@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Commands — Sofiya Bot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#07080b] text-gray-100 min-h-screen flex flex-col justify-between font-sans selection:bg-rose-500 selection:text-white">
+    <nav class="flex items-center justify-between px-10 py-4 border-b border-gray-800/60 bg-[#07080b]/90 backdrop-blur-xl sticky top-0 z-50">
+        <div class="flex items-center space-x-2">
+            <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-rose-600 to-orange-500 flex items-center justify-center font-black text-white">S</div>
+            <a href="/" class="text-xl font-black text-white">sofiya</a>
+        </div>
+        <div class="hidden md:flex items-center space-x-8 text-sm font-bold text-gray-400">
+            <a href="/features" class="hover:text-white transition">Features</a>
+            <a href="/commands" class="text-white">Commands</a>
+            <a href="/tutorials" class="hover:text-white transition">Tutorials</a>
+            <a href="/dashboard" class="hover:text-white transition">Dashboard</a>
+        </div>
+        <div>
+            <a href="/dashboard" class="px-5 py-2 rounded-xl bg-[#5865F2] hover:bg-[#4752C4] font-bold text-xs text-white">Dashboard</a>
+        </div>
+    </nav>
+    <main class="flex-1 max-w-5xl mx-auto px-6 py-16 w-full">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <h1 class="text-4xl font-black mb-4">Bot Commands Directory</h1>
+            <p class="text-gray-400 text-sm">Browse all available commands categorized by modules.</p>
+        </div>
+        <div class="space-y-4">
+            <div class="bg-gray-900/60 border border-gray-800 p-6 rounded-2xl flex justify-between items-center">
+                <div>
+                    <span class="font-mono text-rose-500 font-bold">!rank</span>
+                    <p class="text-xs text-gray-400 mt-1">Check your current level, XP, and rank card position.</p>
+                </div>
+                <span class="px-3 py-1 rounded-lg bg-gray-800 text-xs font-bold text-gray-300">Leveling</span>
+            </div>
+            <div class="bg-gray-900/60 border border-gray-800 p-6 rounded-2xl flex justify-between items-center">
+                <div>
+                    <span class="font-mono text-rose-500 font-bold">!balance</span>
+                    <p class="text-xs text-gray-400 mt-1">View your current wallet and bank balance.</p>
+                </div>
+                <span class="px-3 py-1 rounded-lg bg-gray-800 text-xs font-bold text-gray-300">Economy</span>
+            </div>
+        </div>
+    </main>
+    <footer class="text-center py-8 border-t border-gray-800/60 text-gray-500 text-xs font-bold uppercase">
+        &copy; 2026 Sofiya Bot. All rights reserved.
+    </footer>
+</body>
+</html>

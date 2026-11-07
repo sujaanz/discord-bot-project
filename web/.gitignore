@@ -1,0 +1,24 @@
+# Environment variables and sensitive keys
+.env
+
+# Python cache files and directories
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyz
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+
+# Local database and server settings
+web/server_settings.json
+data/
+
+# OS generated files
+Thumbs.db
+Desktop.ini
+.DS_Store

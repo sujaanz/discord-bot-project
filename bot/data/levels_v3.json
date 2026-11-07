@@ -1,0 +1,71 @@
+{
+    "guilds": {
+        "866932175878225950": {
+            "theme": "crimson",
+            "bg_url": null,
+            "multiplier": 1.0,
+            "level_channel": null,
+            "ignored_channels": [
+                1368100491187191838
+            ],
+            "role_rewards": {},
+            "users": {
+                "795342586986102815": {
+                    "xp": 0,
+                    "level": 5,
+                    "total_xp": 1065,
+                    "messages": 0,
+                    "voice_minutes": 0,
+                    "streak": 1,
+                    "last_daily": 1793955077.4368155,
+                    "prestige": 0,
+                    "bio": "Active Server Member",
+                    "custom_theme": null,
+                    "custom_bg": null
+                },
+                "1267928727833149592": {
+                    "xp": 0,
+                    "level": 0,
+                    "total_xp": 0,
+                    "messages": 0,
+                    "voice_minutes": 0,
+                    "streak": 0,
+                    "last_daily": 0,
+                    "prestige": 0,
+                    "bio": "Active Server Member",
+                    "custom_theme": null,
+                    "custom_bg": null
+                }
+            }
+        },
+        "1568187829022892062": {
+            "theme": "crimson",
+            "bg_url": null,
+            "multiplier": 1.0,
+            "level_channel": 1568187830029779028,
+            "ignored_channels": [],
+            "role_rewards": {},
+            "users": {
+                "795342586986102815": {
+                    "name": "SuJaan",
+                    "xp": 0,
+                    "level": 0,
+                    "total_xp": 0,
+                    "messages": 0,
+                    "voice_minutes": 0,
+                    "streak": 0,
+                    "last_daily": 0,
+                    "prestige": 0,
+                    "bio": "Active Server Member",
+                    "custom_theme": null,
+                    "custom_bg": null,
+                    "card_style": "bento",
+                    "avatar_shape": "auto",
+                    "bg_blur": 3,
+                    "bg_dim": 190
+                }
+            },
+            "name": "Sofiya \ud83c\udf38"
+        }
+    }
+}

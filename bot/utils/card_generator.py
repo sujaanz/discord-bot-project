@@ -5,6 +5,9 @@ import math
 import requests
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
+# ==============================================================================
+# THEME PALETTES & COLOR CONFIGURATIONS
+# ==============================================================================
 THEMES = {
     "crimson": {
         "name": "Crimson Rose",
@@ -74,6 +77,9 @@ TEMPLATES = {
 }
 
 
+# ==============================================================================
+# FONT & IMAGE UTILITIES
+# ==============================================================================
 def load_font(size: int, bold: bool = True):
     paths = [
         "C:/Windows/Fonts/segoeuib.ttf" if bold else "C:/Windows/Fonts/segoeui.ttf",
@@ -213,7 +219,6 @@ def paste_shaped_avatar(
         av_mask = create_smooth_mask((size, size), 24)
         card.paste(av_img, (x, y), av_mask)
     else:
-        # Default Circle with dual gradient ring
         ring_pad = 5
         r_sz = size + ring_pad * 2
         r_grad = create_gradient(r_sz, r_sz, theme["bar_start"], theme["bar_end"])
@@ -229,7 +234,6 @@ def paste_shaped_avatar(
         av_mask = create_smooth_mask((size, size), size // 2)
         card.paste(av_img, (x, y), av_mask)
 
-    # Status indicator
     status_map = {
         "online": (34, 197, 94),
         "idle": (245, 158, 11),
@@ -348,7 +352,6 @@ def create_rank_card(
     pct = int(ratio * 100)
     tier_text = get_tier_label(level, prestige)
 
-    # Resolve avatar shape ("auto" picks the signature shape of each template)
     default_shapes = {
         "bento": "circle",
         "cyber": "hexagon",
@@ -366,14 +369,12 @@ def create_rank_card(
         card_w, card_h = 800, 470
         card, draw = build_base_canvas(card_w, card_h, theme, bg_url, draw_outer_border=False, bg_blur=bg_blur, bg_dim=bg_dim)
 
-        # Sharp Outer Frame & Header Banner
         draw.rectangle([8, 8, card_w - 8, card_h - 8], fill=(14, 16, 22, 215 if not bg_url else 150), outline=theme["accent"], width=3)
         banner_grad = create_gradient(card_w - 24, 110, theme["bar_start"], theme["bar_end"])
         card.paste(banner_grad, (12, 12))
         draw = ImageDraw.Draw(card)
         draw.polygon([(card_w - 140, 12), (card_w - 12, 12), (card_w - 12, 122), (card_w - 70, 122)], fill=(10, 12, 18, 120))
 
-        # Rank & Level Badges in Top Right Header
         f_hdr = load_font(14, bold=True)
         f_big = load_font(34, bold=True)
         draw.rectangle([480, 26, 615, 104], fill=(14, 16, 24, 235), outline=theme["accent"], width=2)
@@ -384,18 +385,15 @@ def create_rank_card(
         draw.text((645, 32), "RANK", fill=(160, 170, 185), font=f_hdr)
         draw.text((645, 52), f"#{rank_pos}", fill=(255, 255, 255), font=f_big)
 
-        # Overlapping Avatar on Left
         av_size = 136
         av_img = fetch_image(avatar_url, (av_size, av_size)) or Image.new("RGBA", (av_size, av_size), (45, 50, 65, 255))
         paste_shaped_avatar(card, av_img, 38, 54, av_size, actual_shape, theme, status)
         draw = ImageDraw.Draw(card)
 
-        # User Identity
         draw.text((200, 132), str(display_name)[:18], fill=(255, 255, 255), font=load_font(34, bold=True))
         draw.text((200, 174), f"@{username}  •  {tier_text}", fill=theme["accent"], font=load_font(16, bold=True))
         draw.text((38, 212), f"\" {str(bio)[:48]} \"", fill=(185, 195, 210), font=load_font(16, bold=True))
 
-        # 2x2 Square Stat Grid
         stats = [
             ("MESSAGES SENT", format_number(messages_count)),
             ("VOICE ACTIVITY", f"{voice_minutes} MINS"),
@@ -412,7 +410,6 @@ def create_rank_card(
             vb = draw.textbbox((0, 0), val, font=load_font(18, bold=True))
             draw.text((bx + 338 - (vb[2] - vb[0]), by + 13), val, fill=(255, 255, 255), font=load_font(18, bold=True))
 
-        # Segmented 20-Block Gaming XP Bar
         draw.text((38, 384), f"XP PROGRESS: {current_xp:,} / {max_xp:,} XP", fill=(255, 255, 255), font=load_font(15, bold=True))
         pct_txt = f"{pct}% COMPLETED"
         pb = draw.textbbox((0, 0), pct_txt, font=load_font(15, bold=True))
@@ -438,22 +435,17 @@ def create_rank_card(
         card_w, card_h = 1120, 340
         card, draw = build_base_canvas(card_w, card_h, theme, bg_url, draw_outer_border=False, bg_blur=bg_blur, bg_dim=bg_dim)
 
-        # Chamfered Cyberpunk Outer Polygon
         pts = [(40, 10), (card_w - 10, 10), (card_w - 10, card_h - 40), (card_w - 40, card_h - 10), (10, card_h - 10), (10, 40)]
         draw.polygon(pts, fill=(12, 15, 23, 210 if not bg_url else 145), outline=theme["accent"])
-        # Corner Hazard Triangles
         draw.polygon([(10, 10), (55, 10), (10, 55)], fill=theme["bar_start"])
         draw.polygon([(card_w - 10, card_h - 10), (card_w - 55, card_h - 10), (card_w - 10, card_h - 55)], fill=theme["bar_start"])
 
-        # Top HUD Header Strip
         draw.polygon([(55, 24), (420, 24), (400, 54), (35, 54)], fill=(24, 28, 42, 240), outline=theme["accent"])
         draw.text((52, 30), f"CYBER-OS // {tier_text} // RANK #{rank_pos}", fill=theme["accent"], font=load_font(14, bold=True))
 
-        # Left User Info & Slanted Level Pod
         draw.text((40, 68), str(display_name)[:18].upper(), fill=(255, 255, 255), font=load_font(42, bold=True))
         draw.text((42, 118), f"@{username}   //   \"{str(bio)[:38]}\"", fill=(165, 175, 195), font=load_font(17, bold=True))
 
-        # Angled Parallelogram Stat Pods
         stats = [
             ("LEVEL", str(level)),
             ("RANK", f"#{rank_pos}"),
@@ -472,7 +464,6 @@ def create_rank_card(
             draw.text((sx + 20, sy + 28), val, fill=theme["accent"] if idx == 0 else (255, 255, 255), font=load_font(22, bold=True))
             sx += pw + 12
 
-        # Slanted Polygon XP Bar
         bx, by, bw, bh = 40, 254, 770, 48
         track_poly = [(bx + 18, by), (bx + bw, by), (bx + bw - 18, by + bh), (bx, by + bh)]
         draw.polygon(track_poly, fill=(20, 23, 34, 255), outline=theme["accent"])
@@ -484,7 +475,6 @@ def create_rank_card(
         xp_txt = f"EXP: {current_xp:,} / {max_xp:,} ({pct}%)"
         draw.text((bx + 32, by + 13), xp_txt, fill=(255, 255, 255), font=load_font(18, bold=True))
 
-        # Right Hexagon Avatar Pod
         av_size = 190
         av_img = fetch_image(avatar_url, (av_size, av_size)) or Image.new("RGBA", (av_size, av_size), (45, 50, 65, 255))
         paste_shaped_avatar(card, av_img, 865, 62, av_size, actual_shape, theme, status)
@@ -500,7 +490,6 @@ def create_rank_card(
         card_w, card_h = 1060, 370
         card, draw = build_base_canvas(card_w, card_h, theme, bg_url, draw_outer_border=False, bg_blur=bg_blur, bg_dim=bg_dim)
 
-        # Diagonal Geometric Triangle Background Overlays
         poly_layer = Image.new("RGBA", (card_w, card_h), (0, 0, 0, 0))
         pdraw = ImageDraw.Draw(poly_layer)
         c1, c2 = theme["bar_start"], theme["bar_end"]
@@ -512,23 +501,19 @@ def create_rank_card(
 
         draw.rounded_rectangle([10, 10, card_w - 10, card_h - 10], radius=22, outline=theme["accent"], width=2)
 
-        # Diamond Avatar on Left Prism Wing
         av_size = 176
         av_img = fetch_image(avatar_url, (av_size, av_size)) or Image.new("RGBA", (av_size, av_size), (45, 50, 65, 255))
         paste_shaped_avatar(card, av_img, 62, 54, av_size, actual_shape, theme, status)
         draw = ImageDraw.Draw(card)
 
-        # Triangular Ribbon Badge under Diamond Avatar
         draw.polygon([(55, 265), (245, 265), (260, 285), (245, 305), (55, 305), (40, 285)], fill=(20, 24, 36, 245), outline=theme["accent"])
         tb = draw.textbbox((0, 0), tier_text, font=load_font(14, bold=True))
         draw.text((150 - (tb[2] - tb[0]) // 2, 276), tier_text, fill=theme["accent"], font=load_font(14, bold=True))
 
-        # Center-Right Content
         ix = 340
         draw.text((ix, 36), str(display_name)[:17], fill=(255, 255, 255), font=load_font(42, bold=True))
         draw.text((ix, 88), f"@{username}   •   \"{str(bio)[:36]}\"", fill=(180, 190, 210), font=load_font(17, bold=True))
 
-        # Diamond / Triangle Prism Stat Cards
         prism_stats = [
             ("LEVEL", str(level)),
             ("RANK", f"#{rank_pos}"),
@@ -541,13 +526,11 @@ def create_rank_card(
         for idx, (lbl, val) in enumerate(prism_stats):
             bw, bh = 126, 82
             draw.rounded_rectangle([px, py, px + bw, py + bh], radius=14, fill=(20, 24, 36, 230), outline=theme["accent"] if idx < 2 else (255, 255, 255, 30), width=1)
-            # Top-right triangle cut accent inside each box
             draw.polygon([(px + bw - 24, py), (px + bw, py), (px + bw, py + 24)], fill=theme["bar_start"])
             draw.text((px + 14, py + 14), lbl, fill=(148, 163, 184), font=load_font(12, bold=True))
             draw.text((px + 14, py + 38), val, fill=(255, 255, 255) if idx != 0 else theme["accent"], font=load_font(24, bold=True))
             px += bw + 12
 
-        # Pointed Prism Progress Bar
         bar_x, bar_y, bar_w, bar_h = ix, 268, 678, 52
         pts_track = [(bar_x, bar_y + bar_h // 2), (bar_x + 20, bar_y), (bar_x + bar_w - 20, bar_y), (bar_x + bar_w, bar_y + bar_h // 2), (bar_x + bar_w - 20, bar_y + bar_h), (bar_x + 20, bar_y + bar_h)]
         draw.polygon(pts_track, fill=(20, 23, 34, 255), outline=theme["accent"])
@@ -573,7 +556,6 @@ def create_rank_card(
 
         draw.rounded_rectangle([8, 8, card_w - 8, card_h - 8], radius=24, fill=(14, 16, 24, 180 if bg_url else 215), outline=theme["accent"], width=2)
 
-        # Giant Watermark Text in Background
         f_wm = load_font(130, bold=True)
         draw.text((card_w - 430, 15), f"LV.{level}", fill=(255, 255, 255, 18), font=f_wm)
 
@@ -603,7 +585,6 @@ def create_rank_card(
             draw.text((px + 15, 134), txt, fill=(235, 240, 250), font=load_font(15, bold=True))
             px += pw + 10
 
-        # Sleek Bottom Laser XP Bar spanning full width
         bx, by, bw, bh = 36, 198, card_w - 72, 26
         draw.rounded_rectangle([bx, by, bx + bw, by + bh], radius=13, fill=(22, 25, 36, 255), outline=(255, 255, 255, 25))
         if ratio > 0:
@@ -623,7 +604,6 @@ def create_rank_card(
         card_w, card_h = 1080, 360
         card, draw = build_base_canvas(card_w, card_h, theme, bg_url, draw_outer_border=True, bg_blur=bg_blur, bg_dim=bg_dim)
 
-        # Left Avatar & Identity
         av_size = 168
         av_img = fetch_image(avatar_url, (av_size, av_size)) or Image.new("RGBA", (av_size, av_size), (45, 50, 65, 255))
         paste_shaped_avatar(card, av_img, 46, 52, av_size, actual_shape, theme, status)
@@ -638,7 +618,6 @@ def create_rank_card(
         draw.text((ix, 92), f"@{username}   •   RANK #{rank_pos}   •   LEVEL {level}", fill=theme["accent"], font=load_font(18, bold=True))
         draw.text((ix, 126), f"\" {str(bio)[:42]} \"", fill=(175, 185, 205), font=load_font(16, bold=True))
 
-        # 2x2 Executive Stat Cards in Middle
         estats = [
             ("CHAT MESSAGES", format_number(messages_count)),
             ("VOICE TIME", f"{voice_minutes} MINS"),
@@ -653,7 +632,6 @@ def create_rank_card(
             draw.text((bx + 16, by + 10), lbl, fill=(145, 155, 175), font=load_font(12, bold=True))
             draw.text((bx + 16, by + 28), val, fill=(255, 255, 255), font=load_font(20, bold=True))
 
-        # Right Circular Progress Gauge Pod
         draw.rounded_rectangle([785, 34, 1044, card_h - 34], radius=24, fill=(20, 24, 36, 235), outline=theme["accent"], width=1)
         draw_circular_gauge(card, 914, 155, 86, 14, ratio, theme, f"{pct}%", f"LVL {level}")
         draw = ImageDraw.Draw(card)
@@ -891,7 +869,6 @@ def create_stats_card(
     f_label = load_font(13, bold=True)
     f_val = load_font(23, bold=True)
 
-    # Left Analytics Core Panel
     draw.rounded_rectangle([30, 30, 290, card_h - 30], radius=22, fill=(20, 24, 36, 235), outline=theme["accent"], width=1)
 
     av_size = 96
@@ -903,7 +880,6 @@ def create_stats_card(
     draw = ImageDraw.Draw(card)
     draw.text((88, 378), "ANALYTICS CORE", fill=(148, 163, 184), font=f_label)
 
-    # Right Header & 8-Panel Tech Matrix
     draw.text((320, 36), f"{str(display_name)[:20].upper()} — ANALYTICS MATRIX", fill=(255, 255, 255), font=f_title)
     draw.text((320, 78), f"@{username}   •   LIVE SERVER TELEMETRY & ACTIVITY METRICS", fill=theme["accent"], font=f_sub)
 
@@ -949,7 +925,6 @@ def create_banner_card(
     theme = THEMES.get(theme_name, THEMES["crimson"])
     card, draw = build_base_canvas(card_w, card_h, theme, bg_url)
 
-    # Diagonal Esports Accent Wing on Left Edge
     draw.polygon([(10, 10), (85, 10), (10, 85)], fill=theme["bar_start"])
     draw.polygon([(card_w - 10, card_h - 10), (card_w - 65, card_h - 10), (card_w - 10, card_h - 65)], fill=theme["bar_end"])
 

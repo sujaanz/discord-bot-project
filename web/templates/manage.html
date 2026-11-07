@@ -1,71 +1,540 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard — {{ guild_name }}</title>
+    <title>Manage {{ guild_name }} — Sofiya Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        function openPluginModal(pluginId) {
-            document.getElementById('modal-' + pluginId).classList.remove('hidden');
+    <style>
+        body {
+            background-color: #0b0c10;
+            color: #f3f4f6;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
-        function closePluginModal(pluginId) {
-            document.getElementById('modal-' + pluginId).classList.add('hidden');
+        .maki-card {
+            background-color: #131620;
+            border: 1px solid #1e2230;
+            border-radius: 14px;
         }
-    </script>
+        .maki-input {
+            background-color: #181b26;
+            border: 1px solid #282e42;
+            color: #ffffff;
+            border-radius: 8px;
+            transition: border-color 0.2s;
+        }
+        .maki-input:focus {
+            border-color: #ff415f;
+            outline: none;
+        }
+        .maki-btn {
+            background: linear-gradient(90deg, #ff415f 0%, #e11d48 100%);
+            transition: opacity 0.2s, transform 0.1s;
+        }
+        .maki-btn:hover {
+            opacity: 0.92;
+        }
+        input[type="range"] {
+            accent-color: #ff415f;
+        }
+    </style>
 </head>
-<body class="bg-[#0b0d14] text-gray-100 min-h-screen flex flex-col justify-between font-sans">
-    <nav class="flex items-center justify-between px-8 py-4 border-b border-gray-800 bg-[#0b0d14]/90 sticky top-0 z-40">
-        <a href="/dashboard" class="text-indigo-400 font-bold text-sm">← Server Selector</a>
-        <a href="/auth/logout" class="px-3 py-1.5 rounded-xl bg-gray-900 text-gray-300 text-xs font-bold border border-gray-800">Logout</a>
+<body class="min-h-screen pb-16">
+
+    <!-- Top Navigation Bar -->
+    <nav class="border-b border-gray-800 bg-[#0e1017]/90 backdrop-blur sticky top-0 z-50 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-3.5 h-3.5 rounded-full bg-rose-500 animate-pulse"></div>
+                <a href="/" class="font-extrabold text-xl tracking-wider text-white">SOFIYA <span class="text-rose-500">DASHBOARD</span></a>
+                <span class="text-xs bg-gray-800 text-gray-300 px-2.5 py-1 rounded-md">{{ guild_name }}</span>
+            </div>
+            <div class="flex items-center space-x-5 text-sm">
+                <a href="/" class="text-gray-400 hover:text-white transition">Home</a>
+                <a href="/features" class="text-gray-400 hover:text-white transition">Features</a>
+                <a href="/commands" class="text-gray-400 hover:text-white transition">Commands</a>
+                <a href="/dashboard" class="text-rose-400 font-semibold hover:text-rose-300 transition">← Back to Servers</a>
+            </div>
+        </div>
     </nav>
-    <header class="max-w-6xl mx-auto px-6 pt-10 pb-6 w-full">
-        <h1 class="text-3xl font-black text-white">{{ guild_name }}</h1>
-        <p class="text-gray-400 text-sm font-medium">Manage and customize your server plugins and automated modules.</p>
-    </header>
-    <main class="flex-1 max-w-6xl mx-auto px-6 pb-20 w-full">
+
+    <div class="max-w-7xl mx-auto px-6 mt-8">
+
+        <!-- Success Banner -->
         {% if success %}
-        <div class="mb-6 p-4 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 font-bold text-sm">
-            ✨ {{ success }}
+        <div class="mb-6 p-4 rounded-xl bg-emerald-950/70 border border-emerald-600/60 text-emerald-200 font-medium text-sm flex items-center justify-between">
+            <span>✅ {{ success }}</span>
         </div>
         {% endif %}
-        <form method="POST">
-            <div class="mb-6 flex items-center justify-between">
-                <h2 class="text-xs font-black uppercase tracking-widest text-gray-400">Server Plugins</h2>
-                <button type="submit" class="px-7 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 font-black text-xs uppercase tracking-wider text-white">Save All Changes 💾</button>
+
+        <!-- MAIN CONFIGURATION FORM START -->
+        <form method="POST" action="{{ url_for('manage_server', guild_id=guild_id) }}">
+
+            <!-- Header Row with Master Switch -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between pb-6 mb-8 border-b border-gray-800 gap-4">
+                <div>
+                    <div class="text-xs uppercase tracking-widest text-rose-500 font-bold mb-1">{{ guild_name }} // CONTROL PANEL</div>
+                    <h1 class="text-3xl font-black tracking-tight text-white">LEVELS & SERVER SETTINGS</h1>
+                    <p class="text-sm text-gray-400 mt-1">Configure Maki-style leveling, custom rank cards, XP multipliers, role rewards, and general bot modules[cite: 8].</p>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <button type="submit" class="maki-btn text-white font-bold px-6 py-2.5 rounded-lg text-sm shadow-lg shadow-rose-600/20">
+                        Save All Changes
+                    </button>
+
+                    <div class="flex items-center space-x-3 bg-[#131620] px-4 py-2.5 rounded-xl border border-gray-800">
+                        <span class="text-sm font-semibold text-gray-300">Leveling Enabled</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" name="leveling_enabled" class="sr-only peer" {% if settings.leveling_enabled %}checked{% endif %}>
+                            <div class="w-11 h-6 bg-gray-700 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-rose-500"></div>
+                        </label>
+                    </div>
+                </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-gray-900 border border-gray-800 rounded-3xl p-6 flex flex-col justify-between">
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="text-indigo-400 font-black text-lg">⭐ Leveling</div>
-                            <input type="checkbox" name="leveling_enabled" {% if settings.leveling_enabled %}checked{% endif %} class="w-5 h-5 accent-indigo-600">
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                <!-- LEFT & CENTER COLUMNS (2/3 Width) -->
+                <div class="lg:col-span-2 space-y-8">
+
+                    <!-- 1. LEVEL UP NOTIFICATION & LIVE PREVIEW -->
+                    <div class="maki-card p-6 space-y-6">
+                        <div class="border-b border-gray-800 pb-4">
+                            <h2 class="text-lg font-bold text-white">Level-Up Notification & Card</h2>
+                            <p class="text-xs text-gray-400">Choose where level-up announcements are sent and select your announcement channel.</p>
                         </div>
-                        <p class="text-xs text-gray-400 mb-6">Reward active community members with XP and rank cards.</p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-gray-400 mb-2">Announcement Routing</label>
+                                <select name="notify_mode" class="maki-input w-full p-2.5 text-sm">
+                                    <option value="current" {% if level_config.notify_mode == 'current' %}selected{% endif %}>Send in current channel</option>
+                                    <option value="channel" {% if level_config.notify_mode == 'channel' %}selected{% endif %}>Send to custom announcement channel</option>
+                                    <option value="dm" {% if level_config.notify_mode == 'dm' %}selected{% endif %}>Send via Direct Message (DM)</option>
+                                    <option value="disabled" {% if level_config.notify_mode == 'disabled' %}selected{% endif %}>Disabled (Silent Level-Up)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-gray-400 mb-2">Select Announcement Channel</label>
+                                <select name="level_channel" class="maki-input w-full p-2.5 text-sm">
+                                    <option value="">-- Choose Channel --</option>
+                                    {% for ch in guild_channels %}
+                                    <option value="{{ ch.id }}" {% if level_config.level_channel | string == ch.id %}selected{% endif %}># {{ ch.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <p class="text-[10px] text-gray-500 mt-1">Select from your server's available text channels.</p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-gray-400 mb-2">
+                                Level-Up Message Template
+                                <span class="text-rose-400 font-normal lowercase ml-2">Placeholders: {user.mention}, {user.name}, {level}, {rank}</span>
+                            </label>
+                            <textarea name="levelup_message" rows="2" class="maki-input w-full p-3 text-sm">{{ level_config.levelup_message }}</textarea>
+                        </div>
+
+                        <!-- Live Level-Up Banner Card Preview -->
+                        <div class="bg-[#0b0e14] p-5 rounded-xl border border-gray-800">
+                            <span class="text-xs font-bold uppercase text-gray-400 block mb-3">Level-Up Card Preview</span>
+                            <div class="flex items-center justify-between bg-gradient-to-r from-[#161926] to-[#201524] border border-rose-500/40 rounded-xl p-4">
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-12 h-12 rounded-xl bg-rose-500/20 border border-rose-500 flex items-center justify-center font-black text-rose-400 text-lg">
+                                        UP
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-bold text-rose-400 tracking-wider">LEVEL UP ACHIEVED!</div>
+                                        <div class="text-lg font-extrabold text-white">LEVEL 5 <span class="text-rose-500 mx-1">➔</span> LEVEL 6</div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-xs text-gray-400 block">SERVER RANK</span>
+                                    <span class="text-2xl font-black text-white">#7</span>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center space-x-6 mt-4 pt-3 border-t border-gray-800/80">
+                                <label class="flex items-center space-x-2 text-sm text-gray-300 cursor-pointer">
+                                    <input type="checkbox" name="send_text" class="rounded accent-rose-500 w-4 h-4" {% if level_config.send_text %}checked{% endif %}>
+                                    <span>Send text message</span>
+                                </label>
+                                <label class="flex items-center space-x-2 text-sm text-gray-300 cursor-pointer">
+                                    <input type="checkbox" name="send_card" class="rounded accent-rose-500 w-4 h-4" {% if level_config.send_card %}checked{% endif %}>
+                                    <span>Send generated level-up card</span>
+                                </label>
+                            </div>
+                        </div>
                     </div>
-                    <button type="button" onclick="openPluginModal('leveling')" class="w-full py-2.5 rounded-xl bg-gray-800 text-indigo-400 font-bold text-xs">Configure ⚙️</button>
-                </div>
-            </div>
-            <div id="modal-leveling" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
-                <div class="bg-gray-900 border border-gray-800 rounded-3xl max-w-lg w-full p-8 space-y-6">
-                    <h3 class="text-xl font-black text-white">⭐ Leveling Settings</h3>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-300 uppercase mb-2">XP Multiplier</label>
-                        <input type="number" step="0.1" name="multiplier" value="{{ settings.multiplier or 1.0 }}" class="w-full px-4 py-3 rounded-xl bg-black border border-gray-800 text-white font-bold">
+
+                    <!-- 2. TEXT, VOICE & FORUM EXPERIENCE ENGINE -->
+                    <div class="maki-card p-6 space-y-6">
+                        <div class="border-b border-gray-800 pb-4">
+                            <h2 class="text-lg font-bold text-white">Text & Voice Experience Settings</h2>
+                            <p class="text-xs text-gray-400">Configure how members earn XP across text channels, voice rooms, and forum threads.</p>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between bg-[#181b26] p-3.5 rounded-xl border border-gray-800">
+                                <div>
+                                    <div class="font-bold text-sm text-white">Text Leveling</div>
+                                    <div class="text-xs text-gray-400">Grant XP when members send messages in text channels.</div>
+                                </div>
+                                <input type="checkbox" name="xp_text" class="w-5 h-5 accent-rose-500 rounded cursor-pointer" {% if level_config.xp_text %}checked{% endif %}>
+                            </div>
+
+                            <div class="flex items-center justify-between bg-[#181b26] p-3.5 rounded-xl border border-gray-800">
+                                <div>
+                                    <div class="font-bold text-sm text-white">Voice Leveling</div>
+                                    <div class="text-xs text-gray-400">Grant XP for every minute spent active in voice channels.</div>
+                                </div>
+                                <input type="checkbox" name="xp_voice" class="w-5 h-5 accent-rose-500 rounded cursor-pointer" {% if level_config.xp_voice %}checked{% endif %}>
+                            </div>
+
+                            <div class="flex items-center justify-between bg-[#181b26] p-3.5 rounded-xl border border-gray-800">
+                                <div>
+                                    <div class="font-bold text-sm text-white">Forum Threads</div>
+                                    <div class="text-xs text-gray-400">Allow members to earn XP inside forum posts and threads.</div>
+                                </div>
+                                <input type="checkbox" name="xp_threads" class="w-5 h-5 accent-rose-500 rounded cursor-pointer" {% if level_config.xp_threads %}checked{% endif %}>
+                            </div>
+                        </div>
+
+                        <!-- Experience Rate Slider -->
+                        <div class="bg-[#181b26] p-4 rounded-xl border border-gray-800">
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="text-xs font-bold uppercase text-gray-400">Experience Rate Multiplier</label>
+                                <span id="multBadge" class="text-sm font-extrabold text-rose-400 bg-rose-500/10 border border-rose-500/30 px-2.5 py-0.5 rounded">{{ settings.multiplier }}x XP</span>
+                            </div>
+                            <input type="range" name="multiplier" min="0.25" max="5.0" step="0.25" value="{{ settings.multiplier }}"
+                                   oninput="document.getElementById('multBadge').innerText = this.value + 'x XP'"
+                                   class="w-full h-2 bg-gray-700 rounded-lg cursor-pointer">
+                        </div>
+
+                        <!-- Base XP Range, Cooldown & Voice Rate -->
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <div>
+                                <label class="block text-[11px] font-bold uppercase text-gray-400 mb-1">Min Text XP</label>
+                                <input type="number" name="min_xp" value="{{ level_config.min_xp }}" class="maki-input w-full p-2.5 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold uppercase text-gray-400 mb-1">Max Text XP</label>
+                                <input type="number" name="max_xp" value="{{ level_config.max_xp }}" class="maki-input w-full p-2.5 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold uppercase text-gray-400 mb-1">Cooldown (Sec)</label>
+                                <input type="number" name="cooldown_seconds" value="{{ level_config.cooldown_seconds }}" class="maki-input w-full p-2.5 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-bold uppercase text-gray-400 mb-1">Voice XP / Min</label>
+                                <input type="number" name="voice_xp_per_min" value="{{ level_config.voice_xp_per_min }}" class="maki-input w-full p-2.5 text-sm">
+                            </div>
+                        </div>
+
+                        <!-- Excluded Channels, Roles & Boosted Channels -->
+                        <div class="space-y-4 pt-2">
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-gray-400 mb-1">Excluded Channels (No XP)</label>
+                                <input type="text" name="ignored_channels" value="{{ level_config.ignored_channels | join(', ') }}" placeholder="Comma-separated Channel IDs..." class="maki-input w-full p-2.5 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-gray-400 mb-1">Excluded Roles (No XP)</label>
+                                <input type="text" name="ignored_roles" value="{{ level_config.ignored_roles | join(', ') }}" placeholder="Comma-separated Role IDs..." class="maki-input w-full p-2.5 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-gray-400 mb-1">Fast-Leveling Channels (2x Double XP)</label>
+                                <input type="text" name="boosted_channels" value="{{ level_config.boosted_channels | join(', ') }}" placeholder="Comma-separated Channel IDs..." class="maki-input w-full p-2.5 text-sm">
+                            </div>
+                        </div>
                     </div>
-                    <button type="button" onclick="closePluginModal('leveling')" class="w-full py-3 rounded-xl bg-indigo-600 font-bold text-white">Save & Close</button>
+
+                    <!-- 3. SERVER CARD STUDIO & BACKGROUNDS -->
+                    <div class="maki-card p-6 space-y-6">
+                        <div class="border-b border-gray-800 pb-4">
+                            <h2 class="text-lg font-bold text-white">Default Server Rank Card & Visuals</h2>
+                            <p class="text-xs text-gray-400">Customize default rank card template, neon theme, avatar geometry, and background URLs.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-gray-400 mb-2">Default Template</label>
+                                <select name="default_card_style" class="maki-input w-full p-2.5 text-sm">
+                                    <option value="bento" {% if level_config.default_card_style == 'bento' %}selected{% endif %}>Bento Pro Grid (1100x360)</option>
+                                    <option value="cyber" {% if level_config.default_card_style == 'cyber' %}selected{% endif %}>Cyberpunk Hex HUD (1120x340)</option>
+                                    <option value="prism" {% if level_config.default_card_style == 'prism' %}selected{% endif %}>Triangle Prism Split (1060x370)</option>
+                                    <option value="square" {% if level_config.default_card_style == 'square' %}selected{% endif %}>Compact Square Box (800x470)</option>
+                                    <option value="banner" {% if level_config.default_card_style == 'banner' %}selected{% endif %}>Ultra-Wide Strip (1200x250)</option>
+                                    <option value="exec" {% if level_config.default_card_style == 'exec' %}selected{% endif %}>Executive Ring Gauge (1080x360)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-gray-400 mb-2">Server Color Theme</label>
+                                <select name="theme" class="maki-input w-full p-2.5 text-sm">
+                                    <option value="crimson" {% if settings.theme == 'crimson' %}selected{% endif %}>Crimson Rose (Red)</option>
+                                    <option value="neon_violet" {% if settings.theme == 'neon_violet' %}selected{% endif %}>Cyber Violet (Purple)</option>
+                                    <option value="emerald" {% if settings.theme == 'emerald' %}selected{% endif %}>Emerald Matrix (Green)</option>
+                                    <option value="gold" {% if settings.theme == 'gold' %}selected{% endif %}>Royal Gold (Gold)</option>
+                                    <option value="ocean" {% if settings.theme == 'ocean' %}selected{% endif %}>Electric Ocean (Blue)</option>
+                                    <option value="sunset" {% if settings.theme == 'sunset' %}selected{% endif %}>Sunset Blaze (Orange)</option>
+                                    <option value="cyber_pink" {% if settings.theme == 'cyber_pink' %}selected{% endif %}>Tokyo Neon (Pink)</option>
+                                    <option value="ice_cyan" {% if settings.theme == 'ice_cyan' %}selected{% endif %}>Arctic Frost (Cyan)</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-gray-400 mb-2">Default Avatar Shape</label>
+                                <select name="default_avatar_shape" class="maki-input w-full p-2.5 text-sm">
+                                    <option value="auto" {% if level_config.default_avatar_shape == 'auto' %}selected{% endif %}>Auto (Match Template)</option>
+                                    <option value="circle" {% if level_config.default_avatar_shape == 'circle' %}selected{% endif %}>Circle (Dual Ring)</option>
+                                    <option value="hexagon" {% if level_config.default_avatar_shape == 'hexagon' %}selected{% endif %}>Hexagon (Polygon)</option>
+                                    <option value="diamond" {% if level_config.default_avatar_shape == 'diamond' %}selected{% endif %}>Diamond (Prism)</option>
+                                    <option value="square" {% if level_config.default_avatar_shape == 'square' %}selected{% endif %}>Square (Brutalist)</option>
+                                    <option value="rounded" {% if level_config.default_avatar_shape == 'rounded' %}selected{% endif %}>Rounded Squircle</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-gray-400 mb-2">Rank Card Background URL</label>
+                                <input type="text" name="bg_url" value="{{ settings.bg_url or '' }}" placeholder="https://i.imgur.com/your_bg.png" class="maki-input w-full p-2.5 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-gray-400 mb-2">Level-Up Banner Background URL</label>
+                                <input type="text" name="levelup_bg_url" value="{{ level_config.levelup_bg_url or '' }}" placeholder="https://i.imgur.com/levelup_bg.png" class="maki-input w-full p-2.5 text-sm">
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-2">
+                            <span class="text-xs text-gray-300 font-medium">Stack Role Rewards (Keep older roles when unlocking higher roles)</span>
+                            <input type="checkbox" name="stack_roles" class="w-5 h-5 accent-rose-500 rounded cursor-pointer" {% if level_config.stack_roles %}checked{% endif %}>
+                        </div>
+                    </div>
+
+                    <!-- 4. LEVELING COMMAND TOGGLES -->
+                    <div class="maki-card p-6 space-y-4">
+                        <div class="border-b border-gray-800 pb-4">
+                            <h2 class="text-lg font-bold text-white">Commands</h2>
+                            <p class="text-xs text-gray-400">Enable or disable individual leveling commands on your server.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            {% set cmd_list = [
+                                ('rank', 'View custom Rank Card (/rank)'),
+                                ('leaderboard', 'View server leaderboard (/leaderboard)'),
+                                ('daily', 'Claim daily bonus XP & streak (/daily)'),
+                                ('prestige', 'Ascend to Prestige tier (/prestige)'),
+                                ('mycard', 'Interactive Rank Card Studio (/mycard)'),
+                                ('xpstats', '8-panel XP telemetry dashboard (/xpstats)'),
+                                ('rewards', 'View level role rewards (/rewards)')
+                            ] %}
+                            {% for cmd, desc in cmd_list %}
+                            <div class="flex items-center justify-between bg-[#181b26] p-3.5 rounded-xl border border-gray-800">
+                                <div>
+                                    <div class="font-bold text-sm text-white">/{{ cmd }}</div>
+                                    <div class="text-[11px] text-gray-400">{{ desc }}</div>
+                                </div>
+                                <input type="checkbox" name="cmd_{{ cmd }}" class="w-5 h-5 accent-rose-500 rounded cursor-pointer"
+                                       {% if level_config.command_toggles.get(cmd, True) %}checked{% endif %}>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- 5. GENERAL BOT MODULES (PREFIX, ECONOMY, AUTOMOD, WELCOME) -->
+                    <div class="maki-card p-6 space-y-5">
+                        <div class="border-b border-gray-800 pb-4">
+                            <h2 class="text-lg font-bold text-white">General, Economy, Welcome & AutoMod Settings</h2>
+                            <p class="text-xs text-gray-400">Manage server prefix, economy currency, welcome greeting, and moderation filters.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-gray-400 mb-2">Command Prefix</label>
+                                <input type="text" name="prefix" value="{{ settings.prefix }}" class="maki-input w-full p-2.5 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-gray-400 mb-2">Currency Name</label>
+                                <input type="text" name="currency_name" value="{{ settings.currency_name }}" class="maki-input w-full p-2.5 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-gray-400 mb-2">Starting Balance</label>
+                                <input type="number" name="starting_balance" value="{{ settings.starting_balance }}" class="maki-input w-full p-2.5 text-sm">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-gray-400 mb-2">Welcome Message</label>
+                            <input type="text" name="welcome_msg" value="{{ settings.welcome_msg }}" class="maki-input w-full p-2.5 text-sm">
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+                            <label class="flex items-center justify-between bg-[#181b26] p-3.5 rounded-xl border border-gray-800 cursor-pointer">
+                                <span class="text-sm font-bold text-white">Economy System</span>
+                                <input type="checkbox" name="economy_enabled" class="w-5 h-5 accent-rose-500 rounded" {% if settings.economy_enabled %}checked{% endif %}>
+                            </label>
+                            <label class="flex items-center justify-between bg-[#181b26] p-3.5 rounded-xl border border-gray-800 cursor-pointer">
+                                <span class="text-sm font-bold text-white">AutoMod Filter</span>
+                                <input type="checkbox" name="automod_enabled" class="w-5 h-5 accent-rose-500 rounded" {% if settings.automod_enabled %}checked{% endif %}>
+                            </label>
+                            <label class="flex items-center justify-between bg-[#181b26] p-3.5 rounded-xl border border-gray-800 cursor-pointer">
+                                <span class="text-sm font-bold text-white">Welcome System</span>
+                                <input type="checkbox" name="welcome_enabled" class="w-5 h-5 accent-rose-500 rounded" {% if settings.welcome_enabled %}checked{% endif %}>
+                            </label>
+                        </div>
+
+                        <div class="pt-3">
+                            <button type="submit" class="maki-btn w-full py-3.5 rounded-xl font-bold text-white text-sm shadow-lg shadow-rose-600/25">
+                                Save & Synchronize All Settings
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
-            </div>
-            <div class="mt-12 bg-gray-900 border border-gray-800 rounded-3xl p-8 space-y-6">
-                <h3 class="text-lg font-black text-white">⚙️ Global Command Prefix</h3>
-                <input type="text" name="prefix" value="{{ settings.prefix }}" class="w-full max-w-xs px-5 py-3 rounded-xl bg-black border border-gray-800 text-white font-mono font-bold">
-                <br>
-                <button type="submit" class="px-8 py-3 rounded-xl bg-indigo-600 font-black text-xs uppercase text-white">Save All Settings 🚀</button>
-            </div>
         </form>
-    </main>
-    <footer class="text-center py-8 border-t border-gray-800 text-gray-500 text-xs font-bold">
-        &copy; 2026 Sofiya Bot Dashboard. All rights reserved.
-    </footer>
+        <!-- MAIN CONFIGURATION FORM END -->
+
+                <!-- RIGHT SIDEBAR (1/3 Width - Separate action forms) -->
+                <div class="space-y-8">
+
+                    <!-- 6. ROLE REWARDS PANEL -->
+                    <div class="maki-card p-6 space-y-4">
+                        <div class="border-b border-gray-800 pb-3">
+                            <h3 class="text-base font-bold text-white">Role Rewards</h3>
+                            <p class="text-xs text-gray-400">Unlock roles automatically when members reach specific levels.</p>
+                        </div>
+
+                        <form method="POST" action="{{ url_for('add_level_reward', guild_id=guild_id) }}" class="space-y-3">
+                            <div class="grid grid-cols-3 gap-2">
+                                <input type="number" name="reward_level" min="1" max="500" placeholder="Level" required class="maki-input p-2.5 text-sm">
+                                <input type="text" name="reward_role_id" placeholder="Role ID" required class="maki-input col-span-2 p-2.5 text-sm">
+                            </div>
+                            <button type="submit" class="w-full bg-gray-800 hover:bg-gray-700 border border-gray-700 text-white font-semibold py-2 rounded-lg text-xs transition">
+                                + Add Role Reward
+                            </button>
+                        </form>
+
+                        <div class="space-y-2 pt-2">
+                            {% for lvl, r_id in level_config.role_rewards.items() | sort %}
+                            <div class="flex items-center justify-between bg-[#181b26] px-3.5 py-2.5 rounded-lg border border-gray-800 text-xs">
+                                <div>
+                                    <span class="font-bold text-rose-400">LEVEL {{ lvl }}</span>
+                                    <span class="text-gray-400 ml-2">➔ Role ID: {{ r_id }}</span>
+                                </div>
+                                <form method="POST" action="{{ url_for('remove_level_reward', guild_id=guild_id, level=lvl) }}">
+                                    <button type="submit" class="text-red-400 hover:text-red-300 font-bold">Remove</button>
+                                </form>
+                            </div>
+                            {% else %}
+                            <div class="text-xs text-gray-500 text-center py-3">No role rewards added yet.</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- 7. ROLE XP MULTIPLIERS -->
+                    <div class="maki-card p-6 space-y-4">
+                        <div class="border-b border-gray-800 pb-3">
+                            <h3 class="text-base font-bold text-white">Role Multipliers</h3>
+                            <p class="text-xs text-gray-400">Assign bonus XP multipliers to VIP or Server Booster roles.</p>
+                        </div>
+
+                        <form method="POST" action="{{ url_for('add_role_multiplier', guild_id=guild_id) }}" class="space-y-3">
+                            <div class="grid grid-cols-3 gap-2">
+                                <input type="text" name="mult_role_id" placeholder="Role ID" required class="maki-input col-span-2 p-2.5 text-sm">
+                                <input type="number" step="0.1" min="0.5" max="10" name="mult_rate" placeholder="2.0x" required class="maki-input p-2.5 text-sm">
+                            </div>
+                            <button type="submit" class="w-full bg-gray-800 hover:bg-gray-700 border border-gray-700 text-white font-semibold py-2 rounded-lg text-xs transition">
+                                + Add Role Multiplier
+                            </button>
+                        </form>
+
+                        <div class="space-y-2 pt-2">
+                            {% for r_id, rate in level_config.get('role_multipliers', {}).items() %}
+                            <div class="flex items-center justify-between bg-[#181b26] px-3.5 py-2.5 rounded-lg border border-gray-800 text-xs">
+                                <div>
+                                    <span class="text-gray-300">Role ID: {{ r_id }}</span>
+                                    <span class="font-bold text-emerald-400 ml-2">{{ rate }}x XP</span>
+                                </div>
+                                <form method="POST" action="{{ url_for('remove_role_multiplier', guild_id=guild_id, role_id=r_id) }}">
+                                    <button type="submit" class="text-red-400 hover:text-red-300 font-bold">Remove</button>
+                                </form>
+                            </div>
+                            {% else %}
+                            <div class="text-xs text-gray-500 text-center py-2">No custom role multipliers configured.</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- 8. DIRECT MEMBER XP MANAGER -->
+                    <div class="maki-card p-6 space-y-4">
+                        <div class="border-b border-gray-800 pb-3">
+                            <h3 class="text-base font-bold text-white">Manage Member XP</h3>
+                            <p class="text-xs text-gray-400">Add XP, remove XP, set level, or reset a member directly.</p>
+                        </div>
+
+                        <form method="POST" action="{{ url_for('manage_user_xp', guild_id=guild_id) }}" class="space-y-3">
+                            <input type="text" name="user_id" placeholder="Discord User ID" required class="maki-input w-full p-2.5 text-sm">
+                            <div class="grid grid-cols-2 gap-2">
+                                <select name="action" class="maki-input p-2.5 text-sm">
+                                    <option value="give_xp">Give Bonus XP</option>
+                                    <option value="remove_xp">Remove XP</option>
+                                    <option value="set_level">Set Exact Level</option>
+                                    <option value="reset_user">Reset Member</option>
+                                </select>
+                                <input type="number" name="amount" placeholder="XP / Level" class="maki-input p-2.5 text-sm">
+                            </div>
+                            <button type="submit" class="w-full bg-rose-600/20 hover:bg-rose-600/30 border border-rose-500/40 text-rose-300 font-bold py-2 rounded-lg text-xs transition">
+                                Execute Action
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- 9. LIVE LEADERBOARD PREVIEW -->
+                    <div class="maki-card p-6 space-y-4">
+                        <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+                            <h3 class="text-base font-bold text-white">Server Leaderboard</h3>
+                            <span class="text-xs bg-rose-500/20 text-rose-400 px-2 py-0.5 rounded font-bold">{{ level_config.users | length }} Members</span>
+                        </div>
+
+                        <div class="space-y-2 max-h-72 overflow-y-auto pr-1">
+                            {% for uid, u in top_users %}
+                            <div class="flex items-center justify-between bg-[#181b26] px-3.5 py-2.5 rounded-lg border border-gray-800 text-xs">
+                                <div class="flex items-center space-x-2.5">
+                                    <span class="font-black text-rose-400">#{{ loop.index }}</span>
+                                    <div>
+                                        <div class="font-bold text-white">{{ u.name }}</div>
+                                        <div class="text-[10px] text-gray-500">{{ u.messages }} msgs • {{ u.voice_minutes }}m voice</div>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <span class="font-extrabold text-white">LVL {{ u.level }}</span>
+                                    <span class="block text-[10px] text-gray-400">{{ u.xp }} XP</span>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="text-xs text-gray-500 text-center py-4">No member activity recorded yet.</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- 10. RESET SERVER XP -->
+                    <div class="maki-card p-6 border-red-900/60 bg-red-950/10 space-y-3">
+                        <h3 class="text-sm font-extrabold text-red-400 uppercase tracking-wider">Reset Server XP</h3>
+                        <p class="text-xs text-gray-400">Wipe all levels, XP, and streaks for every member in this server back to Level 0.</p>
+                        <form method="POST" action="{{ url_for('reset_all_server_xp', guild_id=guild_id) }}"
+                              onsubmit="return confirm('Are you sure you want to reset ALL server members back to Level 0?');">
+                            <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-lg text-xs transition">
+                                Reset All Server XP
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+    </div>
+
 </body>
 </html>

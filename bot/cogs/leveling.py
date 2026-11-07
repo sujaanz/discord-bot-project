@@ -268,12 +268,14 @@ class Leveling(commands.Cog):
         if gid not in self.data["guilds"]:
             self.data["guilds"][gid] = {
                 "name": "",
+                "enabled": True,
                 "theme": "crimson",
                 "bg_url": None,
                 "multiplier": 1.0,
                 "level_channel": None,
                 "ignored_channels": [],
                 "role_rewards": {},
+                "command_toggles": {},
                 "users": {}
             }
         return self.data["guilds"][gid]
@@ -366,6 +368,8 @@ class Leveling(commands.Cog):
 
     async def check_and_apply_levelup(self, guild: discord.Guild, member: discord.Member, channel: discord.abc.Messageable, udata: dict):
         gdata = self.get_guild_data(guild.id)
+        if not gdata.get("enabled", True):
+            return
         leveled_up = False
 
         while udata["xp"] >= self.get_max_xp(udata["level"]):
@@ -397,28 +401,52 @@ class Leveling(commands.Cog):
                     theme = udata.get("custom_theme") or gdata.get("theme", "crimson")
                     bg = udata.get("custom_bg") or gdata.get("bg_url")
                     rank_pos = self.calculate_rank(guild.id, member.id)
-                    card_path = await asyncio.to_thread(
-                        create_banner_card,
-                        title="LEVEL UP ACHIEVED!",
-                        subtitle=f"{member.display_name} just advanced to a higher level!",
-                        highlights=[
-                            ("NEW LEVEL", f"LEVEL {udata['level']}"),
-                            ("SERVER RANK", f"#{rank_pos}"),
-                            ("ROLE UNLOCKED", unlocked_role_name[:16])
-                        ],
-                        footer=f"{guild.name} • Keep chatting to unlock more rewards",
-                        avatar_url=str(member.display_avatar.url),
-                        theme_name=theme,
-                        bg_url=bg
+
+                    # Fetching and formatting custom message template from dashboard settings
+                    raw_template = gdata.get("levelup_message", "GG {user.mention}, you just advanced to **Level {level}**!")
+                    formatted_msg = raw_template.format(
+                        user=member,
+                        mention=member.mention,
+                        name=member.display_name,
+                        level=udata["level"],
+                        rank=rank_pos
                     )
-                    if card_path and os.path.exists(card_path):
+
+                    card_path = None
+                    if gdata.get("send_card", True):
+                        card_path = await asyncio.to_thread(
+                            create_banner_card,
+                            title="LEVEL UP ACHIEVED!",
+                            subtitle=f"{member.display_name} just advanced to a higher level!",
+                            highlights=[
+                                ("NEW LEVEL", f"LEVEL {udata['level']}"),
+                                ("SERVER RANK", f"#{rank_pos}"),
+                                ("ROLE UNLOCKED", unlocked_role_name[:16])
+                            ],
+                            footer=f"{guild.name} • Keep chatting to unlock more rewards",
+                            avatar_url=str(member.display_avatar.url),
+                            theme_name=theme,
+                            bg_url=bg
+                        )
+
+                    send_txt = gdata.get("send_text", True)
+                    send_crd = gdata.get("send_card", True)
+
+                    if send_txt and send_crd and card_path and os.path.exists(card_path):
                         await target_chan.send(
-                            content=f"GG {member.mention}!",
+                            content=formatted_msg,
                             file=discord.File(card_path, filename="levelup.png")
                         )
+                    elif send_txt:
+                        await target_chan.send(content=formatted_msg)
+                    elif send_crd and card_path and os.path.exists(card_path):
+                        await target_chan.send(file=discord.File(card_path, filename="levelup.png"))
+
+                    if card_path and os.path.exists(card_path):
                         os.remove(card_path)
-                except Exception:
-                    pass
+
+                except Exception as e:
+                    print(f"Error in levelup notification: {e}")
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
@@ -428,6 +456,9 @@ class Leveling(commands.Cog):
             return
 
         gdata = self.get_guild_data(message.guild.id)
+        if not gdata.get("enabled", True):
+            return
+
         gdata["name"] = message.guild.name
         if message.channel.id in gdata.get("ignored_channels", []):
             return
@@ -454,6 +485,10 @@ class Leveling(commands.Cog):
     async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
         if member.bot or not member.guild:
             return
+        gdata = self.get_guild_data(member.guild.id)
+        if not gdata.get("enabled", True):
+            return
+
         key = f"{member.guild.id}_{member.id}"
         now = time.time()
 
@@ -516,6 +551,10 @@ class Leveling(commands.Cog):
     # 1. /rank & !rank
     @commands.command(name="rank", help="View your Multi-Style Rank Card.")
     async def rank_prefix(self, ctx: commands.Context, member: discord.Member = None):
+        gdata = self.get_guild_data(ctx.guild.id)
+        if not gdata.get("enabled", True) or not gdata.get("command_toggles", {}).get("rank", True):
+            await ctx.send("❌ The leveling system or this command is currently disabled on this server.")
+            return
         target = member or ctx.author
         path = await asyncio.to_thread(self.generate_member_card, ctx.guild, target)
         if path and os.path.exists(path):
@@ -525,6 +564,10 @@ class Leveling(commands.Cog):
     @app_commands.command(name="rank", description="View your or another member's Custom Rank Card.")
     @app_commands.describe(member="Select a member to check their rank card")
     async def rank_slash(self, interaction: discord.Interaction, member: discord.Member = None):
+        gdata = self.get_guild_data(interaction.guild.id)
+        if not gdata.get("enabled", True) or not gdata.get("command_toggles", {}).get("rank", True):
+            await interaction.response.send_message("❌ The leveling system or this command is currently disabled on this server.", ephemeral=True)
+            return
         target = member or interaction.user
         await interaction.response.defer()
         try:
@@ -536,6 +579,10 @@ class Leveling(commands.Cog):
     # 2. /leaderboard & !lb
     @commands.command(name="leaderboard", aliases=["lb", "top"], help="View the graphical server leaderboard.")
     async def lb_prefix(self, ctx: commands.Context):
+        gdata = self.get_guild_data(ctx.guild.id)
+        if not gdata.get("enabled", True) or not gdata.get("command_toggles", {}).get("leaderboard", True):
+            await ctx.send("❌ The leveling system or this command is currently disabled on this server.")
+            return
         view = LeaderboardView(self, ctx.guild)
         path = await asyncio.to_thread(view.generate_card)
         if path and os.path.exists(path):
@@ -544,6 +591,10 @@ class Leveling(commands.Cog):
 
     @app_commands.command(name="leaderboard", description="View the interactive graphical server leaderboard.")
     async def lb_slash(self, interaction: discord.Interaction):
+        gdata = self.get_guild_data(interaction.guild.id)
+        if not gdata.get("enabled", True) or not gdata.get("command_toggles", {}).get("leaderboard", True):
+            await interaction.response.send_message("❌ The leveling system or this command is currently disabled on this server.", ephemeral=True)
+            return
         await interaction.response.defer()
         view = LeaderboardView(self, interaction.guild)
         path = await asyncio.to_thread(view.generate_card)
@@ -552,8 +603,11 @@ class Leveling(commands.Cog):
     # 3. /daily
     @app_commands.command(name="daily", description="Claim your daily bonus XP card and build your daily streak!")
     async def daily_slash(self, interaction: discord.Interaction):
-        await interaction.response.defer()
         gdata = self.get_guild_data(interaction.guild.id)
+        if not gdata.get("enabled", True) or not gdata.get("command_toggles", {}).get("daily", True):
+            await interaction.response.send_message("❌ The leveling system or this command is currently disabled on this server.", ephemeral=True)
+            return
+        await interaction.response.defer()
         udata = self.get_user_data(interaction.guild.id, interaction.user.id, interaction.user.display_name)
         theme = udata.get("custom_theme") or gdata.get("theme", "crimson")
         bg = udata.get("custom_bg") or gdata.get("bg_url")
@@ -614,8 +668,11 @@ class Leveling(commands.Cog):
     # 4. /prestige
     @app_commands.command(name="prestige", description="Ascend to the next Prestige tier (Requires Level 10+).")
     async def prestige_slash(self, interaction: discord.Interaction):
-        await interaction.response.defer()
         gdata = self.get_guild_data(interaction.guild.id)
+        if not gdata.get("enabled", True) or not gdata.get("command_toggles", {}).get("prestige", True):
+            await interaction.response.send_message("❌ The leveling system or this command is currently disabled on this server.", ephemeral=True)
+            return
+        await interaction.response.defer()
         udata = self.get_user_data(interaction.guild.id, interaction.user.id, interaction.user.display_name)
         theme = udata.get("custom_theme") or gdata.get("theme", "crimson")
         bg = udata.get("custom_bg") or gdata.get("bg_url")
@@ -698,6 +755,10 @@ class Leveling(commands.Cog):
         bio: str = None,
         bg_url: str = None
     ):
+        gdata = self.get_guild_data(interaction.guild.id)
+        if not gdata.get("enabled", True) or not gdata.get("command_toggles", {}).get("mycard", True):
+            await interaction.response.send_message("❌ The leveling system or this command is currently disabled on this server.", ephemeral=True)
+            return
         await interaction.response.defer()
         udata = self.get_user_data(interaction.guild.id, interaction.user.id, interaction.user.display_name)
 
@@ -726,9 +787,12 @@ class Leveling(commands.Cog):
     # 6. /xpstats
     @app_commands.command(name="xpstats", description="View a graphical analytics dashboard of your leveling stats.")
     async def xpstats_slash(self, interaction: discord.Interaction, member: discord.Member = None):
+        gdata = self.get_guild_data(interaction.guild.id)
+        if not gdata.get("enabled", True) or not gdata.get("command_toggles", {}).get("xpstats", True):
+            await interaction.response.send_message("❌ The leveling system or this command is currently disabled on this server.", ephemeral=True)
+            return
         target = member or interaction.user
         await interaction.response.defer()
-        gdata = self.get_guild_data(interaction.guild.id)
         udata = self.get_user_data(interaction.guild.id, target.id, target.display_name)
         rank_pos = self.calculate_rank(interaction.guild.id, target.id)
         max_xp = self.get_max_xp(udata["level"])
@@ -764,8 +828,11 @@ class Leveling(commands.Cog):
     # 7. /rewards
     @app_commands.command(name="rewards", description="View all automatic level-up role rewards on this server.")
     async def rewards_slash(self, interaction: discord.Interaction):
-        await interaction.response.defer()
         gdata = self.get_guild_data(interaction.guild.id)
+        if not gdata.get("enabled", True) or not gdata.get("command_toggles", {}).get("rewards", True):
+            await interaction.response.send_message("❌ The leveling system or this command is currently disabled on this server.", ephemeral=True)
+            return
+        await interaction.response.defer()
         rewards = gdata.get("role_rewards", {})
 
         highlights = []
@@ -788,268 +855,6 @@ class Leveling(commands.Cog):
             bg_url=gdata.get("bg_url")
         )
         await self.send_card_interaction(interaction, card_path, "rewards.png")
-
-    # ADMIN COMMANDS
-    @app_commands.command(name="givexp", description="[Admin] Give bonus XP to a member.")
-    @app_commands.checks.has_permissions(administrator=True)
-    async def givexp_slash(self, interaction: discord.Interaction, member: discord.Member, amount: int):
-        await interaction.response.defer()
-        udata = self.get_user_data(interaction.guild.id, member.id, member.display_name)
-        added = max(1, amount)
-        udata["xp"] += added
-        udata["total_xp"] += added
-        await self.check_and_apply_levelup(interaction.guild, member, interaction.channel, udata)
-        self.save_data()
-
-        card_path = await asyncio.to_thread(
-            create_banner_card,
-            title="ADMIN XP GRANTED",
-            subtitle=f"Added bonus XP to {member.display_name}'s account!",
-            highlights=[
-                ("XP ADDED", f"+{added} XP"),
-                ("NEW LEVEL", f"LEVEL {udata['level']}"),
-                ("TOTAL XP", f"{udata['total_xp']} XP")
-            ],
-            footer=f"Authorized by Admin: {interaction.user.display_name}",
-            avatar_url=str(member.display_avatar.url),
-            theme_name="emerald"
-        )
-        await self.send_card_interaction(interaction, card_path, "givexp.png")
-
-    @app_commands.command(name="removexp", description="[Admin] Remove XP from a member.")
-    @app_commands.checks.has_permissions(administrator=True)
-    async def removexp_slash(self, interaction: discord.Interaction, member: discord.Member, amount: int):
-        await interaction.response.defer()
-        udata = self.get_user_data(interaction.guild.id, member.id, member.display_name)
-        removed = max(1, amount)
-        udata["xp"] = max(0, udata["xp"] - removed)
-        udata["total_xp"] = max(0, udata["total_xp"] - removed)
-        self.save_data()
-
-        card_path = await asyncio.to_thread(
-            create_banner_card,
-            title="ADMIN XP DEDUCTED",
-            subtitle=f"Removed XP from {member.display_name}'s account.",
-            highlights=[
-                ("XP REMOVED", f"-{removed} XP"),
-                ("CURRENT XP", f"{udata['xp']} XP"),
-                ("LEVEL", f"LEVEL {udata['level']}")
-            ],
-            footer=f"Authorized by Admin: {interaction.user.display_name}",
-            avatar_url=str(member.display_avatar.url),
-            theme_name="crimson"
-        )
-        await self.send_card_interaction(interaction, card_path, "removexp.png")
-
-    @app_commands.command(name="setlevel", description="[Admin] Set a member's exact level (Starts from 0).")
-    @app_commands.checks.has_permissions(administrator=True)
-    async def setlevel_slash(self, interaction: discord.Interaction, member: discord.Member, level: int):
-        await interaction.response.defer()
-        udata = self.get_user_data(interaction.guild.id, member.id, member.display_name)
-        udata["level"] = max(0, level)
-        udata["xp"] = 0
-        self.save_data()
-
-        card_path = await asyncio.to_thread(
-            create_banner_card,
-            title="MEMBER LEVEL UPDATED",
-            subtitle=f"{member.display_name}'s level has been manually updated!",
-            highlights=[
-                ("NEW LEVEL", f"LEVEL {udata['level']}"),
-                ("CURRENT XP", "0 XP"),
-                ("REQUIRED XP", f"{self.get_max_xp(udata['level'])} XP")
-            ],
-            footer=f"Authorized by Admin: {interaction.user.display_name}",
-            avatar_url=str(member.display_avatar.url),
-            theme_name="ocean"
-        )
-        await self.send_card_interaction(interaction, card_path, "setlevel.png")
-
-    @app_commands.command(name="resetxp", description="[Admin] Reset a member or the entire server back to Level 0 (0 XP).")
-    @app_commands.checks.has_permissions(administrator=True)
-    async def resetxp_slash(self, interaction: discord.Interaction, member: discord.Member = None):
-        await interaction.response.defer()
-        gdata = self.get_guild_data(interaction.guild.id)
-        if member:
-            gdata["users"].pop(str(member.id), None)
-            self.get_user_data(interaction.guild.id, member.id, member.display_name)
-            target_title = "MEMBER XP RESET"
-            target_sub = f"{member.display_name}'s leveling data has been reset to Level 0 (0 XP)."
-            scope_val = member.display_name[:16]
-        else:
-            gdata["users"] = {}
-            self.save_data()
-            target_title = "FULL SERVER XP RESET"
-            target_sub = "All server members have been reset to Level 0 (0 XP)."
-            scope_val = "ENTIRE SERVER"
-
-        card_path = await asyncio.to_thread(
-            create_banner_card,
-            title=target_title,
-            subtitle=target_sub,
-            highlights=[
-                ("SCOPE", scope_val),
-                ("STARTING LEVEL", "LEVEL 0"),
-                ("STARTING XP", "0 / 100 XP")
-            ],
-            footer=f"Authorized by Admin: {interaction.user.display_name}",
-            avatar_url=str(interaction.user.display_avatar.url),
-            theme_name="crimson"
-        )
-        await self.send_card_interaction(interaction, card_path, "resetxp.png")
-
-    @app_commands.command(name="rolereward", description="[Admin] Add or remove an automatic role reward for a specific level.")
-    @app_commands.choices(action=[
-        app_commands.Choice(name="Add / Update Role Reward", value="add"),
-        app_commands.Choice(name="Remove Role Reward", value="remove")
-    ])
-    @app_commands.checks.has_permissions(administrator=True)
-    async def rolereward_slash(self, interaction: discord.Interaction, action: app_commands.Choice[str], level: int, role: discord.Role = None):
-        await interaction.response.defer()
-        gdata = self.get_guild_data(interaction.guild.id)
-        if action.value == "add":
-            if not role:
-                await interaction.followup.send("Please select a role when adding a role reward.", ephemeral=True)
-                return
-            gdata["role_rewards"][str(level)] = role.id
-            self.save_data()
-            act_txt = "REWARD ADDED"
-            r_txt = f"@{role.name[:16]}"
-        else:
-            gdata["role_rewards"].pop(str(level), None)
-            self.save_data()
-            act_txt = "REWARD REMOVED"
-            r_txt = "NONE"
-
-        card_path = await asyncio.to_thread(
-            create_banner_card,
-            title="ROLE REWARD CONFIGURED",
-            subtitle=f"Updated automatic level-up role reward configuration for Level {level}.",
-            highlights=[
-                ("STATUS", act_txt),
-                ("TARGET LEVEL", f"LEVEL {level}"),
-                ("ROLE", r_txt)
-            ],
-            footer=f"Authorized by Admin: {interaction.user.display_name}",
-            theme_name="gold"
-        )
-        await self.send_card_interaction(interaction, card_path, "rolereward.png")
-
-    @app_commands.command(name="xpmultiplier", description="[Admin] Set server-wide XP boost multiplier (e.g. 1.0, 2.0, 3.0).")
-    @app_commands.checks.has_permissions(administrator=True)
-    async def xpmultiplier_slash(self, interaction: discord.Interaction, rate: float):
-        await interaction.response.defer()
-        gdata = self.get_guild_data(interaction.guild.id)
-        gdata["multiplier"] = max(0.5, min(rate, 10.0))
-        self.save_data()
-
-        card_path = await asyncio.to_thread(
-            create_banner_card,
-            title="SERVER XP MULTIPLIER UPDATED",
-            subtitle=f"Global XP gain rate has been set to {gdata['multiplier']:.1f}x for all members!",
-            highlights=[
-                ("ACTIVE BOOST", f"{gdata['multiplier']:.1f}X XP"),
-                ("TEXT XP", "BOOSTED"),
-                ("STATUS", "ONLINE")
-            ],
-            footer=f"Authorized by Admin: {interaction.user.display_name}",
-            theme_name="neon_violet"
-        )
-        await self.send_card_interaction(interaction, card_path, "multiplier.png")
-
-    @app_commands.command(name="levelchannel", description="[Admin] Set the channel for level-up announcements (leave empty to reset).")
-    @app_commands.checks.has_permissions(administrator=True)
-    async def levelchannel_slash(self, interaction: discord.Interaction, channel: discord.TextChannel = None):
-        await interaction.response.defer()
-        gdata = self.get_guild_data(interaction.guild.id)
-        if channel:
-            gdata["level_channel"] = channel.id
-            ch_name = f"#{channel.name[:16]}"
-        else:
-            gdata["level_channel"] = None
-            ch_name = "CURRENT CHANNEL"
-        self.save_data()
-
-        card_path = await asyncio.to_thread(
-            create_banner_card,
-            title="LEVEL-UP CHANNEL UPDATED",
-            subtitle="Configured where level-up announcement cards will be sent.",
-            highlights=[
-                ("TARGET CHANNEL", ch_name),
-                ("CARD ALERTS", "ENABLED")
-            ],
-            footer=f"Authorized by Admin: {interaction.user.display_name}",
-            theme_name="ocean"
-        )
-        await self.send_card_interaction(interaction, card_path, "levelchannel.png")
-
-    @app_commands.command(name="ignorechannel", description="[Admin] Toggle XP gain on/off in a specific channel.")
-    @app_commands.checks.has_permissions(administrator=True)
-    async def ignorechannel_slash(self, interaction: discord.Interaction, channel: discord.TextChannel):
-        await interaction.response.defer()
-        gdata = self.get_guild_data(interaction.guild.id)
-        ignored = gdata.get("ignored_channels", [])
-        if channel.id in ignored:
-            ignored.remove(channel.id)
-            state_str = "XP ENABLED"
-        else:
-            ignored.append(channel.id)
-            gdata["ignored_channels"] = ignored
-            state_str = "XP DISABLED"
-        self.save_data()
-
-        card_path = await asyncio.to_thread(
-            create_banner_card,
-            title="CHANNEL XP FILTER UPDATED",
-            subtitle=f"Updated XP gain settings for #{channel.name}.",
-            highlights=[
-                ("CHANNEL", f"#{channel.name[:16]}"),
-                ("XP STATUS", state_str)
-            ],
-            footer=f"Authorized by Admin: {interaction.user.display_name}",
-            theme_name="sunset"
-        )
-        await self.send_card_interaction(interaction, card_path, "ignorechannel.png")
-
-    @app_commands.command(name="servercard", description="[Admin] Set default Rank Card theme and background for the server.")
-    @app_commands.choices(theme=[
-        app_commands.Choice(name="Crimson Rose (Red)", value="crimson"),
-        app_commands.Choice(name="Cyber Violet (Purple)", value="neon_violet"),
-        app_commands.Choice(name="Emerald Matrix (Green)", value="emerald"),
-        app_commands.Choice(name="Royal Gold (Gold)", value="gold"),
-        app_commands.Choice(name="Electric Ocean (Blue)", value="ocean"),
-        app_commands.Choice(name="Sunset Blaze (Orange/Red)", value="sunset"),
-        app_commands.Choice(name="Tokyo Neon (Pink)", value="cyber_pink"),
-        app_commands.Choice(name="Arctic Frost (Cyan)", value="ice_cyan"),
-    ])
-    @app_commands.checks.has_permissions(administrator=True)
-    async def servercard_slash(
-        self,
-        interaction: discord.Interaction,
-        theme: app_commands.Choice[str] = None,
-        bg_url: str = None
-    ):
-        await interaction.response.defer()
-        gdata = self.get_guild_data(interaction.guild.id)
-        if theme:
-            gdata["theme"] = theme.value
-        if bg_url:
-            gdata["bg_url"] = None if bg_url.lower() in ["none", "reset", "clear"] else bg_url
-        self.save_data()
-
-        card_path = await asyncio.to_thread(
-            create_banner_card,
-            title="SERVER CARD THEME UPDATED",
-            subtitle="Updated the default visual theme and background for all server cards!",
-            highlights=[
-                ("ACTIVE THEME", gdata.get("theme", "crimson").upper()),
-                ("CUSTOM BG", "SET" if gdata.get("bg_url") else "DEFAULT GLOW")
-            ],
-            footer=f"Authorized by Admin: {interaction.user.display_name}",
-            theme_name=gdata.get("theme", "crimson"),
-            bg_url=gdata.get("bg_url")
-        )
-        await self.send_card_interaction(interaction, card_path, "servercard.png")
 
 
 async def setup(bot: commands.Bot):

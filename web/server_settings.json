@@ -1,0 +1,41 @@
+{
+    "1568187829022892062": {
+        "prefix": "!",
+        "leveling_enabled": true,
+        "theme": "crimson",
+        "bg_url": "",
+        "multiplier": 1.0,
+        "economy_enabled": true,
+        "currency_name": "Coins",
+        "starting_balance": 1000,
+        "automod_enabled": true,
+        "welcome_enabled": true,
+        "welcome_msg": "Welcome to the server!"
+    },
+    "1541004653951590432": {
+        "prefix": "!",
+        "leveling_enabled": false,
+        "theme": "crimson",
+        "bg_url": "",
+        "multiplier": 1.0,
+        "economy_enabled": true,
+        "currency_name": "Coins",
+        "starting_balance": 1000,
+        "automod_enabled": true,
+        "welcome_enabled": true,
+        "welcome_msg": "Welcome to the server!"
+    },
+    "866932175878225950": {
+        "prefix": "!",
+        "leveling_enabled": false,
+        "theme": "crimson",
+        "bg_url": "",
+        "multiplier": 1.0,
+        "economy_enabled": true,
+        "currency_name": "Coins",
+        "starting_balance": 1000,
+        "automod_enabled": true,
+        "welcome_enabled": true,
+        "welcome_msg": "Welcome to the server!"
+    }
+}

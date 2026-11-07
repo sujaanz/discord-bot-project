@@ -1,24 +1,22 @@
-# Environment variables and sensitive keys
+# --- Environment & Credentials ---
 .env
 
-# Python cache files and directories
+# --- Python Bytecode & Cache ---
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-*.pyz
-
-# Virtual environments
-venv/
-env/
-ENV/
 .venv/
+env/
+venv/
 
-# Local database and server settings
-web/server_settings.json
-data/
+# --- VS Code Settings ---
+.vscode/
 
-# OS generated files
-Thumbs.db
-Desktop.ini
+# --- Generated Rank Card Images ---
+bot/data/rank_*.png
+bot/data/*.png
+
+# --- OS Specific Files ---
 .DS_Store
+Thumbs.db

@@ -1,7 +1,7 @@
 {
     "1568187829022892062": {
         "prefix": "!",
-        "leveling_enabled": true,
+        "leveling_enabled": false,
         "theme": "crimson",
         "bg_url": "",
         "multiplier": 1.0,

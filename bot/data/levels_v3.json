@@ -1,3 +1,42 @@
 {
-    "guilds": {}
+    "guilds": {
+        "1568187829022892062": {
+            "name": "Sofiya \ud83c\udf38",
+            "enabled": false,
+            "theme": "crimson",
+            "default_card_style": "bento",
+            "default_avatar_shape": "auto",
+            "bg_url": null,
+            "levelup_bg_url": null,
+            "multiplier": 1.0,
+            "notify_mode": "current",
+            "level_channel": null,
+            "levelup_message": "GG {user.mention}, you just advanced to **Level {level}**!",
+            "send_text": true,
+            "send_card": true,
+            "xp_text": true,
+            "xp_voice": true,
+            "xp_threads": true,
+            "min_xp": 15,
+            "max_xp": 25,
+            "cooldown_seconds": 5,
+            "voice_xp_per_min": 10,
+            "ignored_channels": [],
+            "ignored_roles": [],
+            "boosted_channels": [],
+            "role_rewards": {},
+            "stack_roles": true,
+            "role_multipliers": {},
+            "command_toggles": {
+                "rank": true,
+                "leaderboard": true,
+                "daily": true,
+                "prestige": true,
+                "mycard": true,
+                "xpstats": true,
+                "rewards": true
+            },
+            "users": {}
+        }
+    }
 }

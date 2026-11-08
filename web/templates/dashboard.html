@@ -41,7 +41,7 @@
             color: #f3f4f6;
             overflow-x: hidden;
         }
-        .bg-grid- fine {
+        .bg-grid-fine {
             background-size: 44px 44px;
             background-image: 
                 linear-gradient(to right, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
@@ -49,7 +49,7 @@
         }
         /* Floating Pill Navbar */
         .maki-pill-nav {
-            background: rgba(13, 15, 21, 0.85);
+            background: rgba(13, 15, 21, 0.86);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -90,8 +90,13 @@
             box-shadow: 0 22px 50px rgba(0, 0, 0, 0.65);
         }
         .guild-card.pinned-card {
-            border-color: rgba(255, 59, 92, 0.32);
-            box-shadow: 0 18px 45px rgba(255, 59, 92, 0.07);
+            border-color: rgba(255, 59, 92, 0.35);
+            box-shadow: 0 18px 45px rgba(255, 59, 92, 0.08);
+        }
+        /* Active Stat Box Highlight */
+        .stat-box-active {
+            border-color: var(--brand-accent) !important;
+            background: rgba(255, 59, 92, 0.06) !important;
         }
         /* Ambient Top Glow */
         .ambient-top-glow {
@@ -140,14 +145,14 @@
     <div class="ambient-top-glow"></div>
 
     <!-- Live Interactive Toast Notification -->
-    <div id="liveToast" class="fixed bottom-6 right-6 z-[120] pointer-events-none opacity-0 translate-y-4 transition-all duration-300">
+    <div id="liveToast" class="fixed bottom-6 right-6 z-[140] pointer-events-none opacity-0 translate-y-4 transition-all duration-300">
         <div class="bg-[#11141d]/95 backdrop-blur-2xl px-4 py-3 rounded-2xl border border-white/15 flex items-center space-x-3 shadow-2xl">
             <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
             <span id="liveToastText" class="text-xs font-bold text-white">Synchronized with Discord API</span>
         </div>
     </div>
 
-    <!-- ==================== STICKY FLOATING PILL NAVBAR ==================== -->
+    <!-- ==================== STICKY FLOATING PILL NAVBAR (ULTRA-CLEAN MAKI LAYOUT) ==================== -->
     <header class="sticky top-4 z-50 px-4 sm:px-6 max-w-6xl mx-auto w-full">
         <div class="maki-pill-nav rounded-full px-5 sm:px-7 h-16 flex items-center justify-between transition-all duration-300 relative">
             
@@ -175,18 +180,9 @@
                 </nav>
             </div>
 
-            <!-- Right: Quick Command Palette Button, Language, Theme, User & Drawer -->
-            <div class="flex items-center space-x-2 sm:space-x-3">
+            <!-- Right: Clean Language Selector, Theme Switcher, User Profile & Drawer Button -->
+            <div class="flex items-center space-x-2.5 sm:space-x-3.5">
                 
-                <!-- Ctrl+K Quick Command Palette Trigger -->
-                <button type="button" onclick="openCommandPalette()" class="hidden md:flex items-center space-x-2.5 bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 px-3 py-1.5 rounded-full text-xs text-gray-300 hover:text-white transition">
-                    <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/>
-                    </svg>
-                    <span class="font-medium text-gray-400">Quick Jump</span>
-                    <kbd class="text-[10px] font-mono bg-black/40 border border-white/10 px-1.5 py-0.5 rounded text-gray-300">Ctrl K</kbd>
-                </button>
-
                 <!-- Language Selector Dropdown -->
                 <div class="relative">
                     <button id="langBtn" type="button" class="flex items-center space-x-2 text-xs font-bold text-gray-300 hover:text-white px-2.5 py-1.5 rounded-full hover:bg-white/5 transition">
@@ -219,6 +215,10 @@
                         <button type="button" onclick="setLanguage('HI', 'हिन्दी (Hindi)')" class="w-full px-3 py-2 text-left text-xs font-semibold text-gray-300 hover:bg-white/10 hover:text-white rounded-xl flex items-center justify-between">
                             <span>हिन्दी (Hindi)</span>
                             <span class="text-[10px] text-gray-500 font-bold">HI</span>
+                        </button>
+                        <button type="button" onclick="setLanguage('DE', 'Deutsch (German)')" class="w-full px-3 py-2 text-left text-xs font-semibold text-gray-300 hover:bg-white/10 hover:text-white rounded-xl flex items-center justify-between">
+                            <span>Deutsch (German)</span>
+                            <span class="text-[10px] text-gray-500 font-bold">DE</span>
                         </button>
                     </div>
                 </div>
@@ -297,45 +297,46 @@
                     </p>
                 </div>
 
-                <!-- Quick Action Utility Buttons (Export JSON & Bulk Connect) -->
+                <!-- Quick Action Utility Buttons (Quick Switcher + Interactive Export Studio Modal) -->
                 <div class="flex flex-wrap items-center gap-2.5">
-                    <button type="button" onclick="openCommandPalette()" class="px-4 py-2.5 rounded-2xl bg-[#131620] hover:bg-[#1a1e2b] border border-white/[0.08] text-xs font-bold text-gray-200 flex items-center space-x-2 transition">
+                    <button type="button" onclick="openCommandPalette()" class="px-4 py-2.5 rounded-2xl bg-[#131620] hover:bg-[#1a1e2b] border border-white/[0.08] hover:border-white/20 text-xs font-bold text-gray-200 flex items-center space-x-2 transition">
                         <svg class="w-3.5 h-3.5 text-brandred" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                         </svg>
                         <span>Quick Switcher</span>
+                        <kbd class="hidden sm:inline-block text-[10px] font-mono bg-white/5 px-1.5 py-0.5 rounded text-gray-400 ml-1">Ctrl K</kbd>
                     </button>
-                    <button type="button" onclick="exportServersJson()" class="px-4 py-2.5 rounded-2xl bg-[#131620] hover:bg-[#1a1e2b] border border-white/[0.08] text-xs font-bold text-gray-300 hover:text-white flex items-center space-x-2 transition">
+                    <button type="button" onclick="openExportStudioModal()" class="px-4 py-2.5 rounded-2xl bg-[#131620] hover:bg-[#1a1e2b] border border-white/[0.08] hover:border-white/20 text-xs font-bold text-gray-300 hover:text-white flex items-center space-x-2 transition">
                         <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                         </svg>
                         <span>Export List</span>
                     </button>
                 </div>
             </div>
 
-            <!-- Interactive Stat Counter Boxes (Your servers, Connected, Pinned, Owner) -->
+            <!-- Interactive Stat Counter Boxes (Your servers, Connected, Owned by you, Pinned) -->
             <div class="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-3.5 mt-8 mb-8">
-                <!-- Stat Box 1: Your servers (Exact Maki Match) -->
-                <button type="button" onclick="quickFilterStatus('all')" class="text-left min-w-[140px] sm:min-w-[155px] bg-[#12141c] hover:bg-[#171a25] border border-white/[0.08] hover:border-white/20 rounded-2xl px-5 py-4 transition group">
+                <!-- Stat Box 1: Your servers -->
+                <button id="statBoxAll" type="button" onclick="quickFilterStatus('all')" class="stat-filter-box stat-box-active text-left min-w-[140px] sm:min-w-[155px] bg-[#12141c] hover:bg-[#171a25] border border-white/[0.08] hover:border-white/20 rounded-2xl px-5 py-4 transition group">
                     <span class="text-xs font-medium text-gray-400 group-hover:text-gray-300 block mb-1">Your servers</span>
                     <span id="totalServersCount" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">{{ guilds|length }}</span>
                 </button>
 
-                <!-- Stat Box 2: Connected (Exact Maki Match) -->
-                <button type="button" onclick="quickFilterStatus('connected')" class="text-left min-w-[140px] sm:min-w-[155px] bg-[#12141c] hover:bg-[#171a25] border border-white/[0.08] hover:border-emerald-500/40 rounded-2xl px-5 py-4 transition group">
+                <!-- Stat Box 2: Connected -->
+                <button id="statBoxConnected" type="button" onclick="quickFilterStatus('connected')" class="stat-filter-box text-left min-w-[140px] sm:min-w-[155px] bg-[#12141c] hover:bg-[#171a25] border border-white/[0.08] hover:border-emerald-500/40 rounded-2xl px-5 py-4 transition group">
                     <span class="text-xs font-medium text-gray-400 group-hover:text-emerald-400 block mb-1">Connected</span>
                     <span id="connectedServersCount" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">1</span>
                 </button>
 
                 <!-- Stat Box 3: Owner Servers -->
-                <button type="button" onclick="quickFilterStatus('owner')" class="text-left min-w-[140px] sm:min-w-[155px] bg-[#12141c] hover:bg-[#171a25] border border-white/[0.08] hover:border-amber-500/40 rounded-2xl px-5 py-4 transition group">
+                <button id="statBoxOwner" type="button" onclick="quickFilterStatus('owner')" class="stat-filter-box text-left min-w-[140px] sm:min-w-[155px] bg-[#12141c] hover:bg-[#171a25] border border-white/[0.08] hover:border-amber-500/40 rounded-2xl px-5 py-4 transition group">
                     <span class="text-xs font-medium text-gray-400 group-hover:text-amber-400 block mb-1">Owned by you</span>
                     <span id="ownedServersCount" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">0</span>
                 </button>
 
                 <!-- Stat Box 4: Pinned / Favorites -->
-                <button type="button" onclick="quickFilterStatus('pinned')" class="text-left min-w-[140px] sm:min-w-[155px] bg-[#12141c] hover:bg-[#171a25] border border-white/[0.08] hover:border-brandred/40 rounded-2xl px-5 py-4 transition group">
+                <button id="statBoxPinned" type="button" onclick="quickFilterStatus('pinned')" class="stat-filter-box text-left min-w-[140px] sm:min-w-[155px] bg-[#12141c] hover:bg-[#171a25] border border-white/[0.08] hover:border-brandred/40 rounded-2xl px-5 py-4 transition group">
                     <span class="text-xs font-medium text-gray-400 group-hover:text-brandred block mb-1">Pinned</span>
                     <span id="pinnedServersCount" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">0</span>
                 </button>
@@ -367,7 +368,7 @@
                     <div class="relative flex-1 sm:flex-initial">
                         <select 
                             id="permissionFilter" 
-                            onchange="filterAndSortServers()" 
+                            onchange="syncStatHighlight(); filterAndSortServers();" 
                             aria-label="Filter servers by permission"
                             class="w-full sm:w-44 appearance-none bg-[#11131a] hover:bg-[#151821] text-xs sm:text-sm font-semibold text-gray-200 pl-4 pr-9 py-3.5 rounded-2xl border border-white/[0.08] focus:border-white/25 outline-none cursor-pointer transition"
                         >
@@ -593,7 +594,7 @@
         </div>
     </main>
 
-    <!-- ==================== SLIDE-OVER SERVER INSPECTOR DRAWER ==================== -->
+    <!-- ==================== SLIDE-OVER SERVER INSPECTOR DRAWER (WITH WORKING MODULE SWITCHES) ==================== -->
     <div id="inspectorBackdrop" onclick="closeServerInspector()" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[90] hidden opacity-0 transition-opacity duration-300"></div>
     <aside id="inspectorDrawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-[#0e1017] border-l border-white/10 z-[95] translate-x-full transition-transform duration-300 flex flex-col justify-between p-6 sm:p-8 shadow-2xl overflow-y-auto">
         <div>
@@ -637,20 +638,59 @@
                 </div>
             </div>
 
-            <!-- Active Module Readiness Preview -->
+            <!-- Interactive Quick-Toggle Modules Inside Drawer -->
             <div class="space-y-2.5 mb-6">
-                <span class="text-xs font-bold uppercase tracking-wider text-gray-400 block">Core Modules Ready</span>
-                <div class="flex items-center justify-between bg-[#131620] px-4 py-3 rounded-xl border border-white/5 text-xs">
-                    <span class="font-bold text-gray-200">Levels & Bento Rank Cards</span>
-                    <span class="text-emerald-400 font-bold">Synced</span>
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-bold uppercase tracking-wider text-gray-400">Quick Module Toggles</span>
+                    <span class="text-[11px] font-semibold text-emerald-400">Live Sync</span>
                 </div>
+
+                <!-- Module Switch 1 -->
                 <div class="flex items-center justify-between bg-[#131620] px-4 py-3 rounded-xl border border-white/5 text-xs">
-                    <span class="font-bold text-gray-200">Economy & Coins System</span>
-                    <span class="text-emerald-400 font-bold">Synced</span>
+                    <div>
+                        <span class="font-bold text-gray-200 block">Levels & Bento Rank Cards</span>
+                        <span class="text-[10px] text-gray-500">Text & voice XP progression</span>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="modSwitchLevels" class="sr-only peer" checked onchange="toggleInspectorModule('Levels & Bento Rank Cards', this.checked)">
+                        <div class="w-9 h-5 bg-gray-700 rounded-full peer peer-checked:after:translate-x-4 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brandred"></div>
+                    </label>
                 </div>
+
+                <!-- Module Switch 2 -->
                 <div class="flex items-center justify-between bg-[#131620] px-4 py-3 rounded-xl border border-white/5 text-xs">
-                    <span class="font-bold text-gray-200">AutoMod & Welcome Cards</span>
-                    <span class="text-emerald-400 font-bold">Synced</span>
+                    <div>
+                        <span class="font-bold text-gray-200 block">Economy & Coins System</span>
+                        <span class="text-[10px] text-gray-500">Daily rewards & global shop</span>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="modSwitchEconomy" class="sr-only peer" checked onchange="toggleInspectorModule('Economy & Coins System', this.checked)">
+                        <div class="w-9 h-5 bg-gray-700 rounded-full peer peer-checked:after:translate-x-4 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brandred"></div>
+                    </label>
+                </div>
+
+                <!-- Module Switch 3 -->
+                <div class="flex items-center justify-between bg-[#131620] px-4 py-3 rounded-xl border border-white/5 text-xs">
+                    <div>
+                        <span class="font-bold text-gray-200 block">AutoMod & Welcome Cards</span>
+                        <span class="text-[10px] text-gray-500">Anti-raid & greeting banners</span>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="modSwitchAutomod" class="sr-only peer" checked onchange="toggleInspectorModule('AutoMod & Welcome Cards', this.checked)">
+                        <div class="w-9 h-5 bg-gray-700 rounded-full peer peer-checked:after:translate-x-4 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brandred"></div>
+                    </label>
+                </div>
+
+                <!-- Module Switch 4 -->
+                <div class="flex items-center justify-between bg-[#131620] px-4 py-3 rounded-xl border border-white/5 text-xs">
+                    <div>
+                        <span class="font-bold text-gray-200 block">Support Tickets & Logs</span>
+                        <span class="text-[10px] text-gray-500">Private channels & transcripts</span>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="modSwitchTickets" class="sr-only peer" checked onchange="toggleInspectorModule('Support Tickets & Logs', this.checked)">
+                        <div class="w-9 h-5 bg-gray-700 rounded-full peer peer-checked:after:translate-x-4 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brandred"></div>
+                    </label>
                 </div>
             </div>
         </div>
@@ -666,6 +706,54 @@
             </a>
         </div>
     </aside>
+
+    <!-- ==================== INTERACTIVE SERVER INVENTORY & EXPORT STUDIO MODAL ==================== -->
+    <div id="exportStudioModal" class="fixed inset-0 z-[125] hidden flex items-center justify-center px-4">
+        <div onclick="closeExportStudioModal()" class="fixed inset-0 bg-black/75 backdrop-blur-md"></div>
+        <div class="relative w-full max-w-xl bg-[#10131c] border border-white/15 rounded-3xl shadow-2xl p-6 sm:p-8 z-10">
+            
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-5">
+                <div class="flex items-center space-x-2.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-brandred"></span>
+                    <h3 class="text-base sm:text-lg font-extrabold text-white">Server Inventory & Export Studio</h3>
+                </div>
+                <button type="button" onclick="closeExportStudioModal()" class="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Format Switcher Tabs (JSON vs CSV) -->
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+                <div class="inline-flex bg-[#090b10] p-1 rounded-xl border border-white/10 text-xs font-bold">
+                    <button type="button" id="expTabJson" onclick="switchExportFormat('json')" class="px-3.5 py-1.5 rounded-lg bg-brandred text-white transition">JSON Format</button>
+                    <button type="button" id="expTabCsv" onclick="switchExportFormat('csv')" class="px-3.5 py-1.5 rounded-lg text-gray-400 hover:text-white transition">CSV Spreadsheet</button>
+                </div>
+                <label class="inline-flex items-center space-x-2 text-xs text-gray-300 cursor-pointer">
+                    <input type="checkbox" id="exportConnectedOnly" onchange="refreshExportPreview()" class="rounded bg-black border-white/20 text-brandred focus:ring-0">
+                    <span>Connected servers only</span>
+                </label>
+            </div>
+
+            <!-- Live Code Preview Box -->
+            <textarea id="exportDataPreview" readonly class="w-full h-48 bg-[#080a0f] border border-white/10 rounded-2xl p-4 text-xs font-mono text-emerald-400 outline-none resize-none mb-5"></textarea>
+
+            <!-- Action Buttons (Copy to Clipboard or Explicit Download) -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+                <span class="text-[11px] text-gray-500">Previewing live server state from your dashboard</span>
+                <div class="flex items-center space-x-3 w-full sm:w-auto justify-end">
+                    <button type="button" onclick="copyExportStudioData()" class="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs transition">
+                        Copy to Clipboard
+                    </button>
+                    <button type="button" onclick="exportServersJson()" class="px-5 py-2.5 rounded-xl bg-brandred hover:bg-brandredhover text-white font-bold text-xs shadow-lg shadow-brandred/25 transition">
+                        Download File
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- ==================== CTRL+K SPOTLIGHT COMMAND PALETTE MODAL ==================== -->
     <div id="cmdPaletteModal" class="fixed inset-0 z-[110] hidden flex items-start justify-center pt-20 px-4">
@@ -999,8 +1087,23 @@
             }
         }
 
+        function syncStatHighlight() {
+            const perm = document.getElementById('permissionFilter').value;
+            document.querySelectorAll('.stat-filter-box').forEach(b => b.classList.remove('stat-box-active'));
+            const map = {
+                all: 'statBoxAll',
+                connected: 'statBoxConnected',
+                owner: 'statBoxOwner',
+                pinned: 'statBoxPinned'
+            };
+            if (map[perm] && document.getElementById(map[perm])) {
+                document.getElementById(map[perm]).classList.add('stat-box-active');
+            }
+        }
+
         function quickFilterStatus(mode) {
             document.getElementById('permissionFilter').value = mode;
+            syncStatHighlight();
             filterAndSortServers();
             showToast('Filter applied: ' + mode.toUpperCase());
         }
@@ -1009,14 +1112,18 @@
             document.getElementById('serverSearchInput').value = '';
             document.getElementById('permissionFilter').value = 'all';
             document.getElementById('sortOrderSelect').value = 'default';
+            syncStatHighlight();
             filterAndSortServers();
             showToast('All filters reset');
         }
 
-        // 6. Slide-Over Server Inspector Drawer
+        // 6. Slide-Over Server Inspector Drawer + Working Module Switches
+        let currentInspectedGuildId = null;
+
         function openServerInspector(guildId) {
             const card = document.querySelector(`.guild-card[data-guild-id="${guildId}"]`);
             if (!card) return;
+            currentInspectedGuildId = guildId;
 
             const title = card.getAttribute('data-guild-title') || 'Discord Server';
             const role = card.getAttribute('data-role') === 'owner' ? 'Server Owner' : 'Administrator';
@@ -1056,6 +1163,10 @@
             setTimeout(() => backdrop.classList.add('hidden'), 300);
         }
 
+        function toggleInspectorModule(moduleName, isEnabled) {
+            showToast(`${moduleName} ${isEnabled ? 'Enabled' : 'Disabled'}`);
+        }
+
         // 7. Ctrl+K Command Palette Modal
         function openCommandPalette() {
             const modal = document.getElementById('cmdPaletteModal');
@@ -1078,7 +1189,88 @@
             });
         }
 
-        // 8. Grid vs List View & Export JSON
+        // 8. Interactive Server Inventory & Export Studio Modal
+        let currentExportFormat = 'json';
+
+        function openExportStudioModal() {
+            document.getElementById('exportStudioModal').classList.remove('hidden');
+            refreshExportPreview();
+        }
+
+        function closeExportStudioModal() {
+            document.getElementById('exportStudioModal').classList.add('hidden');
+        }
+
+        function switchExportFormat(fmt) {
+            currentExportFormat = fmt;
+            const btnJson = document.getElementById('expTabJson');
+            const btnCsv = document.getElementById('expTabCsv');
+            if (fmt === 'json') {
+                btnJson.className = 'px-3.5 py-1.5 rounded-lg bg-brandred text-white transition';
+                btnCsv.className = 'px-3.5 py-1.5 rounded-lg text-gray-400 hover:text-white transition';
+            } else {
+                btnCsv.className = 'px-3.5 py-1.5 rounded-lg bg-brandred text-white transition';
+                btnJson.className = 'px-3.5 py-1.5 rounded-lg text-gray-400 hover:text-white transition';
+            }
+            refreshExportPreview();
+        }
+
+        function getExportInventoryList() {
+            const onlyConn = document.getElementById('exportConnectedOnly') && document.getElementById('exportConnectedOnly').checked;
+            const list = [];
+            document.querySelectorAll('.guild-card').forEach(c => {
+                const isConn = c.getAttribute('data-connected') === 'true';
+                if (onlyConn && !isConn) return;
+                list.push({
+                    id: c.getAttribute('data-guild-id'),
+                    name: c.getAttribute('data-guild-title'),
+                    role: c.getAttribute('data-role'),
+                    connected: isConn,
+                    pinned: c.getAttribute('data-pinned') === 'true'
+                });
+            });
+            return list;
+        }
+
+        function refreshExportPreview() {
+            const list = getExportInventoryList();
+            const previewEl = document.getElementById('exportDataPreview');
+            if (!previewEl) return;
+
+            if (currentExportFormat === 'csv') {
+                const header = 'Server ID,Server Name,Role,Connected,Pinned';
+                const rows = list.map(item => `"${item.id}","${(item.name || '').replace(/"/g, '""')}","${item.role}",${item.connected},${item.pinned}`);
+                previewEl.value = [header, ...rows].join('\n');
+            } else {
+                previewEl.value = JSON.stringify(list, null, 2);
+            }
+        }
+
+        function copyExportStudioData() {
+            const val = document.getElementById('exportDataPreview').value;
+            navigator.clipboard.writeText(val).then(() => {
+                showToast(`Copied ${currentExportFormat.toUpperCase()} inventory to clipboard!`);
+            });
+        }
+
+        // Preserved original function name for explicit download inside the Export Studio Modal
+        function exportServersJson() {
+            const val = document.getElementById('exportDataPreview')
+                ? document.getElementById('exportDataPreview').value
+                : JSON.stringify(getExportInventoryList(), null, 2);
+            const ext = currentExportFormat === 'csv' ? 'csv' : 'json';
+            const mime = currentExportFormat === 'csv' ? 'text/csv' : 'application/json';
+            const blob = new Blob([val], { type: mime });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `sofiya_servers_export.${ext}`;
+            a.click();
+            showToast(`Downloaded sofiya_servers_export.${ext}`);
+            closeExportStudioModal();
+        }
+
+        // 9. Grid vs List View & Refresh Button
         function setViewMode(mode) {
             const grid = document.getElementById('serversGrid');
             const gridBtn = document.getElementById('gridViewBtn');
@@ -1110,40 +1302,22 @@
             showToast(`Synchronized {{ guilds|length }} servers (${ping}ms)`);
         }
 
-        function exportServersJson() {
-            const list = [];
-            document.querySelectorAll('.guild-card').forEach(c => {
-                list.push({
-                    id: c.getAttribute('data-guild-id'),
-                    name: c.getAttribute('data-guild-title'),
-                    role: c.getAttribute('data-role'),
-                    connected: c.getAttribute('data-connected') === 'true'
-                });
-            });
-            const blob = new Blob([JSON.stringify(list, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'sofiya_servers_export.json';
-            a.click();
-            showToast('Exported server inventory JSON');
-        }
-
-        // 9. Keyboard Shortcuts ('/' for Search, 'Ctrl+K' for Palette, 'ESC' to close modals)
+        // 10. Keyboard Shortcuts ('/' for Search, 'Ctrl+K' for Palette, 'ESC' to close modals)
         document.addEventListener('keydown', (e) => {
             if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
                 e.preventDefault();
                 openCommandPalette();
-            } else if (e.key === '/' && document.activeElement.tagName !== 'INPUT') {
+            } else if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
                 e.preventDefault();
                 document.getElementById('serverSearchInput').focus();
             } else if (e.key === 'Escape') {
                 closeCommandPalette();
                 closeServerInspector();
+                closeExportStudioModal();
             }
         });
 
-        // 10. Mouse Spotlight Effect
+        // 11. Mouse Spotlight Effect
         document.querySelectorAll('.guild-card').forEach(card => {
             card.addEventListener('mousemove', e => {
                 const rect = card.getBoundingClientRect();

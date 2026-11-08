@@ -1,89 +1,1338 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="dark scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maki — The Ultimate Discord Bot for Your Community</title>
+    <title>Sofiya — Run Your Whole Community With One App</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
                     colors: {
-                        darkbg: '#0d0d0d',
-                        cardbg: '#141720',
-                        brandred: '#ff4757',
-                        brandredhover: '#ff3344'
+                        darkbg: '#060709',
+                        surface: '#0d0f14',
+                        cardbg: '#12151e',
+                        brandred: 'var(--brand-accent, #ff3b5c)',
+                        brandredhover: 'var(--brand-accent-hover, #e62e4d)',
+                        discord: '#5865F2',
+                        discordhover: '#4752C4'
                     }
                 }
             }
         }
     </script>
+    <style>
+        :root {
+            --brand-accent: #ff3b5c;
+            --brand-accent-hover: #e62e4d;
+            --brand-glow: rgba(255, 59, 92, 0.22);
+        }
+        body {
+            background-color: #060709;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+        /* Subtle Background Grid Texture */
+        .bg-grid-pattern {
+            background-size: 48px 48px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        }
+        /* Floating Pill Navbar */
+        .maki-pill-nav {
+            background: rgba(13, 15, 21, 0.82);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.8);
+        }
+        /* Spotlight Glassmorphism Cards */
+        .glass-card {
+            position: relative;
+            background: linear-gradient(180deg, rgba(20, 23, 33, 0.78) 0%, rgba(12, 14, 20, 0.90) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 22px 55px rgba(0, 0, 0, 0.55);
+            overflow: hidden;
+        }
+        .glass-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 59, 92, 0.09), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+            pointer-events: none;
+        }
+        .glass-card:hover::before {
+            opacity: 1;
+        }
+        .glass-card-hover {
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-card-hover:hover {
+            border-color: rgba(255, 59, 92, 0.38);
+            transform: translateY(-4px);
+            box-shadow: 0 28px 65px rgba(255, 59, 92, 0.09);
+        }
+        /* Discord Mockup Container */
+        .discord-window {
+            background: #111214;
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            box-shadow: 0 25px 65px -15px rgba(0, 0, 0, 0.9);
+        }
+        /* Ambient Background Glows */
+        .hero-radial-glow {
+            position: absolute;
+            top: -130px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1050px;
+            height: 700px;
+            background: radial-gradient(ellipse at center, var(--brand-glow) 0%, rgba(160, 20, 45, 0.06) 45%, rgba(6, 7, 9, 0) 75%);
+            pointer-events: none;
+            z-index: 0;
+            transition: background 0.5s ease;
+        }
+        /* Infinite Marquee Animation */
+        @keyframes marquee {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-marquee {
+            display: flex;
+            width: max-content;
+            animation: marquee 28s linear infinite;
+        }
+        .animate-marquee:hover {
+            animation-play-state: paused;
+        }
+        /* Scroll Reveal Animation */
+        .reveal-section {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.65s ease-out, transform 0.65s ease-out;
+        }
+        .reveal-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
 </head>
-<body class="bg-darkbg text-gray-100 font-sans antialiased selection:bg-brandred selection:text-white">
+<body class="bg-grid-pattern antialiased selection:bg-brandred selection:text-white min-h-screen flex flex-col justify-between relative">
 
-    <header class="sticky top-0 z-50 backdrop-blur-md bg-darkbg/80 border-b border-gray-800/60">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <a href="/" class="flex items-center space-x-2">
-                    <span class="w-8 h-8 bg-brandred rounded-xl flex items-center justify-center font-black text-white text-lg shadow-lg shadow-brandred/30">M</span>
-                    <span class="text-xl font-bold tracking-tight text-white">maki</span>
+    <!-- =====================================================================
+         EDITABLE CONFIGURATION (এখান থেকে আপনার নিজের লিংকগুলো সহজেই বদলে নিতে পারবেন)
+         ===================================================================== -->
+    <script>
+        const SOFIYA_CONFIG = {
+            botName: "Sofiya",
+            discordInviteUrl: "/auth/login",
+            supportServerUrl: "https://discord.gg/",
+            twitterUrl: "https://x.com/SkSujaanMondal",
+            githubUrl: "https://github.com/sujaanz",
+            linkedinUrl: "https://linkedin.com/in/sksujaanmondal"
+        };
+    </script>
+
+    <!-- Ambient Hero Glow -->
+    <div id="heroGlow" class="hero-radial-glow"></div>
+
+    <!-- Live Interactive Toast Notification -->
+    <div id="liveToast" class="fixed bottom-6 right-6 z-[100] pointer-events-none opacity-0 translate-y-4 transition-all duration-300">
+        <div class="glass-card px-4 py-3 rounded-2xl border border-white/15 flex items-center space-x-3 shadow-2xl bg-[#10131c]/95">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+            <span id="liveToastText" class="text-xs font-bold text-white">Synced successfully!</span>
+        </div>
+    </div>
+
+    <!-- ==================== STICKY FLOATING PILL NAVBAR ==================== -->
+    <header class="sticky top-4 z-50 px-4 sm:px-6 max-w-6xl mx-auto w-full">
+        <div class="maki-pill-nav rounded-full px-5 sm:px-7 h-16 flex items-center justify-between transition-all duration-300 relative">
+            
+            <!-- Left: Slanted Maki-Style Vector Logo & Brand Name -->
+            <div class="flex items-center space-x-8">
+                <a href="/" class="flex items-center space-x-3 group">
+                    <svg class="w-8 h-8 text-brandred transition-transform duration-300 group-hover:scale-105" viewBox="0 0 40 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="6" cy="22" r="3.5" fill="currentColor"/>
+                        <path d="M13 8L21 25" stroke="currentColor" stroke-width="5.5" stroke-linecap="round"/>
+                        <path d="M25 6L34 25" stroke="currentColor" stroke-width="5.5" stroke-linecap="round"/>
+                    </svg>
+                    <span class="text-xl font-extrabold tracking-tight text-white">sofiya</span>
+                </a>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden lg:flex items-center space-x-7 text-sm font-semibold text-gray-300">
+                    <a href="#bento-features" class="hover:text-white transition">Features</a>
+                    <a href="/commands" class="hover:text-white transition">Commands</a>
+                    <a href="/tutorials" class="hover:text-white transition">Tutorials</a>
+                    <a href="#modules-cloud" class="hover:text-white transition">Modules</a>
+                    <a href="/dashboard" class="hover:text-white transition">Dashboard</a>
+                </nav>
+            </div>
+
+            <!-- Right: Language Dropdown, Theme Switcher, Auth & Drawer Toggle -->
+            <div class="flex items-center space-x-2.5 sm:space-x-3.5">
+                
+                <!-- Working Language Selector Dropdown -->
+                <div class="relative">
+                    <button id="langBtn" type="button" class="flex items-center space-x-2 text-xs font-bold text-gray-300 hover:text-white px-2.5 py-1.5 rounded-full hover:bg-white/5 transition">
+                        <span id="currentLangCode">EN</span>
+                        <svg class="w-4 h-3 rounded-[2px] shadow-sm" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
+                            <clipPath id="uk-clip"><path d="M0,0 v30 h60 v-30 z"/></clipPath>
+                            <g clip-path="url(#uk-clip)">
+                                <path d="M0,0 v30 h60 v-30 z" fill="#012169"/>
+                                <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>
+                                <path d="M0,0 L60,30 M60,0 L0,30" stroke="#C8102E" stroke-width="4"/>
+                                <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>
+                                <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/>
+                            </g>
+                        </svg>
+                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="9"/>
+                            <path d="M3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 010 18M12 3a15 15 0 000 18"/>
+                        </svg>
+                    </button>
+
+                    <!-- Language Popover Menu -->
+                    <div id="langDropdown" class="hidden absolute right-0 mt-3 w-44 glass-card rounded-2xl p-2 border border-white/10 shadow-2xl z-50">
+                        <button type="button" onclick="setLanguage('EN', 'English (UK)')" class="w-full px-3 py-2 text-left text-xs font-semibold text-white hover:bg-white/10 rounded-xl flex items-center justify-between">
+                            <span>English (UK)</span>
+                            <span class="text-[10px] text-brandred font-bold">EN</span>
+                        </button>
+                        <button type="button" onclick="setLanguage('BN', 'বাংলা (Bengali)')" class="w-full px-3 py-2 text-left text-xs font-semibold text-gray-300 hover:bg-white/10 hover:text-white rounded-xl flex items-center justify-between">
+                            <span>বাংলা (Bengali)</span>
+                            <span class="text-[10px] text-gray-500 font-bold">BN</span>
+                        </button>
+                        <button type="button" onclick="setLanguage('HI', 'हिन्दी (Hindi)')" class="w-full px-3 py-2 text-left text-xs font-semibold text-gray-300 hover:bg-white/10 hover:text-white rounded-xl flex items-center justify-between">
+                            <span>हिन्दी (Hindi)</span>
+                            <span class="text-[10px] text-gray-500 font-bold">HI</span>
+                        </button>
+                        <button type="button" onclick="setLanguage('DE', 'Deutsch (German)')" class="w-full px-3 py-2 text-left text-xs font-semibold text-gray-300 hover:bg-white/10 hover:text-white rounded-xl flex items-center justify-between">
+                            <span>Deutsch (German)</span>
+                            <span class="text-[10px] text-gray-500 font-bold">DE</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Working Theme / Accent Glow Cycle Button -->
+                <button id="themeCycleBtn" type="button" title="Switch Ambient Theme" class="p-2 text-gray-400 hover:text-white rounded-full hover:bg-white/5 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="4"/>
+                        <path stroke-linecap="round" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/>
+                    </svg>
+                </button>
+
+                <!-- User / Login Pill (Desktop) -->
+                <div class="hidden sm:flex items-center">
+                    {% if user %}
+                        <a href="/dashboard" class="flex items-center space-x-2.5 bg-white/5 hover:bg-white/10 border border-white/10 pl-2 pr-4 py-1.5 rounded-full transition">
+                            <img src="https://cdn.discordapp.com/avatars/{{ user.id }}/{{ user.avatar }}.png" onerror="this.src='https://i.pravatar.cc/100?img=12'" alt="Avatar" class="w-6 h-6 rounded-full object-cover">
+                            <span class="text-xs font-bold text-white">{{ user.username }}</span>
+                        </a>
+                    {% else %}
+                        <a href="/auth/login" class="bg-brandred hover:bg-brandredhover text-white text-xs font-bold px-5 py-2.5 rounded-full shadow-lg shadow-brandred/25 transition">
+                            Login
+                        </a>
+                    {% endif %}
+                </div>
+
+                <!-- Hamburger Menu Button -->
+                <button id="mobileMenuBtn" type="button" aria-label="Open Navigation Menu" class="p-2 text-gray-300 hover:text-white rounded-full hover:bg-white/5 transition">
+                    <svg id="hamburgerIcon" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Expandable Glass Navigation Drawer -->
+        <div id="navDrawer" class="hidden mt-3 glass-card rounded-3xl p-6 border border-white/10 transition-all shadow-2xl">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm font-semibold text-gray-300">
+                <a href="/" class="px-4 py-3 rounded-xl bg-white/5 text-white flex items-center justify-between">
+                    <span>Home Overview</span>
+                    <span class="w-2 h-2 rounded-full bg-brandred"></span>
+                </a>
+                <a href="/features" class="px-4 py-3 rounded-xl hover:bg-white/5 hover:text-white transition flex items-center justify-between">
+                    <span>Features & Modules</span>
+                    <span class="text-xs text-gray-500">26 Active</span>
+                </a>
+                <a href="/commands" class="px-4 py-3 rounded-xl hover:bg-white/5 hover:text-white transition flex items-center justify-between">
+                    <span>Slash Commands</span>
+                    <span class="text-xs text-gray-500">/help</span>
+                </a>
+                <a href="/tutorials" class="px-4 py-3 rounded-xl hover:bg-white/5 hover:text-white transition flex items-center justify-between">
+                    <span>Setup Tutorials</span>
+                    <span class="text-xs text-gray-500">Docs</span>
+                </a>
+                <a href="/dashboard" class="px-4 py-3 rounded-xl hover:bg-white/5 hover:text-white transition flex items-center justify-between sm:col-span-2">
+                    <span>Server Control Dashboard</span>
+                    <span class="text-xs text-brandred font-bold">Manage &rarr;</span>
                 </a>
             </div>
-            
-            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-300">
-                <a href="/features" class="hover:text-white transition">Features</a>
-                <a href="/commands" class="hover:text-white transition">Commands</a>
-                <a href="/tutorials" class="hover:text-white transition">Tutorials</a>
-            </nav>
-
-            <div class="flex items-center space-x-4">
+            <div class="pt-4 mt-4 border-t border-white/10 flex flex-col sm:flex-row gap-3">
                 {% if user %}
-                    <a href="/dashboard" class="flex items-center space-x-2 bg-[#1a1d26] hover:bg-[#222634] border border-gray-800 px-4 py-2 rounded-xl transition">
-                        <img src="https://cdn.discordapp.com/avatars/{{ user.id }}/{{ user.avatar }}.png" alt="Avatar" class="w-7 h-7 rounded-full">
-                        <span class="text-sm font-medium text-white">{{ user.username }}</span>
-                    </a>
+                    <a href="/dashboard" class="w-full py-3 bg-brandred text-white font-bold rounded-xl text-center text-sm">Open Server Dashboard</a>
+                    <a href="/auth/logout" class="w-full py-3 bg-white/5 hover:bg-white/10 text-gray-300 font-bold rounded-xl text-center text-sm transition">Logout ({{ user.username }})</a>
                 {% else %}
-                    <a href="/auth/login" class="bg-brandred hover:bg-brandredhover text-white font-medium px-5 py-2.5 rounded-xl shadow-lg shadow-brandred/20 transition duration-200 text-sm">
-                        Login
-                    </a>
+                    <a href="/auth/login" class="w-full py-3 bg-discord hover:bg-discordhover text-white font-bold rounded-xl text-center text-sm shadow-lg shadow-discord/25 transition">Login with Discord OAuth2</a>
                 {% endif %}
             </div>
         </div>
     </header>
 
-    <section class="relative pt-24 pb-20 overflow-hidden">
-        <div class="max-w-4xl mx-auto px-6 text-center space-y-6">
-            <div class="inline-flex items-center space-x-2 bg-[#141720] border border-gray-800/80 px-4 py-1.5 rounded-full text-xs text-gray-300 shadow-sm">
-                <span class="w-2 h-2 rounded-full bg-brandred animate-pulse"></span>
-                <span>Next-generation Discord Community Engine</span>
-            </div>
+    <!-- ==================== MAIN PAGE CONTENT ==================== -->
+    <main class="flex-grow relative z-10">
+
+        <!-- 1. HERO SECTION -->
+        <section class="max-w-4xl mx-auto px-5 pt-12 sm:pt-20 pb-14 text-center">
             
-            <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight text-white leading-tight">
-                One Discord app for your whole community, <span class="text-transparent bg-clip-text bg-gradient-to-r from-brandred to-orange-500">built to grow.</span>
+            <!-- Discount Promo Pill -->
+            <a href="#modules-cloud" class="inline-flex items-center space-x-3 bg-[#12141c]/90 hover:bg-[#191c26] border border-white/10 pl-2 pr-4 py-1.5 rounded-full text-xs sm:text-sm text-gray-200 shadow-lg mb-8 transition group">
+                <span class="bg-brandred text-white text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">DISCOUNT</span>
+                <span id="heroPromoText" class="font-medium">Save 30% on Premium Pro</span>
+                <svg class="w-4 h-4 text-gray-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6l6 6-6 6"/>
+                </svg>
+            </a>
+
+            <!-- Main Headline -->
+            <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white leading-[1.07] mb-6">
+                Run your whole community <span class="text-brandred">with one app.</span>
             </h1>
-            
-            <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto">
-                Moderation, custom leveling cards, automated welcomes, and high-performance modules designed for modern Discord servers.
+
+            <!-- Hero Subtitle -->
+            <p class="text-base sm:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed mb-10 font-normal">
+                Everything your Discord server needs, from moderation and tickets to levelling, economy, automation, and more, in one app.
             </p>
 
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-                <a href="/auth/login" class="w-full sm:w-auto px-8 py-3.5 bg-brandred hover:bg-brandredhover text-white font-semibold rounded-xl shadow-xl shadow-brandred/30 transition duration-200">
-                    Add to Discord
+            <!-- Hero Action Buttons -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md sm:max-w-xl mx-auto mb-14">
+                <a href="/auth/login" class="w-full sm:w-auto sm:min-w-[235px] py-4 px-7 bg-discord hover:bg-discordhover text-white font-bold rounded-2xl shadow-xl shadow-discord/25 transition duration-200 flex items-center justify-center space-x-3 text-base hover:scale-[1.02]">
+                    <svg class="w-5 h-5 fill-current" viewBox="0 0 127.14 96.36">
+                        <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"/>
+                    </svg>
+                    <span>Add to Discord</span>
                 </a>
-                <a href="/dashboard" class="w-full sm:w-auto px-8 py-3.5 bg-[#141720] hover:bg-[#1f2433] border border-gray-800 text-white font-semibold rounded-xl transition duration-200">
-                    Open Dashboard
+                <a href="#modules-cloud" class="w-full sm:w-auto sm:min-w-[235px] py-4 px-7 bg-[#171922] hover:bg-[#222634] border border-white/10 text-white font-bold rounded-2xl transition duration-200 text-base text-center">
+                    Explore Modules
                 </a>
             </div>
-        </div>
-    </section>
 
-    <footer class="border-t border-gray-900 bg-[#0a0a0a] py-12">
-        <div class="max-w-7xl mx-auto px-6 text-center text-sm text-gray-500">
-            <p>Copyright © 2020 - 2026 Quare CommV. All rights reserved.</p>
+            <!-- Floating Social Proof Pill (1,600,000+ servers) -->
+            <div class="relative flex items-center justify-center">
+                <a href="#bento-features" title="Scroll Down" class="hidden sm:flex flex-col items-center justify-end w-6 h-11 rounded-full bg-[#11131a] border border-white/10 p-1.5 mr-4 hover:border-brandred/50 transition">
+                    <span class="w-2 h-3 rounded-full bg-brandred animate-bounce"></span>
+                </a>
+
+                <div class="inline-flex items-center space-x-4 bg-[#101218]/90 backdrop-blur-xl border border-white/10 px-6 py-3 rounded-full shadow-2xl">
+                    <div class="flex -space-x-2.5 items-center">
+                        <img src="https://i.pravatar.cc/100?img=32" alt="Server 1" class="w-8 h-8 rounded-full border-2 border-[#101218] object-cover">
+                        <img src="https://i.pravatar.cc/100?img=47" alt="Server 2" class="w-8 h-8 rounded-full border-2 border-[#101218] object-cover">
+                        <img src="https://i.pravatar.cc/100?img=15" alt="Server 3" class="w-8 h-8 rounded-full border-2 border-[#101218] object-cover">
+                        <img src="https://i.pravatar.cc/100?img=24" alt="Server 4" class="w-8 h-8 rounded-full border-2 border-[#101218] object-cover">
+                        <img src="https://i.pravatar.cc/100?img=60" alt="Server 5" class="w-8 h-8 rounded-full border-2 border-[#101218] object-cover">
+                    </div>
+                    <div class="text-sm sm:text-base text-gray-300">
+                        <strong class="font-extrabold text-white">1,600,000+</strong> servers
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. INFINITE PARTNER COMMUNITIES MARQUEE -->
+        <section class="max-w-6xl mx-auto py-8 border-y border-white/5 overflow-hidden relative">
+            <p class="text-center text-[11px] font-bold uppercase tracking-[0.22em] text-gray-500 mb-5">Trusted by active gaming, creator, and developer communities</p>
+            <div class="overflow-hidden relative w-full">
+                <div class="animate-marquee space-x-4 px-4">
+                    {% for srv in [
+                        ('CHILL BC', '24,500 members', '11'),
+                        ('Sofiya Official', '42,100 members', '22'),
+                        ('Sujaan Gaming', '20,800 members', '33'),
+                        ('DEAD NPC SOCIETY', '18,900 members', '44'),
+                        ('Valorant India Hub', '65,000 members', '55'),
+                        ('Anime Sanctuary', '94,200 members', '60'),
+                        ('Binary Minds Dev', '12,400 members', '12'),
+                        ('CHILL BC', '24,500 members', '11'),
+                        ('Sofiya Official', '42,100 members', '22'),
+                        ('Sujaan Gaming', '20,800 members', '33'),
+                        ('DEAD NPC SOCIETY', '18,900 members', '44')
+                    ] %}
+                    <div class="flex items-center space-x-3 px-4 py-2.5 rounded-2xl bg-white/[0.025] border border-white/5 flex-shrink-0">
+                        <img src="https://i.pravatar.cc/80?img={{ srv[2] }}" alt="{{ srv[0] }}" class="w-7 h-7 rounded-full object-cover">
+                        <div>
+                            <div class="text-xs font-bold text-gray-200">{{ srv[0] }}</div>
+                            <div class="text-[10px] text-gray-500 font-medium">{{ srv[1] }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. INTERACTIVE 4-CARD BENTO GRID ("Everything you need to run your server") -->
+        <section id="bento-features" class="reveal-section max-w-6xl mx-auto px-5 py-20">
+            <div class="text-center max-w-2xl mx-auto mb-14">
+                <span class="text-brandred text-xs font-extrabold uppercase tracking-widest block mb-2">Built for Scale</span>
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">Everything you need to run your server.</h2>
+                <p class="text-sm sm:text-base text-gray-400 mt-3">Test the live controls below. Every module syncs with your Discord server in real time.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-5">
+                
+                <!-- Bento Card 1: Interactive Module Toggles (7 cols) -->
+                <div class="md:col-span-7 glass-card glass-card-hover rounded-3xl p-7 flex flex-col justify-between">
+                    <div class="space-y-3 mb-6 bg-[#090b10] p-4 rounded-2xl border border-white/5">
+                        <div class="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-gray-400 px-1 pb-1">
+                            <span>Interactive Module Control</span>
+                            <span id="activeModuleCount" class="text-brandred">3 / 3 Active</span>
+                        </div>
+
+                        <!-- Interactive Toggle Row 1 -->
+                        <div class="flex items-center justify-between bg-[#131620] px-4 py-3 rounded-xl border border-white/5">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 rounded-lg bg-brandred/15 border border-brandred/30 flex items-center justify-center text-brandred">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 20V10m6 10V4M6 20v-4"/></svg>
+                                </div>
+                                <div>
+                                    <div class="text-xs font-bold text-white">Levels & Rank Cards</div>
+                                    <div class="text-[11px] text-gray-400">Text & voice XP progression</div>
+                                </div>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" class="sr-only peer bento-toggle" checked onchange="updateBentoToggles('Levels & Rank Cards', this.checked)">
+                                <div class="w-10 h-5 bg-gray-700 rounded-full peer peer-checked:after:translate-x-5 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brandred"></div>
+                            </label>
+                        </div>
+
+                        <!-- Interactive Toggle Row 2 -->
+                        <div class="flex items-center justify-between bg-[#131620] px-4 py-3 rounded-xl border border-white/5">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 rounded-lg bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                </div>
+                                <div>
+                                    <div class="text-xs font-bold text-white">AutoMod Protection</div>
+                                    <div class="text-[11px] text-gray-400">Anti-raid, spam & link filtering</div>
+                                </div>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" class="sr-only peer bento-toggle" checked onchange="updateBentoToggles('AutoMod Protection', this.checked)">
+                                <div class="w-10 h-5 bg-gray-700 rounded-full peer peer-checked:after:translate-x-5 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brandred"></div>
+                            </label>
+                        </div>
+
+                        <!-- Interactive Toggle Row 3 -->
+                        <div class="flex items-center justify-between bg-[#131620] px-4 py-3 rounded-xl border border-white/5">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-8 h-8 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8m-3-5h6"/></svg>
+                                </div>
+                                <div>
+                                    <div class="text-xs font-bold text-white">Economy & Global Shop</div>
+                                    <div class="text-[11px] text-gray-400">Daily rewards, coins & role store</div>
+                                </div>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" class="sr-only peer bento-toggle" checked onchange="updateBentoToggles('Economy & Global Shop', this.checked)">
+                                <div class="w-10 h-5 bg-gray-700 rounded-full peer peer-checked:after:translate-x-5 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brandred"></div>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-extrabold text-white">Modular by Design</h3>
+                        <p class="text-xs sm:text-sm text-gray-400 mt-1">Click any toggle above to test instant state synchronization across your server.</p>
+                    </div>
+                </div>
+
+                <!-- Bento Card 2: Interactive Latency Ping & Uptime Ring (5 cols) -->
+                <div class="md:col-span-5 glass-card glass-card-hover rounded-3xl p-7 flex flex-col justify-between items-center text-center">
+                    <div class="w-full flex items-center justify-between text-xs text-gray-400">
+                        <span class="font-semibold">Cluster #01 (India/Global)</span>
+                        <button type="button" onclick="pingCluster()" class="text-[11px] bg-white/5 hover:bg-white/10 border border-white/10 px-2.5 py-1 rounded-lg text-orange-400 font-bold transition">
+                            Test Ping: <span id="clusterPing">18ms</span>
+                        </button>
+                    </div>
+                    <div class="my-auto py-5 relative flex items-center justify-center">
+                        <svg class="w-32 h-32 -rotate-90" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="40" stroke="rgba(255,255,255,0.08)" stroke-width="8" fill="none"/>
+                            <circle cx="50" cy="50" r="40" stroke="#f97316" stroke-width="8" stroke-dasharray="251.2" stroke-dashoffset="12" stroke-linecap="round" fill="none"/>
+                        </svg>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <span class="text-2xl font-black text-white">99.98%</span>
+                            <span class="text-[10px] uppercase tracking-wider text-orange-400 font-bold">Uptime</span>
+                        </div>
+                    </div>
+                    <div class="text-left w-full">
+                        <h3 class="text-lg font-extrabold text-white">Always Online</h3>
+                        <p class="text-xs sm:text-sm text-gray-400 mt-1">Enterprise-grade sharded infrastructure built to stay responsive 24/7.</p>
+                    </div>
+                </div>
+
+                <!-- Bento Card 3: Interactive Slash Command Simulator (5 cols) -->
+                <div class="md:col-span-5 glass-card glass-card-hover rounded-3xl p-7 flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-1.5 text-[11px] font-bold">
+                            <button type="button" onclick="switchSlashCmd('/rank', 'member:@Sujaan', 'Generates a high-res Bento rank card')" class="slash-pill px-2.5 py-1 rounded-lg bg-discord text-white transition">/rank</button>
+                            <button type="button" onclick="switchSlashCmd('/daily', 'streak:14_days', 'Claims +500 Coins & 1.5x XP bonus')" class="slash-pill px-2.5 py-1 rounded-lg bg-white/5 text-gray-400 hover:text-white transition">/daily</button>
+                            <button type="button" onclick="switchSlashCmd('/play', 'query:lofi_hiphop', 'Streams 320kbps audio to voice channel')" class="slash-pill px-2.5 py-1 rounded-lg bg-white/5 text-gray-400 hover:text-white transition">/play</button>
+                        </div>
+                        <div class="flex items-center space-x-3 pt-1">
+                            <div class="w-12 h-12 rounded-2xl bg-discord/20 border border-discord/40 flex items-center justify-center text-discord font-black text-xl shadow-lg shadow-discord/10 flex-shrink-0">
+                                /
+                            </div>
+                            <div class="bg-[#090b10] border border-white/10 rounded-xl px-4 py-2.5 flex-1 min-w-0">
+                                <div class="text-xs font-mono text-indigo-400 font-bold truncate">
+                                    <span id="slashCmdName">/rank</span> <span id="slashCmdArg" class="text-gray-400">member:@Sujaan</span>
+                                </div>
+                                <div id="slashCmdDesc" class="text-[11px] text-gray-500 mt-0.5 truncate">Generates a high-res Bento rank card</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-5">
+                        <h3 class="text-lg font-extrabold text-white">Modern Slash Commands</h3>
+                        <p class="text-xs sm:text-sm text-gray-400 mt-1">Click a command pill above to preview native Discord auto-complete parameters.</p>
+                    </div>
+                </div>
+
+                <!-- Bento Card 4: Live Web Channel Selector Sync (7 cols) -->
+                <div class="md:col-span-7 glass-card glass-card-hover rounded-3xl p-7 flex flex-col justify-between">
+                    <div class="bg-[#090b10] border border-white/5 rounded-2xl p-4 mb-6 space-y-3">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="text-gray-400 font-medium">Level Up Notification Channel</span>
+                            <span class="text-emerald-400 font-bold flex items-center space-x-1">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping mr-1"></span>
+                                <span id="channelSyncBadge">Synced Live</span>
+                            </span>
+                        </div>
+                        <div>
+                            <select onchange="showToast('Notification channel synced to ' + this.value)" class="w-full bg-[#141824] hover:bg-[#191e2d] border border-white/10 focus:border-brandred rounded-xl px-3.5 py-2.5 text-xs font-semibold text-gray-200 outline-none cursor-pointer transition">
+                                <option value="# level-ups-and-rewards"># level-ups-and-rewards</option>
+                                <option value="# general-chat"># general-chat</option>
+                                <option value="# bot-commands"># bot-commands</option>
+                                <option value="# community-highlights"># community-highlights</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-extrabold text-white">Real-Time Web Dashboard</h3>
+                        <p class="text-xs sm:text-sm text-gray-400 mt-1">Select any channel from the dropdown above to see how changes apply immediately.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. FEATURE SHOWCASE 1: MODERATION ("Keep your server safe, automatically.") -->
+        <section class="reveal-section max-w-6xl mx-auto px-5 py-20 border-t border-white/5">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-5 space-y-5">
+                    <span class="text-brandred text-xs font-extrabold uppercase tracking-widest">Moderation</span>
+                    <h2 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight">Keep your server safe, automatically.</h2>
+                    <p class="text-gray-400 text-sm sm:text-base leading-relaxed">
+                        Configure intelligent AutoMod rules to block phishing links, mass mentions, and toxic behaviour before your moderators even have to lift a finger.
+                    </p>
+                    <ul class="space-y-3 text-sm text-gray-300 pt-2">
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-brandred flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            <span>Automated anti-spam, invite link, and bad word filters</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-brandred flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            <span>Escalating warning thresholds and timed mutes</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-brandred flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            <span>Detailed audit logs for deleted messages and role updates</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Interactive AutoMod Simulator -->
+                <div class="lg:col-span-7">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+                        <div class="inline-flex items-center space-x-2 bg-[#161922] border border-white/10 px-4 py-2 rounded-full text-xs font-bold text-gray-200 shadow-xl">
+                            <svg class="w-4 h-4 text-brandred" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            <span>AutoMod Protection Active</span>
+                        </div>
+                        <button type="button" onclick="simulateAutoMod()" class="text-xs bg-brandred/15 hover:bg-brandred/25 text-brandred border border-brandred/30 px-3.5 py-1.5 rounded-full font-bold transition">
+                            Simulate Raid / Link Test &rarr;
+                        </button>
+                    </div>
+
+                    <div class="discord-window rounded-3xl p-6">
+                        <div class="flex items-start space-x-3.5">
+                            <div class="w-10 h-10 rounded-full bg-brandred flex items-center justify-center font-black text-white text-sm flex-shrink-0">S</div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-bold text-white text-sm">Sofiya</span>
+                                    <span class="bg-discord text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded uppercase">APP</span>
+                                    <span class="text-xs text-gray-500">Today at 14:22</span>
+                                </div>
+                                <div class="rounded-r-xl p-4 mt-2.5 space-y-2 border-l-4 border-brandred bg-[#18191c]">
+                                    <div class="flex items-center justify-between">
+                                        <span id="automodTitle" class="text-xs font-extrabold uppercase tracking-wider text-brandred">AutoMod Action • Link Blocked</span>
+                                        <span id="automodCase" class="text-[11px] text-gray-500">Case #1084</span>
+                                    </div>
+                                    <p id="automodDesc" class="text-xs sm:text-sm text-gray-300">
+                                        Blocked a message containing an unauthorized server invite from <strong class="text-white">@rogue_user</strong> in <span class="text-indigo-400 bg-indigo-500/10 px-1.5 py-0.5 rounded">#general-chat</span>.
+                                    </p>
+                                    <div class="grid grid-cols-2 gap-2 pt-2 text-xs">
+                                        <div class="bg-black/30 p-2.5 rounded-lg border border-white/5">
+                                            <span class="text-gray-500 block text-[10px] uppercase font-bold">Action Taken</span>
+                                            <span id="automodAction" class="text-white font-semibold">Message Deleted & 15m Timeout</span>
+                                        </div>
+                                        <div class="bg-black/30 p-2.5 rounded-lg border border-white/5">
+                                            <span class="text-gray-500 block text-[10px] uppercase font-bold">Triggered Rule</span>
+                                            <span id="automodRule" class="text-white font-semibold">Block External Discord Invites</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. FEATURE SHOWCASE 2: LEVELING STUDIO ("Reward the members who show up.") -->
+        <section class="reveal-section max-w-6xl mx-auto px-5 py-20 border-t border-white/5">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-5 space-y-5">
+                    <span class="text-brandred text-xs font-extrabold uppercase tracking-widest">Levels & XP</span>
+                    <h2 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight">Reward the members who show up.</h2>
+                    <p class="text-gray-400 text-sm sm:text-base leading-relaxed">
+                        Turn everyday conversations into rewarding milestones. Members earn XP from text messages and voice sessions to unlock custom roles and showcase personalized rank cards.
+                    </p>
+
+                    <!-- Interactive Rank Card Color Picker -->
+                    <div class="pt-2">
+                        <span class="text-xs font-bold uppercase tracking-wider text-gray-400 block mb-2.5">Live Card Theme Preview:</span>
+                        <div class="flex items-center space-x-3">
+                            <button type="button" onclick="setRankTheme('#ff3b5c', '#f97316', 'Crimson Neon')" class="w-7 h-7 rounded-full bg-gradient-to-tr from-[#ff3b5c] to-[#f97316] ring-2 ring-white scale-110 transition"></button>
+                            <button type="button" onclick="setRankTheme('#8b5cf6', '#ec4899', 'Cyber Violet')" class="w-7 h-7 rounded-full bg-gradient-to-tr from-[#8b5cf6] to-[#ec4899] opacity-80 hover:opacity-100 transition"></button>
+                            <button type="button" onclick="setRankTheme('#10b981', '#06b6d4', 'Emerald Matrix')" class="w-7 h-7 rounded-full bg-gradient-to-tr from-[#10b981] to-[#06b6d4] opacity-80 hover:opacity-100 transition"></button>
+                            <button type="button" onclick="setRankTheme('#f59e0b', '#eab308', 'Solar Gold')" class="w-7 h-7 rounded-full bg-gradient-to-tr from-[#f59e0b] to-[#eab308] opacity-80 hover:opacity-100 transition"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Rank Card & Role Rewards Tabs -->
+                <div class="lg:col-span-7">
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+                        <div class="inline-flex bg-[#12141c] p-1 rounded-xl border border-white/10 text-xs font-bold">
+                            <button type="button" id="tabBtnRank" onclick="switchLevelTab('rank')" class="px-3.5 py-1.5 rounded-lg bg-brandred text-white transition">Rank Card</button>
+                            <button type="button" id="tabBtnRewards" onclick="switchLevelTab('rewards')" class="px-3.5 py-1.5 rounded-lg text-gray-400 hover:text-white transition">Role Rewards</button>
+                            <button type="button" id="tabBtnLeader" onclick="switchLevelTab('leader')" class="px-3.5 py-1.5 rounded-lg text-gray-400 hover:text-white transition">Leaderboard</button>
+                        </div>
+                        <button type="button" onclick="grantDemoXp()" class="text-xs bg-brandred/15 hover:bg-brandred/25 text-brandred border border-brandred/30 px-3.5 py-1.5 rounded-full font-bold transition">
+                            + Boost XP Demo
+                        </button>
+                    </div>
+
+                    <div class="discord-window rounded-3xl p-6">
+                        <!-- TAB 1: RANK CARD VIEW -->
+                        <div id="levelTabRank" class="flex items-start space-x-3.5">
+                            <div class="w-10 h-10 rounded-full bg-brandred flex items-center justify-center font-black text-white text-sm flex-shrink-0">S</div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-bold text-white text-sm">Sofiya</span>
+                                    <span class="bg-discord text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded uppercase">APP</span>
+                                    <span class="text-xs text-gray-500">Today at 16:05</span>
+                                </div>
+                                <p class="text-xs sm:text-sm text-gray-300 mt-1 mb-3">
+                                    GG <span class="text-indigo-400 bg-indigo-500/10 px-1 rounded">@Sujaan</span>, you just advanced to <strong id="demoLevelText" class="text-white">Level 24</strong>!
+                                </p>
+
+                                <!-- Graphical Rank Card Preview -->
+                                <div class="rounded-2xl p-5 bg-gradient-to-r from-[#161822] via-[#1d1522] to-[#141720] border border-white/10 relative overflow-hidden">
+                                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                        <div class="flex items-center space-x-4">
+                                            <div class="relative">
+                                                <img src="https://i.pravatar.cc/120?img=12" alt="User Avatar" class="w-16 h-16 rounded-2xl object-cover border-2" id="rankAvatarBorder" style="border-color: #ff3b5c;">
+                                                <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-[#161822]"></span>
+                                            </div>
+                                            <div>
+                                                <div class="text-base font-extrabold text-white">Sujaan</div>
+                                                <div id="rankThemeLabel" class="text-xs text-gray-400">Crimson Neon • 2.0x Booster</div>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center space-x-5 text-right">
+                                            <div>
+                                                <span class="text-[10px] uppercase tracking-wider text-gray-400 block font-bold">RANK</span>
+                                                <span class="text-2xl font-black text-white">#1</span>
+                                            </div>
+                                            <div>
+                                                <span class="text-[10px] uppercase tracking-wider text-gray-400 block font-bold">LEVEL</span>
+                                                <span id="demoLevelNumber" class="text-2xl font-black" style="color: #ff3b5c;">24</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Progress Bar -->
+                                    <div class="mt-4">
+                                        <div class="flex justify-between text-xs font-bold mb-1.5">
+                                            <span class="text-gray-400">XP Progress</span>
+                                            <span id="demoXpNumbers" class="text-white">4,820 / 5,000 XP (96%)</span>
+                                        </div>
+                                        <div class="w-full h-3 bg-black/50 rounded-full overflow-hidden p-0.5 border border-white/5">
+                                            <div id="rankProgressBar" class="h-full rounded-full transition-all duration-500" style="width: 96%; background: linear-gradient(90deg, #ff3b5c, #f97316);"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB 2: ROLE REWARDS VIEW -->
+                        <div id="levelTabRewards" class="hidden space-y-3">
+                            <div class="text-xs font-extrabold uppercase tracking-wider text-gray-400 mb-2">Configured Automatic Role Rewards</div>
+                            <div class="flex items-center justify-between bg-[#181b24] px-4 py-3 rounded-xl border border-white/5">
+                                <span class="text-xs font-bold text-white">Reach Level 5</span>
+                                <span class="px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-xs font-bold">@Active Member</span>
+                            </div>
+                            <div class="flex items-center justify-between bg-[#181b24] px-4 py-3 rounded-xl border border-white/5">
+                                <span class="text-xs font-bold text-white">Reach Level 15</span>
+                                <span class="px-3 py-1 rounded-full bg-purple-500/15 text-purple-400 border border-purple-500/30 text-xs font-bold">@Server Veteran</span>
+                            </div>
+                            <div class="flex items-center justify-between bg-[#181b24] px-4 py-3 rounded-xl border border-white/5">
+                                <span class="text-xs font-bold text-white">Reach Level 30</span>
+                                <span class="px-3 py-1 rounded-full bg-brandred/15 text-brandred border border-brandred/30 text-xs font-bold">@Community Legend</span>
+                            </div>
+                        </div>
+
+                        <!-- TAB 3: LEADERBOARD VIEW -->
+                        <div id="levelTabLeader" class="hidden space-y-2.5">
+                            <div class="text-xs font-extrabold uppercase tracking-wider text-gray-400 mb-2">Top Community Members</div>
+                            <div class="flex items-center justify-between bg-[#181b24] px-4 py-2.5 rounded-xl border border-white/5">
+                                <div class="flex items-center space-x-3">
+                                    <span class="text-xs font-black text-amber-400">#1</span>
+                                    <img src="https://i.pravatar.cc/80?img=12" class="w-7 h-7 rounded-full" alt="Avatar">
+                                    <span class="text-xs font-bold text-white">Sujaan</span>
+                                </div>
+                                <span class="text-xs font-mono font-bold text-brandred">Level 24 • 48.2k XP</span>
+                            </div>
+                            <div class="flex items-center justify-between bg-[#181b24] px-4 py-2.5 rounded-xl border border-white/5">
+                                <div class="flex items-center space-x-3">
+                                    <span class="text-xs font-black text-gray-300">#2</span>
+                                    <img src="https://i.pravatar.cc/80?img=45" class="w-7 h-7 rounded-full" alt="Avatar">
+                                    <span class="text-xs font-bold text-white">Aria</span>
+                                </div>
+                                <span class="text-xs font-mono font-bold text-gray-400">Level 21 • 39.4k XP</span>
+                            </div>
+                            <div class="flex items-center justify-between bg-[#181b24] px-4 py-2.5 rounded-xl border border-white/5">
+                                <div class="flex items-center space-x-3">
+                                    <span class="text-xs font-black text-amber-600">#3</span>
+                                    <img src="https://i.pravatar.cc/80?img=33" class="w-7 h-7 rounded-full" alt="Avatar">
+                                    <span class="text-xs font-bold text-white">Alex</span>
+                                </div>
+                                <span class="text-xs font-mono font-bold text-gray-400">Level 19 • 31.0k XP</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. FEATURE SHOWCASE 3: INTERACTIVE TICKETS ("Support that stays organised.") -->
+        <section class="reveal-section max-w-6xl mx-auto px-5 py-20 border-t border-white/5">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-5 space-y-5">
+                    <span class="text-emerald-400 text-xs font-extrabold uppercase tracking-widest">Tickets & Support</span>
+                    <h2 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight">Support that stays organised.</h2>
+                    <p class="text-gray-400 text-sm sm:text-base leading-relaxed">
+                        Resolve member inquiries, partnership requests, and ban appeals in private channels. Click the buttons inside the ticket preview to test staff actions.
+                    </p>
+                </div>
+
+                <!-- Interactive Discord Ticket Mockup -->
+                <div class="lg:col-span-7">
+                    <div class="discord-window rounded-3xl p-6 space-y-4">
+                        <div class="flex items-center justify-between border-b border-white/5 pb-3 text-xs text-gray-400">
+                            <span class="font-mono font-bold text-emerald-400"># ticket-0492-general-support</span>
+                            <span id="ticketStatusBadge" class="px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 font-bold text-[11px]">Open Ticket</span>
+                        </div>
+                        <div class="flex items-start space-x-3.5">
+                            <div class="w-10 h-10 rounded-full bg-brandred flex items-center justify-center font-black text-white text-sm flex-shrink-0">S</div>
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-bold text-white text-sm">Sofiya</span>
+                                    <span class="bg-discord text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded uppercase">APP</span>
+                                </div>
+                                <div class="rounded-r-xl p-4 mt-2 bg-[#162221] border-l-4 border-emerald-400 space-y-2">
+                                    <div id="ticketHeaderTitle" class="text-xs font-extrabold text-emerald-300 uppercase">Support Ticket Opened</div>
+                                    <p id="ticketBodyText" class="text-xs sm:text-sm text-gray-200">
+                                        Welcome <strong class="text-white">@Alex</strong>! A member of our <span class="text-emerald-400">@Support Team</span> will be with you shortly.
+                                    </p>
+                                    <div class="flex flex-wrap gap-2 pt-2">
+                                        <button type="button" onclick="handleTicketAction('claim')" class="px-3.5 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-300 text-xs font-bold transition">
+                                            Claim Ticket
+                                        </button>
+                                        <button type="button" onclick="handleTicketAction('transcript')" class="px-3.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 text-xs font-bold transition">
+                                            Save Transcript
+                                        </button>
+                                        <button type="button" onclick="handleTicketAction('close')" class="px-3.5 py-1.5 rounded-lg bg-brandred/20 hover:bg-brandred/30 border border-brandred/40 text-brandred text-xs font-bold transition">
+                                            Close Ticket
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. FEATURE SHOWCASE 4: WELCOMER ("Make your community feel like home.") -->
+        <section class="reveal-section max-w-6xl mx-auto px-5 py-20 border-t border-white/5">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-5 space-y-5">
+                    <span class="text-purple-400 text-xs font-extrabold uppercase tracking-widest">Welcomer</span>
+                    <h2 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight">Make your community feel like home.</h2>
+                    <p class="text-gray-400 text-sm sm:text-base leading-relaxed">
+                        Greet every new arrival with custom image banners, personalized welcome messages, and automatic starter roles the moment they join.
+                    </p>
+                </div>
+
+                <!-- Discord Welcome Mockup -->
+                <div class="lg:col-span-7">
+                    <div class="discord-window rounded-3xl p-6">
+                        <div class="flex items-start space-x-3.5">
+                            <div class="w-10 h-10 rounded-full bg-brandred flex items-center justify-center font-black text-white text-sm flex-shrink-0">S</div>
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-bold text-white text-sm">Sofiya</span>
+                                    <span class="bg-discord text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded uppercase">APP</span>
+                                </div>
+                                <div class="mt-2.5 rounded-2xl p-5 bg-gradient-to-br from-[#1f192e] to-[#131520] border border-purple-500/30 flex items-center space-x-4">
+                                    <img src="https://i.pravatar.cc/120?img=45" alt="New Member" class="w-14 h-14 rounded-full border-2 border-purple-400 object-cover">
+                                    <div>
+                                        <span class="text-[11px] font-extrabold uppercase tracking-wider text-purple-400">Member #1,642 Joined • Role Assigned: @Member</span>
+                                        <h4 class="text-base font-black text-white">Welcome to the community, @Aria!</h4>
+                                        <p class="text-xs text-gray-400 mt-0.5">Grab your self-roles in <span class="text-purple-300">#roles</span> and say hello in <span class="text-purple-300">#lounge</span>.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. FEATURE SHOWCASE 5: INTERACTIVE ANALYTICS ("Understand how your server grows.") -->
+        <section class="reveal-section max-w-6xl mx-auto px-5 py-20 border-t border-white/5">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-5 space-y-5">
+                    <span class="text-indigo-400 text-xs font-extrabold uppercase tracking-widest">Analytics</span>
+                    <h2 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight">Understand how your server grows.</h2>
+                    <p class="text-gray-400 text-sm sm:text-base leading-relaxed">
+                        Monitor daily active chatters, voice channel minutes, and member retention trends directly from your server analytics dashboard.
+                    </p>
+                </div>
+
+                <!-- Interactive Analytics Graph Card -->
+                <div class="lg:col-span-7">
+                    <div class="glass-card rounded-3xl p-6 border border-white/10">
+                        <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+                            <div>
+                                <span class="text-xs text-gray-400 font-semibold">Server Message Volume</span>
+                                <div class="text-2xl font-black text-white mt-0.5">
+                                    <span id="analyticsCount">48,920</span>
+                                    <span id="analyticsGrowth" class="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full ml-1">+18.4%</span>
+                                </div>
+                            </div>
+                            <div class="inline-flex bg-[#0c0e14] p-1 rounded-xl border border-white/10 text-xs font-bold">
+                                <button type="button" onclick="updateAnalytics('7d')" class="analytics-btn px-3 py-1 rounded-lg bg-purple-600 text-white transition">7 Days</button>
+                                <button type="button" onclick="updateAnalytics('30d')" class="analytics-btn px-3 py-1 rounded-lg text-gray-400 hover:text-white transition">30 Days</button>
+                                <button type="button" onclick="updateAnalytics('all')" class="analytics-btn px-3 py-1 rounded-lg text-gray-400 hover:text-white transition">All Time</button>
+                            </div>
+                        </div>
+                        <svg class="w-full h-40 overflow-visible" viewBox="0 0 500 140" fill="none">
+                            <defs>
+                                <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.45"/>
+                                    <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0.0"/>
+                                </linearGradient>
+                            </defs>
+                            <path id="analyticsLine" d="M0,110 C70,95 110,120 170,75 C230,30 280,65 340,40 C400,15 450,35 500,10" stroke="#a855f7" stroke-width="3.5" stroke-linecap="round" class="transition-all duration-500"/>
+                            <circle cx="340" cy="40" r="5" fill="#fff" stroke="#a855f7" stroke-width="3"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. FEATURE SHOWCASE 6: INTERACTIVE GIVEAWAYS ("Giveaways in seconds.") -->
+        <section class="reveal-section max-w-6xl mx-auto px-5 py-20 border-t border-white/5">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-5 space-y-5">
+                    <span class="text-blue-400 text-xs font-extrabold uppercase tracking-widest">Giveaways</span>
+                    <h2 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight">Giveaways in seconds.</h2>
+                    <p class="text-gray-400 text-sm sm:text-base leading-relaxed">
+                        Launch automated giveaways with level requirements, booster bonus entries, and instant winner selection. Click below to test entering!
+                    </p>
+                </div>
+
+                <!-- Interactive Giveaway Mockup -->
+                <div class="lg:col-span-7">
+                    <div class="discord-window rounded-3xl p-6">
+                        <div class="flex items-start space-x-3.5">
+                            <div class="w-10 h-10 rounded-full bg-brandred flex items-center justify-center font-black text-white text-sm flex-shrink-0">S</div>
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-bold text-white text-sm">Sofiya</span>
+                                    <span class="bg-discord text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded uppercase">APP</span>
+                                </div>
+                                <div class="mt-2.5 rounded-r-xl p-4 bg-[#161926] border-l-4 border-discord space-y-2">
+                                    <div id="giveawayHeader" class="text-xs font-extrabold text-indigo-400 uppercase">Giveaway Active • 3 Winners</div>
+                                    <h4 class="text-base font-black text-white">Discord Nitro Monthly Subscription</h4>
+                                    <p id="giveawaySubtext" class="text-xs text-gray-300">Click the button below to enter! Ends in <strong>2 hours</strong>. Hosted by <span class="text-indigo-400">@Sujaan</span>.</p>
+                                    <div class="pt-2 flex flex-wrap gap-2">
+                                        <button id="giveawayJoinBtn" type="button" onclick="joinGiveaway()" class="inline-flex items-center space-x-2 bg-discord hover:bg-discordhover text-white text-xs font-bold px-4 py-2 rounded-lg transition">
+                                            <span id="giveawayBtnText">Enter Giveaway (428)</span>
+                                        </button>
+                                        <button type="button" onclick="rollGiveawayWinner()" class="inline-flex items-center space-x-2 bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 text-xs font-bold px-3.5 py-2 rounded-lg transition">
+                                            <span>Roll Demo Winner</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 10. FEATURE SHOWCASE 7: SOCIAL NOTIFICATIONS ("Keep your community in the loop.") -->
+        <section class="reveal-section max-w-6xl mx-auto px-5 py-20 border-t border-white/5">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-5 space-y-5">
+                    <span class="text-brandred text-xs font-extrabold uppercase tracking-widest">Notifications</span>
+                    <h2 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight">Keep your community in the loop.</h2>
+                    <p class="text-gray-400 text-sm sm:text-base leading-relaxed">
+                        Send instant alerts to your server whenever you go live on Twitch, upload a new YouTube video, or post updates on X and Instagram.
+                    </p>
+                </div>
+
+                <!-- Stream Alert Mockup with Real Photo -->
+                <div class="lg:col-span-7">
+                    <div class="discord-window rounded-3xl p-6">
+                        <div class="flex items-start space-x-3.5">
+                            <div class="w-10 h-10 rounded-full bg-brandred flex items-center justify-center font-black text-white text-sm flex-shrink-0">S</div>
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-bold text-white text-sm">Sofiya</span>
+                                    <span class="bg-discord text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded uppercase">APP</span>
+                                </div>
+                                <div class="mt-2.5 rounded-2xl overflow-hidden bg-[#18191c] border border-white/10">
+                                    <div class="p-4 flex items-center justify-between">
+                                        <div>
+                                            <span class="text-[11px] font-extrabold uppercase text-brandred tracking-wider">Live Stream Alert</span>
+                                            <h4 class="text-sm sm:text-base font-bold text-white mt-0.5">Late Night Ranked Grind & Community Customs!</h4>
+                                        </div>
+                                        <a href="https://twitch.tv" target="_blank" rel="noopener" class="px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition">Watch Stream</a>
+                                    </div>
+                                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=900&q=80" alt="Stream Preview" class="w-full h-44 object-cover">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 11. INTERACTIVE 26 MODULES CLOUD ("Plus everything else your server needs.") -->
+        <section id="modules-cloud" class="reveal-section max-w-5xl mx-auto px-5 py-20 text-center border-t border-white/5">
+            <span class="text-indigo-400 text-xs font-extrabold uppercase tracking-widest block mb-2">26 Powerful Modules</span>
+            <h2 class="text-3xl sm:text-5xl font-extrabold text-white mb-4">Plus everything else your server needs.</h2>
+            <p class="text-sm sm:text-base text-gray-400 max-w-xl mx-auto mb-10">
+                Click any module pill below to inspect its capabilities before configuring it in your server dashboard.
+            </p>
+
+            <!-- 26 Interactive Module Pills -->
+            <div class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 mb-8">
+                {% for mod in [
+                    'App Customiser', 'Welcomer', 'Levels', 'Economy', 'Music', 'Moderation',
+                    'Logs', 'Giveaways', 'Tickets', 'Role Selection', 'Sticky Roles', 'Counters',
+                    'Starboard', 'Suggestions', 'Birthdays', 'Message Builder', 'Scheduled Messages',
+                    'Sticky Messages', 'Notifications', 'Automations', 'Custom Commands',
+                    'Temporary Channels', 'Roleplay', 'Analytics', 'Connect', 'Verify'
+                ] %}
+                <button type="button" onclick="inspectModule('{{ mod }}')" class="mod-pill px-4 py-2 rounded-full bg-[#131620] hover:bg-[#1e2333] border border-white/10 hover:border-brandred/50 text-xs sm:text-sm font-semibold text-gray-200 transition flex items-center space-x-2">
+                    <span class="w-2 h-2 rounded-full bg-brandred"></span>
+                    <span>{{ mod }}</span>
+                </button>
+                {% endfor %}
+            </div>
+
+            <!-- Live Module Inspector Box -->
+            <div class="glass-card max-w-2xl mx-auto rounded-2xl p-5 mb-10 border border-white/10 text-left flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                        <h4 id="inspectorTitle" class="text-sm font-extrabold text-white">Levels & XP Engine</h4>
+                        <span class="text-[10px] bg-brandred/20 text-brandred px-2 py-0.5 rounded-full font-bold uppercase">Ready</span>
+                    </div>
+                    <p id="inspectorDesc" class="text-xs text-gray-400 mt-1">Customize Bento rank cards, voice XP rates, role rewards, and multipliers from the web dashboard.</p>
+                </div>
+                <a href="/dashboard" class="px-4 py-2.5 rounded-xl bg-brandred hover:bg-brandredhover text-white text-xs font-bold flex-shrink-0 transition">
+                    Configure Module &rarr;
+                </a>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="/dashboard" class="px-7 py-3.5 rounded-xl bg-white text-black font-extrabold text-sm hover:bg-gray-200 transition">
+                    Explore all modules &rarr;
+                </a>
+                <a href="/commands" class="px-7 py-3.5 rounded-xl bg-[#151822] hover:bg-[#1e2230] border border-white/10 text-white font-bold text-sm transition">
+                    View Commands
+                </a>
+            </div>
+        </section>
+
+        <!-- 12. BOTTOM CTA SECTION -->
+        <section class="reveal-section max-w-5xl mx-auto px-5 py-16">
+            <div class="glass-card rounded-3xl p-8 sm:p-12 border border-brandred/30">
+                <div class="max-w-2xl">
+                    <h2 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight mb-4">
+                        Ready to build a better community?
+                    </h2>
+                    <p class="text-sm sm:text-base text-gray-300 mb-8">
+                        Add Sofiya to your Discord server in seconds and start customizing your modules from our intuitive web dashboard.
+                    </p>
+                    <div class="flex flex-wrap gap-4 mb-10">
+                        <a href="/auth/login" class="px-7 py-3.5 rounded-xl bg-brandred hover:bg-brandredhover text-white font-bold text-sm shadow-xl shadow-brandred/30 transition">
+                            Add to Discord
+                        </a>
+                        <a href="/dashboard" class="px-7 py-3.5 rounded-xl bg-[#151822] hover:bg-[#1f2330] border border-white/10 text-white font-bold text-sm transition">
+                            Open Dashboard
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Interactive Dashboard Preview Box Inside CTA -->
+                <div class="bg-[#0b0d13]/90 border border-white/10 rounded-2xl p-5">
+                    <div class="flex items-center justify-between pb-4 mb-4 border-b border-white/5">
+                        <div class="flex items-center space-x-3">
+                            <span class="w-8 h-8 rounded-lg bg-brandred flex items-center justify-center font-black text-white text-xs">S</span>
+                            <div>
+                                <div class="text-xs font-bold text-white">Sofiya Quick Setup</div>
+                                <div class="text-[11px] text-gray-400">All 26 modules ready to configure</div>
+                            </div>
+                        </div>
+                        <span class="text-xs font-bold text-emerald-400">● Connected</span>
+                    </div>
+                    <a href="/dashboard" class="block w-full py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-center text-xs font-bold text-white transition">
+                        Launch Server Control Panel &rarr;
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==================== FULL MAKI-STYLE FOOTER ==================== -->
+    <footer class="border-t border-white/5 bg-[#050608] pt-16 pb-12 px-6 mt-12">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-white/5 text-xs">
+            
+            <!-- Brand Column -->
+            <div class="md:col-span-5 space-y-4">
+                <a href="/" class="flex items-center space-x-3">
+                    <svg class="w-7 h-7 text-brandred" viewBox="0 0 40 32" fill="none">
+                        <circle cx="6" cy="22" r="3.5" fill="currentColor"/>
+                        <path d="M13 8L21 25" stroke="currentColor" stroke-width="5.5" stroke-linecap="round"/>
+                        <path d="M25 6L34 25" stroke="currentColor" stroke-width="5.5" stroke-linecap="round"/>
+                    </svg>
+                    <span class="text-lg font-extrabold tracking-tight text-white">sofiya</span>
+                </a>
+                <p class="text-gray-400 max-w-xs leading-relaxed">
+                    One Discord app for your whole community, built to grow with you.
+                </p>
+                <!-- Social Icons (Pure SVG - Editable via SOFIYA_CONFIG or href) -->
+                <div class="flex items-center space-x-3 pt-2">
+                    <a href="https://x.com/SkSujaanMondal" target="_blank" rel="noopener" aria-label="X" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-gray-300 hover:text-white transition">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
+                    <a href="/auth/login" aria-label="Discord" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-gray-300 hover:text-white transition">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 127.14 96.36"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07Z"/></svg>
+                    </a>
+                    <a href="https://github.com/sujaanz" target="_blank" rel="noopener" aria-label="GitHub" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-gray-300 hover:text-white transition">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Links Columns -->
+            <div class="md:col-span-2 space-y-3">
+                <h4 class="font-bold text-white uppercase tracking-wider">Product</h4>
+                <ul class="space-y-2.5 text-gray-400">
+                    <li><a href="/features" class="hover:text-white transition">Features</a></li>
+                    <li><a href="/commands" class="hover:text-white transition">Commands</a></li>
+                    <li><a href="/tutorials" class="hover:text-white transition">Tutorials</a></li>
+                    <li><a href="#modules-cloud" class="hover:text-white transition">Modules</a></li>
+                    <li><a href="/dashboard" class="hover:text-white transition">Dashboard</a></li>
+                </ul>
+            </div>
+
+            <div class="md:col-span-2 space-y-3">
+                <h4 class="font-bold text-white uppercase tracking-wider">Resources</h4>
+                <ul class="space-y-2.5 text-gray-400">
+                    <li><a href="/tutorials" class="hover:text-white transition">Support Centre</a></li>
+                    <li><a href="#bento-features" class="hover:text-white transition">System Status</a></li>
+                </ul>
+            </div>
+
+            <div class="md:col-span-3 space-y-3">
+                <h4 class="font-bold text-white uppercase tracking-wider">Company</h4>
+                <ul class="space-y-2.5 text-gray-400">
+                    <li><a href="#bento-features" onclick="showToast('Terms & Privacy loaded')" class="hover:text-white transition">Terms and Conditions</a></li>
+                    <li><a href="#bento-features" onclick="showToast('Cookie preferences saved')" class="hover:text-white transition">Cookie Guidelines</a></li>
+                    <li><a href="/dashboard" class="hover:text-white transition">Contact Us</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="max-w-6xl mx-auto pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500">
+            <p>Copyright &copy; 2020 - 2026 Sofiya Bot. All rights reserved.</p>
+            <button type="button" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="mt-4 sm:mt-0 text-gray-400 hover:text-white font-semibold transition">
+                Back to top &uarr;
+            </button>
         </div>
     </footer>
 
+    <!-- ==================== COMPLETE INTERACTIVE ENGINE SCRIPT ==================== -->
+    <script>
+        // 1. Live Toast Helper
+        let toastTimer;
+        function showToast(msg) {
+            const toast = document.getElementById('liveToast');
+            const text = document.getElementById('liveToastText');
+            if (!toast || !text) return;
+            text.textContent = msg;
+            toast.classList.remove('opacity-0', 'translate-y-4');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-4');
+            }, 2600);
+        }
+
+        // 2. Mobile Drawer & Language Popover Toggles
+        const menuBtn = document.getElementById('mobileMenuBtn');
+        const navDrawer = document.getElementById('navDrawer');
+        const langBtn = document.getElementById('langBtn');
+        const langDropdown = document.getElementById('langDropdown');
+
+        if (menuBtn && navDrawer) {
+            menuBtn.addEventListener('click', () => {
+                navDrawer.classList.toggle('hidden');
+                langDropdown.classList.add('hidden');
+            });
+        }
+        if (langBtn && langDropdown) {
+            langBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                langDropdown.classList.toggle('hidden');
+                navDrawer.classList.add('hidden');
+            });
+        }
+        document.addEventListener('click', () => {
+            if (langDropdown) langDropdown.classList.add('hidden');
+        });
+
+        function setLanguage(code, label) {
+            document.getElementById('currentLangCode').textContent = code;
+            showToast('Language switched to ' + label);
+        }
+
+        // 3. Ambient Accent Theme Switcher
+        const themes = [
+            { name: 'Crimson Red', accent: '#ff3b5c', hover: '#e62e4d', glow: 'rgba(255, 59, 92, 0.22)' },
+            { name: 'Cyber Violet', accent: '#8b5cf6', hover: '#7c3aed', glow: 'rgba(139, 92, 246, 0.22)' },
+            { name: 'Emerald Matrix', accent: '#10b981', hover: '#059669', glow: 'rgba(16, 185, 129, 0.20)' }
+        ];
+        let currentThemeIdx = 0;
+        document.getElementById('themeCycleBtn').addEventListener('click', () => {
+            currentThemeIdx = (currentThemeIdx + 1) % themes.length;
+            const t = themes[currentThemeIdx];
+            document.documentElement.style.setProperty('--brand-accent', t.accent);
+            document.documentElement.style.setProperty('--brand-accent-hover', t.hover);
+            document.documentElement.style.setProperty('--brand-glow', t.glow);
+            showToast('Theme switched to ' + t.name);
+        });
+
+        // 4. Bento Toggles, Ping & Slash Command Switcher
+        function updateBentoToggles(modName, state) {
+            const checks = document.querySelectorAll('.bento-toggle:checked').length;
+            document.getElementById('activeModuleCount').textContent = checks + ' / 3 Active';
+            showToast(modName + (state ? ' Enabled' : ' Disabled'));
+        }
+
+        function pingCluster() {
+            const ms = Math.floor(Math.random() * 9) + 14;
+            document.getElementById('clusterPing').textContent = ms + 'ms';
+            showToast('Cluster #01 responded in ' + ms + 'ms');
+        }
+
+        function switchSlashCmd(cmd, arg, desc) {
+            document.getElementById('slashCmdName').textContent = cmd;
+            document.getElementById('slashCmdArg').textContent = arg;
+            document.getElementById('slashCmdDesc').textContent = desc;
+            showToast('Previewing ' + cmd + ' command');
+        }
+
+        // 5. AutoMod Simulator
+        let autoModIdx = 0;
+        const autoModCases = [
+            { title: 'AutoMod Action • Phishing Blocked', caseId: 'Case #1085', desc: 'Blocked a suspicious phishing link from @scam_bot in #general-chat.', action: 'Permanent Ban & Message Purge', rule: 'Anti-Phishing Domain Filter' },
+            { title: 'AutoMod Action • Mass Mention Stopped', caseId: 'Case #1086', desc: 'Stopped @raider_99 from mentioning 18 roles in a single message.', action: 'Message Deleted & 1h Mute', rule: 'Max Mention Limit (5)' },
+            { title: 'AutoMod Action • Link Blocked', caseId: 'Case #1084', desc: 'Blocked a message containing an unauthorized server invite from @rogue_user.', action: 'Message Deleted & 15m Timeout', rule: 'Block External Discord Invites' }
+        ];
+        function simulateAutoMod() {
+            const c = autoModCases[autoModIdx % autoModCases.length];
+            autoModIdx++;
+            document.getElementById('automodTitle').textContent = c.title;
+            document.getElementById('automodCase').textContent = c.caseId;
+            document.getElementById('automodDesc').textContent = c.desc;
+            document.getElementById('automodAction').textContent = c.action;
+            document.getElementById('automodRule').textContent = c.rule;
+            showToast('Simulated ' + c.caseId);
+        }
+
+        // 6. Leveling Tabs & Live Rank Card Theme Customizer
+        function switchLevelTab(tab) {
+            ['Rank', 'Rewards', 'Leader'].forEach(t => {
+                document.getElementById('levelTab' + t).classList.add('hidden');
+                const btn = document.getElementById('tabBtn' + t);
+                btn.classList.remove('bg-brandred', 'text-white');
+                btn.classList.add('text-gray-400');
+            });
+            const map = { rank: 'Rank', rewards: 'Rewards', leader: 'Leader' };
+            const active = map[tab];
+            document.getElementById('levelTab' + active).classList.remove('hidden');
+            const activeBtn = document.getElementById('tabBtn' + active);
+            activeBtn.classList.add('bg-brandred', 'text-white');
+            activeBtn.classList.remove('text-gray-400');
+        }
+
+        function setRankTheme(c1, c2, name) {
+            document.getElementById('rankProgressBar').style.background = `linear-gradient(90deg, ${c1}, ${c2})`;
+            document.getElementById('rankAvatarBorder').style.borderColor = c1;
+            document.getElementById('demoLevelNumber').style.color = c1;
+            document.getElementById('rankThemeLabel').textContent = name + ' • 2.0x Booster';
+            showToast('Rank Card style set to ' + name);
+        }
+
+        let currentDemoLvl = 24;
+        function grantDemoXp() {
+            currentDemoLvl++;
+            document.getElementById('demoLevelText').textContent = 'Level ' + currentDemoLvl;
+            document.getElementById('demoLevelNumber').textContent = currentDemoLvl;
+            document.getElementById('demoXpNumbers').textContent = '5,000 / 5,000 XP (LEVEL UP!)';
+            showToast('Level Up! @Sujaan reached Level ' + currentDemoLvl);
+        }
+
+        // 7. Interactive Ticket Actions
+        function handleTicketAction(action) {
+            const badge = document.getElementById('ticketStatusBadge');
+            const title = document.getElementById('ticketHeaderTitle');
+            const body = document.getElementById('ticketBodyText');
+            if (action === 'claim') {
+                badge.textContent = 'Claimed by @Sujaan';
+                title.textContent = 'Ticket Claimed by Staff';
+                body.innerHTML = 'Staff member <strong class="text-white">@Sujaan</strong> has claimed this ticket and is assisting <strong class="text-white">@Alex</strong>.';
+                showToast('Ticket #0492 claimed by @Sujaan');
+            } else if (action === 'transcript') {
+                showToast('HTML Transcript saved to #ticket-logs');
+            } else if (action === 'close') {
+                badge.textContent = 'Closed & Archived';
+                title.textContent = 'Support Ticket Closed';
+                body.innerHTML = 'This ticket was resolved and archived. Full web transcript generated.';
+                showToast('Ticket #0492 closed');
+            }
+        }
+
+        // 8. Interactive Analytics Timeframe Switcher
+        function updateAnalytics(period) {
+            const countEl = document.getElementById('analyticsCount');
+            const growthEl = document.getElementById('analyticsGrowth');
+            const lineEl = document.getElementById('analyticsLine');
+            if (period === '7d') {
+                countEl.textContent = '48,920';
+                growthEl.textContent = '+18.4%';
+                lineEl.setAttribute('d', 'M0,110 C70,95 110,120 170,75 C230,30 280,65 340,40 C400,15 450,35 500,10');
+            } else if (period === '30d') {
+                countEl.textContent = '214,680';
+                growthEl.textContent = '+34.2%';
+                lineEl.setAttribute('d', 'M0,120 C70,80 110,85 170,55 C230,65 280,35 340,25 C400,30 450,15 500,5');
+            } else {
+                countEl.textContent = '1,892,400';
+                growthEl.textContent = '+142.0%';
+                lineEl.setAttribute('d', 'M0,130 C70,110 110,95 170,70 C230,55 280,45 340,30 C400,20 450,12 500,4');
+            }
+            showToast('Analytics updated (' + period.toUpperCase() + ')');
+        }
+
+        // 9. Interactive Giveaway
+        let giveawayEntered = false;
+        function joinGiveaway() {
+            giveawayEntered = !giveawayEntered;
+            const btnText = document.getElementById('giveawayBtnText');
+            if (giveawayEntered) {
+                btnText.textContent = 'Joined Giveaway (429)';
+                showToast('You entered the Nitro Giveaway!');
+            } else {
+                btnText.textContent = 'Enter Giveaway (428)';
+                showToast('Left giveaway');
+            }
+        }
+
+        function rollGiveawayWinner() {
+            const winners = ['@Sujaan', '@Aria', '@Alex', '@Rohan'];
+            const pick = winners[Math.floor(Math.random() * winners.length)];
+            document.getElementById('giveawaySubtext').innerHTML = `Congratulations <strong class="text-emerald-400">${pick}</strong>! You won the <strong>Discord Nitro Monthly Subscription</strong>!`;
+            showToast('Winner rolled: ' + pick);
+        }
+
+        // 10. Interactive 26 Module Inspector
+        const moduleDescriptions = {
+            'App Customiser': 'Customize bot username, avatar, bio, and theme colors exclusively for your server.',
+            'Welcomer': 'Greet new members with custom background cards, DMs, and automatic join roles.',
+            'Levels': 'Reward text and voice activity with Bento rank cards, role rewards, and multipliers.',
+            'Economy': 'Create a custom server currency, daily streaks, leaderboards, and role shops.',
+            'Music': 'Stream high-bitrate audio in voice channels with queue filters and 24/7 mode.',
+            'Moderation': 'Keep chats clean with AutoMod link filters, anti-raid locks, and case logs.',
+            'Tickets': 'Organize member support with multi-panel dropdown tickets and HTML transcripts.',
+            'Giveaways': 'Host instant giveaways with role requirements and booster bonus entries.'
+        };
+        function inspectModule(mod) {
+            document.getElementById('inspectorTitle').textContent = mod + ' Module';
+            document.getElementById('inspectorDesc').textContent = moduleDescriptions[mod] || `Configure automated triggers, permissions, and channels for the ${mod} module directly from your web dashboard.`;
+            showToast('Inspecting ' + mod + ' module');
+        }
+
+        // 11. Mouse Spotlight Effect & Scroll Reveal
+        document.querySelectorAll('.glass-card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+                card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+            });
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal-section').forEach(sec => observer.observe(sec));
+    </script>
 </body>
 </html>

@@ -10,5 +10,8 @@
     "premium_price": "$3.50",
     "use_live_bot_guild_count": true,
     "fallback_server_count_display": "1,600,000+",
-    "custom_server_count_override": null
+    "custom_server_count_override": null,
+    "bot_avatar_url": "https://cdn.discordapp.com/avatars/1267928727833149592/07ba069468f6eeebd11c6ae032507832.png?size=256",
+    "bot_banner_url": "https://cdn.discordapp.com/banners/1267928727833149592/87242711d78d8cea96e2d9a1edef46f8.png?size=600",
+    "use_live_discord_bot_profile": true
 }

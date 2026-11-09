@@ -37,9 +37,18 @@ _BOT_GUILDS_CACHE = {
     "token_valid": False
 }
 
+# In-memory cache for live Discord Bot Profile (Name, Avatar DP, Banner)
+_BOT_PROFILE_CACHE = {
+    "data": None,
+    "timestamp": 0.0
+}
+
 # Customizable Status Bar & Global Bot Telemetry Defaults (Auto-saved to web/bot_status.json)
 DEFAULT_BOT_STATUS_CONFIG = {
     "bot_name": "Sofiya",
+    "bot_avatar_url": "",
+    "bot_banner_url": "",
+    "use_live_discord_bot_profile": True,
     "status_bar_text": "Online • 28 Modules Ready",
     "connected_status_prefix": "Connected as",
     "cluster_name": "Cluster #01 (India/Global)",
@@ -227,6 +236,9 @@ def ensure_guild_settings(all_settings: dict, guild_id: str, guild_name: str = "
     if gid not in all_settings or not isinstance(all_settings[gid], dict):
         all_settings[gid] = {}
 
+    status_cfg = load_bot_status_config()
+    default_bot_name = status_cfg.get("bot_name", "Sofiya") or "Sofiya"
+
     defaults = {
         'name': guild_name,
         'prefix': '!',
@@ -242,7 +254,7 @@ def ensure_guild_settings(all_settings: dict, guild_id: str, guild_name: str = "
         'automod_enabled': True,
         'welcome_enabled': True,
         'welcome_msg': 'Welcome to the server!',
-        'bot_nickname': 'Sofiya',
+        'bot_nickname': default_bot_name,
         'bot_avatar': '',
         'bot_banner': '',
         'bot_bio': f'One Discord app for {guild_name}, built to grow with you.',
@@ -355,7 +367,7 @@ def parse_id_list(raw_str: str) -> list:
 
 
 # =====================================================================
-# DISCORD API REAL-TIME FETCHERS (BOT PRESENCE, GUILDS, DP/ICONS, CHANNELS, ROLES)
+# DISCORD API REAL-TIME FETCHERS (BOT IDENTITY/DP, PRESENCE, GUILDS, CHANNELS, ROLES)
 # =====================================================================
 
 def get_bot_token() -> str:
@@ -368,9 +380,81 @@ def get_bot_token() -> str:
     ).strip()
 
 
+def fetch_bot_identity(force_refresh: bool = False) -> dict:
+    """
+    Fetches the live Discord Bot User Profile (Real Bot Name, Avatar DP URL, Banner URL)
+    directly from Discord API (`/users/@me`) using the Bot Token.
+    Whenever the bot changes its DP or username on Discord, the website updates automatically!
+    """
+    now = time.time()
+    status_cfg = load_bot_status_config()
+
+    if not force_refresh and _BOT_PROFILE_CACHE["data"] is not None and (now - _BOT_PROFILE_CACHE["timestamp"]) < 45:
+        return dict(_BOT_PROFILE_CACHE["data"])
+
+    bot_name = status_cfg.get("bot_name", "Sofiya") or "Sofiya"
+    avatar_url = status_cfg.get("bot_avatar_url", "") or ""
+    banner_url = status_cfg.get("bot_banner_url", "") or ""
+    bot_id = str(DISCORD_CLIENT_ID)
+    live_synced = False
+
+    bot_token = get_bot_token()
+    if bot_token and status_cfg.get("use_live_discord_bot_profile", True):
+        try:
+            headers = {"Authorization": f"Bot {bot_token}"}
+            resp = requests.get(f"{DISCORD_API_BASE}/users/@me", headers=headers, timeout=4)
+            if resp.status_code == 200:
+                bdata = resp.json()
+                bot_id = str(bdata.get("id") or bot_id)
+                live_name = bdata.get("global_name") or bdata.get("username")
+                if live_name:
+                    bot_name = str(live_name).strip()
+
+                av_hash = bdata.get("avatar")
+                if av_hash:
+                    ext = "gif" if str(av_hash).startswith("a_") else "png"
+                    avatar_url = f"https://cdn.discordapp.com/avatars/{bot_id}/{av_hash}.{ext}?size=256"
+
+                bn_hash = bdata.get("banner")
+                if bn_hash:
+                    ext = "gif" if str(bn_hash).startswith("a_") else "png"
+                    banner_url = f"https://cdn.discordapp.com/banners/{bot_id}/{bn_hash}.{ext}?size=600"
+
+                live_synced = True
+
+                # Persist latest live bot name & DP into web/bot_status.json
+                cfg_changed = False
+                if bot_name and status_cfg.get("bot_name") != bot_name:
+                    status_cfg["bot_name"] = bot_name
+                    cfg_changed = True
+                if avatar_url and status_cfg.get("bot_avatar_url") != avatar_url:
+                    status_cfg["bot_avatar_url"] = avatar_url
+                    cfg_changed = True
+                if banner_url and status_cfg.get("bot_banner_url") != banner_url:
+                    status_cfg["bot_banner_url"] = banner_url
+                    cfg_changed = True
+                if cfg_changed:
+                    save_bot_status_config(status_cfg)
+        except Exception as e:
+            print(f"Error fetching live bot identity: {e}")
+
+    profile = {
+        "id": bot_id,
+        "name": bot_name,
+        "name_lower": bot_name.lower(),
+        "initial": bot_name[:1].upper() if bot_name else "S",
+        "avatar_url": avatar_url,
+        "banner_url": banner_url,
+        "live_synced": live_synced
+    }
+    _BOT_PROFILE_CACHE["data"] = profile
+    _BOT_PROFILE_CACHE["timestamp"] = now
+    return dict(profile)
+
+
 def fetch_bot_guild_ids(force_refresh: bool = False) -> set:
     """
-    Fetch the exact set of Guild IDs where Sofiya Bot is currently installed.
+    Fetch the exact set of Guild IDs where the Bot is currently installed.
     Uses Discord Bot Token (`/users/@me/guilds`) + local storage fallback.
     """
     now = time.time()
@@ -705,14 +789,16 @@ def get_redirect_target_after_level_action(guild_id: str, msg: str):
 
 
 # =====================================================================
-# AUTOMATIC FRONTEND <-> BACKEND LIVE BRIDGE (100% PRESERVED + 28 MODULES)
+# AUTOMATIC FRONTEND <-> BACKEND LIVE BRIDGE (100% PRESERVED + LIVE BOT DP & NAME SYNC)
 # =====================================================================
 
 @app.after_request
 def inject_live_bot_bridge(response):
     """
-    Automatically injects a lightweight live-sync script into `/`, `/dashboard`, and `/manage/<guild_id>`
+    Automatically injects a lightweight live-sync script into ALL HTML pages (`/`, `/dashboard`, `/manage/<guild_id>`)
     so that:
+      0. Every page automatically syncs the Bot's LIVE Name & Profile Picture (DP) from Discord API
+         (replacing static "Sofiya" text and red 'S' circles with the real bot name & DP)!
       1. `index.html` automatically receives custom status bar settings from `web/bot_status.json`!
       2. `dashboard.html` automatically shows real 'Manage server' vs 'Add Sofiya' buttons
          and routes 'Add Sofiya' to `/invite/<guild_id>`!
@@ -726,6 +812,90 @@ def inject_live_bot_bridge(response):
             return response
 
         path = request.path or ""
+        bot_profile = fetch_bot_identity()
+
+        # Check if viewing a specific guild that has custom bot nickname/avatar overrides
+        effective_profile = dict(bot_profile)
+        if path.startswith('/manage/'):
+            parts = [p for p in path.split('/') if p]
+            if len(parts) >= 2:
+                gid = parts[1]
+                all_settings = load_settings()
+                g_settings = all_settings.get(str(gid), {})
+                custom_nick = (g_settings.get('bot_nickname') or '').strip()
+                custom_av = (g_settings.get('bot_avatar') or '').strip()
+                if custom_nick and custom_nick != 'Sofiya':
+                    effective_profile['name'] = custom_nick
+                    effective_profile['name_lower'] = custom_nick.lower()
+                    effective_profile['initial'] = custom_nick[:1].upper()
+                if custom_av:
+                    effective_profile['avatar_url'] = custom_av
+
+        # Global Live Bot Identity (Name + DP Avatar) Synchronizer Script for ALL pages
+        global_identity_js = f"""
+<script>
+(function() {{
+    const BOT_PROFILE = {json.dumps(effective_profile)};
+    window.SOFIYA_LIVE_BOT_PROFILE = BOT_PROFILE;
+
+    function applyLiveBotIdentity(profile) {{
+        if (!profile) return;
+        const liveName = profile.name || 'Sofiya';
+        const liveLower = profile.name_lower || liveName.toLowerCase();
+        const liveInitial = profile.initial || liveName.charAt(0).toUpperCase();
+        const liveAvatar = profile.avatar_url || '';
+
+        if (window.SOFIYA_CONFIG) {{
+            window.SOFIYA_CONFIG.botName = liveName;
+        }}
+
+        // 1. Sync Page Title if Bot Name Changed
+        if (liveName !== 'Sofiya' && document.title.includes('Sofiya')) {{
+            document.title = document.title.replace(/Sofiya/g, liveName);
+        }}
+
+        // 2. Sync Navbar & Footer Brand Logos ("sofiya")
+        document.querySelectorAll('header a[href="/"] span, footer a[href="/"] span').forEach(el => {{
+            if (el.textContent.trim().toLowerCase() === 'sofiya') {{
+                el.textContent = liveLower;
+            }}
+        }});
+
+        // 3. Sync Exact Bot Name Spans & Headings Across All Cards/Modals
+        if (liveName !== 'Sofiya') {{
+            document.querySelectorAll('span, h1, h2, h3, h4, p, a, button, label, div').forEach(el => {{
+                if (el.children.length === 0 && el.textContent && el.textContent.includes('Sofiya')) {{
+                    el.textContent = el.textContent.replace(/Sofiya/g, liveName);
+                }}
+            }});
+        }}
+
+        // 4. Replace Static Red 'S' Avatar Badges in Discord Chat Mockups & Cards with Real Bot DP Image!
+        document.querySelectorAll('div, span').forEach(el => {{
+            if (el.children.length === 0 && el.textContent.trim() === 'S' && el.className && typeof el.className === 'string' && el.className.includes('bg-brandred')) {{
+                if (liveAvatar) {{
+                    el.textContent = '';
+                    const img = document.createElement('img');
+                    img.src = liveAvatar;
+                    img.alt = liveName;
+                    img.className = 'w-full h-full object-cover rounded-inherit';
+                    img.style.borderRadius = 'inherit';
+                    img.onerror = function() {{ el.textContent = liveInitial; }};
+                    el.appendChild(img);
+                    el.classList.add('overflow-hidden');
+                }} else {{
+                    el.textContent = liveInitial;
+                }}
+            }}
+        }});
+    }}
+
+    applyLiveBotIdentity(BOT_PROFILE);
+}})();
+</script>
+"""
+
+        scripts_to_inject = [global_identity_js]
 
         # 0. Auto-Bridge for / (Index Page Status Bar & Custom Promo Sync from web/bot_status.json)
         if path == '/':
@@ -751,9 +921,7 @@ def inject_live_bot_bridge(response):
 }})();
 </script>
 """
-            html_text = response.get_data(as_text=True)
-            if "</body>" in html_text:
-                response.set_data(html_text.replace("</body>", index_bridge_js + "\n</body>", 1))
+            scripts_to_inject.append(index_bridge_js)
 
         # 1. Auto-Bridge for /dashboard (Manage server vs Add Sofiya)
         elif path == '/dashboard' and session.get('access_token'):
@@ -774,6 +942,7 @@ def inject_live_bot_bridge(response):
 (function() {{
     const SERVER_CONN_MAP = {json.dumps(conn_map)};
     const TOKEN_ACTIVE = {json.dumps(token_active)};
+    const BOT_NAME = (window.SOFIYA_LIVE_BOT_PROFILE && window.SOFIYA_LIVE_BOT_PROFILE.name) ? window.SOFIYA_LIVE_BOT_PROFILE.name : 'Sofiya';
     try {{
         let existing = JSON.parse(localStorage.getItem('sofiya_connected_servers_v2')) || {{}};
         let merged = TOKEN_ACTIVE ? SERVER_CONN_MAP : Object.assign({{}}, SERVER_CONN_MAP, existing);
@@ -786,13 +955,16 @@ def inject_live_bot_bridge(response):
             const isConn = card.getAttribute('data-connected') === 'true';
             const btn = card.querySelector('.action-btn');
             const label = card.querySelector('.action-btn-label');
+            const stTxt = card.querySelector('.status-text');
             if (!btn || !gid) return;
             if (isConn) {{
                 btn.setAttribute('href', '/manage/' + gid);
                 if (label) label.textContent = 'Manage server';
+                if (stTxt) stTxt.textContent = BOT_NAME + ' connected';
             }} else {{
                 btn.setAttribute('href', '/invite/' + gid);
-                if (label) label.textContent = 'Add Sofiya';
+                if (label) label.textContent = 'Add ' + BOT_NAME;
+                if (stTxt) stTxt.textContent = 'Ready to connect';
             }}
         }});
     }}
@@ -813,9 +985,7 @@ def inject_live_bot_bridge(response):
 }})();
 </script>
 """
-            html_text = response.get_data(as_text=True)
-            if "</body>" in html_text:
-                response.set_data(html_text.replace("</body>", bridge_js + "\n</body>", 1))
+            scripts_to_inject.append(bridge_js)
 
         # 2. Auto-Bridge for /manage/<guild_id> (Live 28-Module Backend Sync)
         elif path.startswith('/manage/') and path.count('/') == 2 and session.get('access_token'):
@@ -840,9 +1010,12 @@ def inject_live_bot_bridge(response):
 }})();
 </script>
 """
-            html_text = response.get_data(as_text=True)
-            if "</body>" in html_text:
-                response.set_data(html_text.replace("</body>", bridge_js + "\n</body>", 1))
+            scripts_to_inject.append(bridge_js)
+
+        html_text = response.get_data(as_text=True)
+        if "</body>" in html_text and scripts_to_inject:
+            combined_scripts = "\n".join(scripts_to_inject)
+            response.set_data(html_text.replace("</body>", combined_scripts + "\n</body>", 1))
     except Exception as e:
         print(f"Bridge injection warning: {e}")
 
@@ -859,20 +1032,22 @@ def index():
     admin_guilds = fetch_user_admin_guilds(access_token) if access_token else []
     bot_status_cfg = load_bot_status_config()
     bot_guild_count = get_display_bot_guild_count()
+    bot_profile = fetch_bot_identity()
 
     return render_template(
         'index.html',
         user=session.get('user'),
         guilds=admin_guilds,
         bot_guild_count=bot_guild_count,
-        bot_status_config=bot_status_cfg
+        bot_status_config=bot_status_cfg,
+        bot_profile=bot_profile
     )
 
 
 @app.route('/features')
 def features():
     try:
-        return render_template('features.html', user=session.get('user'))
+        return render_template('features.html', user=session.get('user'), bot_profile=fetch_bot_identity())
     except TemplateNotFound:
         return redirect(url_for('index') + '#bento-features')
 
@@ -880,7 +1055,7 @@ def features():
 @app.route('/commands')
 def commands():
     try:
-        return render_template('commands.html', user=session.get('user'))
+        return render_template('commands.html', user=session.get('user'), bot_profile=fetch_bot_identity())
     except TemplateNotFound:
         return redirect(url_for('index') + '#bento-features')
 
@@ -888,7 +1063,7 @@ def commands():
 @app.route('/tutorials')
 def tutorials():
     try:
-        return render_template('tutorials.html', user=session.get('user'))
+        return render_template('tutorials.html', user=session.get('user'), bot_profile=fetch_bot_identity())
     except TemplateNotFound:
         return redirect(url_for('index') + '#modules-cloud')
 
@@ -916,7 +1091,8 @@ def dashboard():
         'dashboard.html',
         guilds=admin_guilds,
         user=session.get('user'),
-        bot_status_config=load_bot_status_config()
+        bot_status_config=load_bot_status_config(),
+        bot_profile=fetch_bot_identity(force_refresh=force_sync)
     )
 
 
@@ -946,11 +1122,12 @@ def global_premium_redirect():
             guild_id='default_guild',
             settings={},
             guilds=[],
-            user=session.get('user')
+            user=session.get('user'),
+            bot_profile=fetch_bot_identity()
         )
     except TemplateNotFound:
         try:
-            return render_template('premium.html', user=session.get('user'))
+            return render_template('premium.html', user=session.get('user'), bot_profile=fetch_bot_identity())
         except TemplateNotFound:
             if not access_token:
                 return redirect(url_for('auth.login'))
@@ -997,7 +1174,7 @@ def manage_premium_panel(guild_id):
 
         record_audit_log(all_settings, guild_id, "Updated Server Premium & Custom Bot Branding")
         save_settings(all_settings)
-        success_msg = "Premium Pro & Custom Bot Branding synchronized with Sofiya!"
+        success_msg = "Premium Pro & Custom Bot Branding synchronized with Bot!"
 
     context = dict(
         guild_name=guild_name,
@@ -1011,6 +1188,7 @@ def manage_premium_panel(guild_id):
         guild_roles=guild_roles,
         guild_id=guild_id,
         user=session.get('user'),
+        bot_profile=fetch_bot_identity(),
         success=success_msg
     )
 
@@ -1086,6 +1264,7 @@ def manage_server(guild_id):
         top_users=top_users,
         guild_id=guild_id,
         user=session.get('user'),
+        bot_profile=fetch_bot_identity(),
         success=success_msg
     )
 
@@ -1140,6 +1319,7 @@ def manage_level_module(guild_id):
         top_users=top_users,
         guild_id=guild_id,
         user=session.get('user'),
+        bot_profile=fetch_bot_identity(),
         success=success_msg
     )
 
@@ -1215,6 +1395,7 @@ def manage_specific_module(guild_id, module_key):
         guild_roles=guild_roles,
         guild_id=guild_id,
         user=session.get('user'),
+        bot_profile=fetch_bot_identity(),
         success=success_msg
     )
 
@@ -1356,10 +1537,25 @@ def reset_all_server_xp(guild_id):
 # ULTRA NEXT-GEN LIVE REST API ENDPOINTS (REAL-TIME BOT <-> WEB SYNC)
 # =====================================================================
 
+@app.route('/api/bot/profile', methods=['GET'])
+def api_bot_profile():
+    """
+    Returns live Discord Bot Identity (Real Bot Name, Avatar DP URL, Banner URL)
+    fetched directly from Discord API (`/users/@me`).
+    """
+    force = request.args.get('refresh') == '1'
+    profile = fetch_bot_identity(force_refresh=force)
+    return jsonify({
+        "ok": True,
+        "bot_profile": profile
+    })
+
+
 @app.route('/api/bot/stats', methods=['GET', 'POST'])
 def api_bot_stats():
     """
-    GET: Returns live bot server count (`guild_count`) and customizable status bar config from `web/bot_status.json`.
+    GET: Returns live bot server count (`guild_count`), live bot DP/Name (`bot_profile`),
+         and customizable status bar config from `web/bot_status.json`.
     POST: Allows updating `web/bot_status.json` live if authenticated!
     """
     status_cfg = load_bot_status_config()
@@ -1370,15 +1566,18 @@ def api_bot_stats():
             if k in payload:
                 status_cfg[k] = payload[k]
         save_bot_status_config(status_cfg)
+        _BOT_PROFILE_CACHE["timestamp"] = 0.0
 
     bot_guild_ids = fetch_bot_guild_ids()
     live_count = len(bot_guild_ids)
+    bot_profile = fetch_bot_identity()
 
     return jsonify({
         "ok": True,
         "guild_count": live_count if live_count > 0 else None,
         "display_server_count": get_display_bot_guild_count(),
         "total_modules": 28,
+        "bot_profile": bot_profile,
         "status_config": status_cfg
     })
 
@@ -1539,6 +1738,7 @@ def api_guild_diagnostics(guild_id):
         "guild_id": str(guild_id),
         "bot_connected": is_bot_in_guild(guild_id),
         "bot_token_configured": bool(get_bot_token()),
+        "bot_profile": fetch_bot_identity(),
         "channels_detected": len(channels),
         "roles_detected": len(roles),
         "active_modules": active_count,
@@ -1614,9 +1814,12 @@ def api_guild_test_message(guild_id):
     if not bot_token:
         return jsonify({"ok": False, "error": "DISCORD_TOKEN not set in .env"}), 400
 
+    bot_profile = fetch_bot_identity()
+    bot_display_name = bot_profile.get("name", "Sofiya")
+
     payload = request.get_json(silent=True) or {}
     channel_id = str(payload.get("channel_id", "")).strip()
-    content = str(payload.get("content", "✅ **Sofiya Dashboard Sync Test:** Your web dashboard is connected to this channel!")).strip()
+    content = str(payload.get("content", f"✅ **{bot_display_name} Dashboard Sync Test:** Your web dashboard is connected to this channel!")).strip()
 
     if not channel_id.isdigit():
         channels = fetch_guild_channels(guild_id)

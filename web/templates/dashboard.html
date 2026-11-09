@@ -23,6 +23,7 @@
                         cardbg: '#12141b',
                         brandred: 'var(--brand-accent, #ff3b5c)',
                         brandredhover: 'var(--brand-accent-hover, #e62e4d)',
+                        goldaccent: '#f5b027',
                         discord: '#5865F2',
                         discordhover: '#4752C4'
                     }
@@ -55,7 +56,7 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.85);
         }
-        /* Main Outer Dashboard Container (Exact Maki.gg Shell) */
+        /* Main Outer Dashboard Container (Exact Maki.gg Laptop Shell) */
         .dashboard-shell {
             position: relative;
             background: linear-gradient(180deg, rgba(16, 18, 24, 0.94) 0%, rgba(9, 10, 14, 0.98) 100%);
@@ -67,7 +68,7 @@
         /* Server Card Glassmorphism + Interactive Spotlight */
         .guild-card {
             position: relative;
-            background: linear-gradient(180deg, rgba(22, 25, 34, 0.84) 0%, rgba(15, 17, 23, 0.94) 100%);
+            background: linear-gradient(180deg, rgba(20, 23, 31, 0.86) 0%, rgba(13, 15, 21, 0.96) 100%);
             border: 1px solid rgba(255, 255, 255, 0.07);
             transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
             overflow: hidden;
@@ -95,7 +96,7 @@
         }
         /* Active Stat Box Highlight */
         .stat-box-active {
-            border-color: var(--brand-accent) !important;
+            border-color: rgba(255, 59, 92, 0.5) !important;
             background: rgba(255, 59, 92, 0.06) !important;
         }
         /* Ambient Top Glow */
@@ -152,12 +153,12 @@
         </div>
     </div>
 
-    <!-- ==================== STICKY FLOATING PILL NAVBAR (ULTRA-CLEAN MAKI LAYOUT) ==================== -->
+    <!-- ==================== STICKY FLOATING PILL NAVBAR (EXACT LAPTOP SCREENSHOT MATCH) ==================== -->
     <header class="sticky top-4 z-50 px-4 sm:px-6 max-w-6xl mx-auto w-full">
         <div class="maki-pill-nav rounded-full px-5 sm:px-7 h-16 flex items-center justify-between transition-all duration-300 relative">
             
-            <!-- Left: Slanted Maki-Style Vector Logo & Brand Name -->
-            <div class="flex items-center space-x-8">
+            <!-- Left: Slanted Maki-Style Vector Logo & Brand Name + Laptop Nav Links -->
+            <div class="flex items-center space-x-6 lg:space-x-7">
                 <a href="/" class="flex items-center space-x-3 group">
                     <svg class="w-8 h-8 text-brandred transition-transform duration-300 group-hover:scale-105" viewBox="0 0 40 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="6" cy="22" r="3.5" fill="currentColor"/>
@@ -167,26 +168,83 @@
                     <span class="text-xl font-extrabold tracking-tight text-white">sofiya</span>
                 </a>
 
-                <!-- Desktop Navigation Links -->
-                <nav class="hidden lg:flex items-center space-x-7 text-sm font-semibold text-gray-300">
-                    <a href="/" class="hover:text-white transition">Home</a>
-                    <a href="/features" class="hover:text-white transition">Features</a>
-                    <a href="/commands" class="hover:text-white transition">Commands</a>
-                    <a href="/tutorials" class="hover:text-white transition">Tutorials</a>
-                    <a href="/dashboard" class="text-white font-bold flex items-center space-x-1.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-brandred"></span>
-                        <span>Dashboard</span>
+                <!-- Desktop Navigation Links (Exact Match to Laptop Screenshot: Dashboard Pill, Features v, Resources v, >_ Commands, ☆ Premium) -->
+                <nav class="hidden lg:flex items-center space-x-5 text-xs sm:text-sm font-semibold text-gray-300">
+                    <!-- Active Dashboard Pill -->
+                    <a href="/dashboard" class="bg-white/[0.08] hover:bg-white/[0.12] border border-white/10 text-white font-bold px-4 py-1.5 rounded-full transition shadow-sm">
+                        Dashboard
+                    </a>
+
+                    <!-- Features Dropdown -->
+                    <div class="relative">
+                        <button id="featuresNavBtn" type="button" class="flex items-center space-x-1 hover:text-white transition py-1">
+                            <span>Features</span>
+                            <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div id="featuresNavMenu" class="hidden absolute left-0 mt-3 w-56 bg-[#12151e] rounded-2xl p-2 border border-white/10 shadow-2xl z-50 text-xs">
+                            <a href="/#bento-features" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 text-gray-200 hover:text-white flex items-center justify-between transition">
+                                <span>Leveling &amp; Bento Cards</span>
+                                <span class="text-[10px] text-brandred font-bold">XP Cog</span>
+                            </a>
+                            <a href="/#bento-features" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 text-gray-200 hover:text-white flex items-center justify-between transition">
+                                <span>AutoMod &amp; Safety</span>
+                                <span class="text-[10px] text-emerald-400 font-bold">24/7</span>
+                            </a>
+                            <a href="/#modules-cloud" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 text-gray-200 hover:text-white flex items-center justify-between transition">
+                                <span>All 28 Server Modules</span>
+                                <span>&rarr;</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Resources Dropdown -->
+                    <div class="relative">
+                        <button id="resourcesNavBtn" type="button" class="flex items-center space-x-1 hover:text-white transition py-1">
+                            <span>Resources</span>
+                            <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div id="resourcesNavMenu" class="hidden absolute left-0 mt-3 w-52 bg-[#12151e] rounded-2xl p-2 border border-white/10 shadow-2xl z-50 text-xs">
+                            <a href="/tutorials" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 text-gray-200 hover:text-white flex items-center justify-between transition">
+                                <span>Setup Tutorials</span>
+                                <span class="text-[10px] text-gray-500">Docs</span>
+                            </a>
+                            <a href="#" onclick="openExportStudioModal(); return false;" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 text-gray-200 hover:text-white flex items-center justify-between transition">
+                                <span>Export Server Inventory</span>
+                                <span class="text-[10px] text-brandred font-bold">JSON</span>
+                            </a>
+                            <a href="/" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 text-gray-200 hover:text-white flex items-center justify-between transition">
+                                <span>Home Landing Page</span>
+                                <span>&rarr;</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- >_ Commands Link -->
+                    <a href="/commands" class="hover:text-white transition flex items-center space-x-1.5">
+                        <span class="font-mono text-xs text-gray-400">&gt;_</span>
+                        <span>Commands</span>
+                    </a>
+
+                    <!-- ☆ Premium Link (Connected to Dedicated Server Premium Panel Selector) -->
+                    <a href="{{ '/manage/' ~ guilds[0].id ~ '/premium' if guilds and guilds|length > 0 else '/#modules-cloud' }}" onclick="openPremiumServerModal(event)" class="hover:text-white transition flex items-center space-x-1.5">
+                        <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                        </svg>
+                        <span>Premium</span>
                     </a>
                 </nav>
             </div>
 
-            <!-- Right: Clean Language Selector, Theme Switcher, User Profile & Drawer Button -->
-            <div class="flex items-center space-x-2.5 sm:space-x-3.5">
+            <!-- Right: Clean Language Selector (Flag + EN v), Theme Switcher, User Profile Pill with Chevron & Drawer Button -->
+            <div class="flex items-center space-x-2.5 sm:space-x-3">
                 
-                <!-- Language Selector Dropdown -->
+                <!-- Language Selector Dropdown (Flag + EN + Chevron like Screenshot) -->
                 <div class="relative">
-                    <button id="langBtn" type="button" class="flex items-center space-x-2 text-xs font-bold text-gray-300 hover:text-white px-2.5 py-1.5 rounded-full hover:bg-white/5 transition">
-                        <span id="currentLangCode">EN</span>
+                    <button id="langBtn" type="button" class="flex items-center space-x-1.5 text-xs font-bold text-gray-300 hover:text-white px-2.5 py-1.5 rounded-full hover:bg-white/5 transition">
                         <svg class="w-4 h-3 rounded-[2px] shadow-sm" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
                             <clipPath id="uk-clip"><path d="M0,0 v30 h60 v-30 z"/></clipPath>
                             <g clip-path="url(#uk-clip)">
@@ -197,9 +255,9 @@
                                 <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/>
                             </g>
                         </svg>
-                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="9"/>
-                            <path d="M3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 010 18M12 3a15 15 0 000 18"/>
+                        <span id="currentLangCode">EN</span>
+                        <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
                         </svg>
                     </button>
 
@@ -231,20 +289,53 @@
                     </svg>
                 </button>
 
-                <!-- User Profile Pill -->
+                <!-- User Profile Pill with Dropdown Menu (Matches `sujaanz v` Pill in Screenshot) -->
                 {% if user %}
-                <div class="hidden sm:flex items-center space-x-2 bg-white/[0.04] border border-white/10 pl-2 pr-3.5 py-1.5 rounded-full">
-                    {% if user.avatar %}
-                        <img src="https://cdn.discordapp.com/avatars/{{ user.id }}/{{ user.avatar }}.png" alt="{{ user.username }}" class="w-6 h-6 rounded-full object-cover">
-                    {% else %}
-                        <div class="w-6 h-6 rounded-full bg-brandred flex items-center justify-center text-[10px] font-black text-white">{{ user.username[:1] | upper }}</div>
-                    {% endif %}
-                    <span class="text-xs font-bold text-gray-200">{{ user.username }}</span>
+                <div class="relative hidden sm:block">
+                    <button id="userProfileBtn" type="button" class="flex items-center space-x-2.5 bg-white/[0.05] hover:bg-white/[0.10] border border-white/10 pl-2 pr-3.5 py-1.5 rounded-full transition">
+                        {% if user.avatar %}
+                            <img src="https://cdn.discordapp.com/avatars/{{ user.id }}/{{ user.avatar }}.png" onerror="this.src='https://i.pravatar.cc/100?img=12'" alt="{{ user.username }}" class="w-6 h-6 rounded-full object-cover">
+                        {% else %}
+                            <div class="w-6 h-6 rounded-full bg-brandred flex items-center justify-center text-[10px] font-black text-white">{{ user.username[:1] | upper }}</div>
+                        {% endif %}
+                        <span class="text-xs font-bold text-gray-100">{{ user.username }}</span>
+                        <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+
+                    <!-- User Profile Popover Menu -->
+                    <div id="userProfileDropdown" class="hidden absolute right-0 mt-3 w-56 bg-[#12151e] rounded-2xl p-2.5 border border-white/10 shadow-2xl z-50 text-xs">
+                        <div class="px-3 py-2 border-b border-white/5 mb-1.5">
+                            <span class="text-[10px] uppercase tracking-wider text-gray-500 font-bold block">Signed in via Discord</span>
+                            <span class="text-xs font-extrabold text-white truncate block mt-0.5">{{ user.username }}</span>
+                        </div>
+                        <button type="button" onclick="openCommandPalette()" class="w-full px-3 py-2 text-left font-semibold text-gray-300 hover:text-white hover:bg-white/10 rounded-xl flex items-center justify-between transition">
+                            <span>Quick Server Switcher</span>
+                            <kbd class="text-[10px] font-mono bg-white/5 px-1.5 py-0.5 rounded text-gray-400">Ctrl K</kbd>
+                        </button>
+                        <button type="button" onclick="openPremiumServerModal(event)" class="w-full px-3 py-2 text-left font-semibold text-amber-400 hover:bg-white/10 rounded-xl flex items-center justify-between transition">
+                            <span>Server Premium Panel</span>
+                            <span>&#9733;</span>
+                        </button>
+                        <button type="button" onclick="openExportStudioModal()" class="w-full px-3 py-2 text-left font-semibold text-gray-300 hover:text-white hover:bg-white/10 rounded-xl flex items-center justify-between transition">
+                            <span>Export Server List</span>
+                            <span class="text-[10px] text-gray-500">JSON/CSV</span>
+                        </button>
+                        <a href="/auth/logout" class="mt-1 w-full px-3 py-2 text-left font-bold text-brandred hover:bg-brandred/15 rounded-xl flex items-center justify-between transition">
+                            <span>Logout Session</span>
+                            <span>&rarr;</span>
+                        </a>
+                    </div>
                 </div>
+                {% else %}
+                <a href="/auth/login" class="hidden sm:inline-flex bg-brandred hover:bg-brandredhover text-white text-xs font-bold px-4 py-2 rounded-full transition">
+                    Login
+                </a>
                 {% endif %}
 
-                <!-- Hamburger Menu Button -->
-                <button id="mobileMenuBtn" type="button" aria-label="Open Menu" class="p-2 text-gray-300 hover:text-white rounded-full hover:bg-white/5 transition">
+                <!-- Hamburger Menu Button (Mobile / Drawer Trigger) -->
+                <button id="mobileMenuBtn" type="button" aria-label="Open Menu" class="lg:hidden p-2 text-gray-300 hover:text-white rounded-full hover:bg-white/5 transition">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
                     </svg>
@@ -259,6 +350,10 @@
                 <a href="/features" class="px-4 py-3 rounded-xl hover:bg-white/5 hover:text-white transition">Features Overview</a>
                 <a href="/commands" class="px-4 py-3 rounded-xl hover:bg-white/5 hover:text-white transition">Bot Commands</a>
                 <a href="/tutorials" class="px-4 py-3 rounded-xl hover:bg-white/5 hover:text-white transition">Setup Tutorials</a>
+                <a href="{{ '/manage/' ~ guilds[0].id ~ '/premium' if guilds and guilds|length > 0 else '/#modules-cloud' }}" onclick="openPremiumServerModal(event)" class="sm:col-span-2 px-4 py-3 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400 font-bold flex items-center justify-between transition">
+                    <span>&#9733; Open Server Premium Panel</span>
+                    <span>&rarr;</span>
+                </a>
             </div>
             <div class="pt-4 mt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
                 {% if user %}
@@ -273,14 +368,16 @@
         </div>
     </header>
 
-    <!-- ==================== MAIN DASHBOARD CONTAINER (EXACT MAKI LAYOUT + PRO CONTROLS) ==================== -->
+    <!-- ==================== MAIN DASHBOARD CONTAINER (EXACT MAKI LAPTOP LAYOUT + PRO CONTROLS) ==================== -->
     <main class="flex-1 max-w-6xl mx-auto px-4 sm:px-6 pt-8 pb-20 w-full relative z-10">
         
         <div class="dashboard-shell rounded-[28px] sm:rounded-[34px] p-6 sm:p-10 md:p-12">
             
-            <!-- Top Header Row: DASHBOARD Label, Title & Live Cluster Telemetry Pill -->
-            <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
-                <div class="max-w-2xl">
+            <!-- Top Header Row: Left Title & Subtitle | Right Stat Counter Boxes (Matches Laptop Screenshot Layout!) -->
+            <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-6 mb-8">
+                
+                <!-- Left: DASHBOARD Label, Title & Subtitle -->
+                <div class="max-w-xl">
                     <div class="inline-flex items-center space-x-2 mb-2.5">
                         <span class="text-[11px] font-extrabold uppercase tracking-[0.18em] text-gray-400">DASHBOARD</span>
                         <span class="text-gray-600">&bull;</span>
@@ -297,52 +394,58 @@
                     </p>
                 </div>
 
-                <!-- Quick Action Utility Buttons (Quick Switcher + Interactive Export Studio Modal) -->
-                <div class="flex flex-wrap items-center gap-2.5">
-                    <button type="button" onclick="openCommandPalette()" class="px-4 py-2.5 rounded-2xl bg-[#131620] hover:bg-[#1a1e2b] border border-white/[0.08] hover:border-white/20 text-xs font-bold text-gray-200 flex items-center space-x-2 transition">
-                        <svg class="w-3.5 h-3.5 text-brandred" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                        </svg>
-                        <span>Quick Switcher</span>
-                        <kbd class="hidden sm:inline-block text-[10px] font-mono bg-white/5 px-1.5 py-0.5 rounded text-gray-400 ml-1">Ctrl K</kbd>
-                    </button>
-                    <button type="button" onclick="openExportStudioModal()" class="px-4 py-2.5 rounded-2xl bg-[#131620] hover:bg-[#1a1e2b] border border-white/[0.08] hover:border-white/20 text-xs font-bold text-gray-300 hover:text-white flex items-center space-x-2 transition">
-                        <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                        </svg>
-                        <span>Export List</span>
-                    </button>
+                <!-- Right: Top Stat Counter Boxes (Your servers & Connected prominent on top-right like Screenshot, plus Owned & Pinned + Pro Utility Actions) -->
+                <div class="flex flex-col sm:items-end gap-3">
+                    <div class="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-3">
+                        <!-- Stat Box 1: Your servers (Matches Screenshot) -->
+                        <button id="statBoxAll" type="button" onclick="quickFilterStatus('all')" class="stat-filter-box stat-box-active text-left min-w-[130px] sm:min-w-[140px] bg-[#12141c] hover:bg-[#171a25] border border-white/[0.08] hover:border-white/20 rounded-2xl px-5 py-3.5 transition group">
+                            <span class="text-xs font-medium text-gray-400 group-hover:text-gray-300 block mb-1">Your servers</span>
+                            <span id="totalServersCount" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">{{ guilds|length }}</span>
+                        </button>
+
+                        <!-- Stat Box 2: Connected (Matches Screenshot) -->
+                        <button id="statBoxConnected" type="button" onclick="quickFilterStatus('connected')" class="stat-filter-box text-left min-w-[130px] sm:min-w-[140px] bg-[#12141c] hover:bg-[#171a25] border border-white/[0.08] hover:border-emerald-500/40 rounded-2xl px-5 py-3.5 transition group">
+                            <span class="text-xs font-medium text-gray-400 group-hover:text-emerald-400 block mb-1">Connected</span>
+                            <span id="connectedServersCount" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">1</span>
+                        </button>
+
+                        <!-- Stat Box 3: Owner Servers (Preserved Pro Filter) -->
+                        <button id="statBoxOwner" type="button" onclick="quickFilterStatus('owner')" class="stat-filter-box text-left min-w-[130px] sm:min-w-[140px] bg-[#12141c] hover:bg-[#171a25] border border-white/[0.08] hover:border-amber-500/40 rounded-2xl px-5 py-3.5 transition group">
+                            <span class="text-xs font-medium text-gray-400 group-hover:text-amber-400 block mb-1">Owned by you</span>
+                            <span id="ownedServersCount" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">0</span>
+                        </button>
+
+                        <!-- Stat Box 4: Pinned / Favorites (Preserved Pro Filter) -->
+                        <button id="statBoxPinned" type="button" onclick="quickFilterStatus('pinned')" class="stat-filter-box text-left min-w-[130px] sm:min-w-[140px] bg-[#12141c] hover:bg-[#171a25] border border-white/[0.08] hover:border-brandred/40 rounded-2xl px-5 py-3.5 transition group">
+                            <span class="text-xs font-medium text-gray-400 group-hover:text-brandred block mb-1">Pinned</span>
+                            <span id="pinnedServersCount" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">0</span>
+                        </button>
+                    </div>
+
+                    <!-- Quick Action Utility Buttons (Quick Switcher + Interactive Export Studio Modal + Premium Studio) -->
+                    <div class="flex flex-wrap items-center gap-2">
+                        <button type="button" onclick="openCommandPalette()" class="px-3.5 py-2 rounded-xl bg-[#131620] hover:bg-[#1a1e2b] border border-white/[0.08] hover:border-white/20 text-[11px] font-bold text-gray-300 hover:text-white flex items-center space-x-2 transition">
+                            <svg class="w-3.5 h-3.5 text-brandred" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                            <span>Quick Switcher</span>
+                            <kbd class="hidden sm:inline-block text-[10px] font-mono bg-white/5 px-1.5 py-0.5 rounded text-gray-400 ml-1">Ctrl K</kbd>
+                        </button>
+                        <button type="button" onclick="openExportStudioModal()" class="px-3.5 py-2 rounded-xl bg-[#131620] hover:bg-[#1a1e2b] border border-white/[0.08] hover:border-white/20 text-[11px] font-bold text-gray-300 hover:text-white flex items-center space-x-2 transition">
+                            <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            <span>Export List</span>
+                        </button>
+                        <button type="button" onclick="openPremiumServerModal(event)" class="px-3.5 py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/25 text-[11px] font-bold text-amber-300 hover:text-amber-200 flex items-center space-x-1.5 transition">
+                            <span>&#9733;</span>
+                            <span>Premium</span>
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <!-- Interactive Stat Counter Boxes (Your servers, Connected, Owned by you, Pinned) -->
-            <div class="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-3.5 mt-8 mb-8">
-                <!-- Stat Box 1: Your servers -->
-                <button id="statBoxAll" type="button" onclick="quickFilterStatus('all')" class="stat-filter-box stat-box-active text-left min-w-[140px] sm:min-w-[155px] bg-[#12141c] hover:bg-[#171a25] border border-white/[0.08] hover:border-white/20 rounded-2xl px-5 py-4 transition group">
-                    <span class="text-xs font-medium text-gray-400 group-hover:text-gray-300 block mb-1">Your servers</span>
-                    <span id="totalServersCount" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">{{ guilds|length }}</span>
-                </button>
-
-                <!-- Stat Box 2: Connected -->
-                <button id="statBoxConnected" type="button" onclick="quickFilterStatus('connected')" class="stat-filter-box text-left min-w-[140px] sm:min-w-[155px] bg-[#12141c] hover:bg-[#171a25] border border-white/[0.08] hover:border-emerald-500/40 rounded-2xl px-5 py-4 transition group">
-                    <span class="text-xs font-medium text-gray-400 group-hover:text-emerald-400 block mb-1">Connected</span>
-                    <span id="connectedServersCount" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">1</span>
-                </button>
-
-                <!-- Stat Box 3: Owner Servers -->
-                <button id="statBoxOwner" type="button" onclick="quickFilterStatus('owner')" class="stat-filter-box text-left min-w-[140px] sm:min-w-[155px] bg-[#12141c] hover:bg-[#171a25] border border-white/[0.08] hover:border-amber-500/40 rounded-2xl px-5 py-4 transition group">
-                    <span class="text-xs font-medium text-gray-400 group-hover:text-amber-400 block mb-1">Owned by you</span>
-                    <span id="ownedServersCount" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">0</span>
-                </button>
-
-                <!-- Stat Box 4: Pinned / Favorites -->
-                <button id="statBoxPinned" type="button" onclick="quickFilterStatus('pinned')" class="stat-filter-box text-left min-w-[140px] sm:min-w-[155px] bg-[#12141c] hover:bg-[#171a25] border border-white/[0.08] hover:border-brandred/40 rounded-2xl px-5 py-4 transition group">
-                    <span class="text-xs font-medium text-gray-400 group-hover:text-brandred block mb-1">Pinned</span>
-                    <span id="pinnedServersCount" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">0</span>
-                </button>
-            </div>
-
-            <!-- Search, Permissions Dropdown, Sort & View Switcher Toolbar -->
+            <!-- Search, Permissions Dropdown, Sort & View Switcher Toolbar (Exact Laptop Screenshot Match) -->
             <div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3.5 mb-8">
                 
                 <!-- Search Input Box -->
@@ -354,7 +457,7 @@
                     <input 
                         id="serverSearchInput" 
                         type="text" 
-                        placeholder="Search your servers by name or ID..." 
+                        placeholder="Search your servers..." 
                         oninput="filterAndSortServers()"
                         class="w-full bg-[#11131a] hover:bg-[#141720] focus:bg-[#141720] text-sm text-white placeholder-gray-500 pl-11 pr-12 py-3.5 rounded-2xl border border-white/[0.08] focus:border-white/25 outline-none transition"
                     >
@@ -364,7 +467,7 @@
                 <!-- Right Controls: Permission Filter + Sort Order + Grid/List/Refresh Group -->
                 <div class="flex flex-wrap sm:flex-nowrap items-center gap-3">
                     
-                    <!-- Permission Filter Dropdown (Exact Maki Match) -->
+                    <!-- Permission Filter Dropdown (Exact Maki Match: All permissions v) -->
                     <div class="relative flex-1 sm:flex-initial">
                         <select 
                             id="permissionFilter" 
@@ -403,7 +506,7 @@
                         </svg>
                     </div>
 
-                    <!-- View Toggle & Refresh Button Group (Exact Match to Screenshot) -->
+                    <!-- View Toggle & Refresh Button Group (Exact Match to Screenshot: [Grid | List | Refresh]) -->
                     <div class="bg-[#11131a] border border-white/[0.08] rounded-2xl p-1.5 flex items-center space-x-1">
                         <!-- Grid View Button -->
                         <button id="gridViewBtn" type="button" onclick="setViewMode('grid')" title="Grid View" class="p-2 rounded-xl bg-white/10 text-white transition">
@@ -432,17 +535,19 @@
                 </div>
             </div>
 
-            <!-- ==================== SERVER CARDS GRID (2-COLUMN MAKI LAYOUT) ==================== -->
+            <!-- ==================== SERVER CARDS GRID (2-COLUMN MAKI LAPTOP LAYOUT) ==================== -->
             <div id="serversGrid" class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {% for guild in guilds %}
-                {% set is_default_connected = loop.first %}
+                {% set is_default_connected = guild.bot_connected if guild.bot_connected is defined else loop.first %}
+                {% set icon_ext = 'gif' if guild.icon and (guild.icon | string).startswith('a_') else 'png' %}
+                {% set full_icon_url = 'https://cdn.discordapp.com/icons/' ~ guild.id ~ '/' ~ guild.icon ~ '.' ~ icon_ext ~ '?size=128' if guild.icon else '' %}
                 <div 
                     class="guild-card rounded-[24px] p-6 flex flex-col justify-between"
                     data-index="{{ loop.index0 }}"
                     data-guild-id="{{ guild.id }}"
                     data-guild-title="{{ guild.name }}"
                     data-name="{{ guild.name | lower }}"
-                    data-icon="{{ 'https://cdn.discordapp.com/icons/' ~ guild.id ~ '/' ~ guild.icon ~ '.png?size=128' if guild.icon else '' }}"
+                    data-icon="{{ full_icon_url }}"
                     data-role="{{ 'owner' if guild.owner else 'manager' }}"
                     data-connected="{{ 'true' if is_default_connected else 'false' }}"
                     data-pinned="false"
@@ -453,7 +558,7 @@
                             <div class="relative flex-shrink-0">
                                 {% if guild.icon %}
                                     <img 
-                                        src="https://cdn.discordapp.com/icons/{{ guild.id }}/{{ guild.icon }}.png?size=128" 
+                                        src="{{ full_icon_url }}" 
                                         alt="{{ guild.name }}" 
                                         class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl object-cover border border-white/10 shadow-md"
                                     >
@@ -473,7 +578,7 @@
 
                                 <div class="flex flex-wrap items-center gap-2.5 mt-1">
                                     {% if guild.owner %}
-                                    <!-- Owner Badge with Crisp SVG Crown -->
+                                    <!-- Owner Badge with Crisp SVG Crown (Exact Match to Screenshot) -->
                                     <div class="inline-flex items-center space-x-1.5 text-xs font-semibold text-gray-400">
                                         <svg class="w-3.5 h-3.5 text-amber-400 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
                                             <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/>
@@ -481,9 +586,9 @@
                                         <span>Owner</span>
                                     </div>
                                     {% else %}
-                                    <!-- Manage Server Badge with Crisp SVG Shield -->
+                                    <!-- Manage Server Badge with Crisp SVG Shield (Exact Match to Screenshot) -->
                                     <div class="inline-flex items-center space-x-1.5 text-xs font-semibold text-gray-400">
-                                        <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <svg class="w-3.5 h-3.5 text-teal-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                                         </svg>
                                         <span>Manage Server</span>
@@ -533,7 +638,7 @@
                         </div>
                     </div>
 
-                    <!-- Card Bottom: Connection Status & Action Button (Exact Maki Layout) -->
+                    <!-- Card Bottom: Connection Status & Action Button (Exact Maki Layout: Manage server -> vs Add Sofiya ->) -->
                     <div class="flex items-center justify-between pt-6 mt-6 border-t border-white/[0.06]">
                         
                         <!-- Left Status Indicator (Click to toggle connected state) -->
@@ -549,10 +654,10 @@
                             </span>
                         </button>
 
-                        <!-- Right Action Button (Direct Route to /manage/<guild.id>) -->
+                        <!-- Right Action Button (Routes to /manage/<guild.id> when connected, or /invite/<guild.id> when Ready to connect) -->
                         <div class="flex items-center space-x-2">
                             <a 
-                                href="/manage/{{ guild.id }}" 
+                                href="{{ '/manage/' ~ guild.id if is_default_connected else '/invite/' ~ guild.id }}" 
                                 class="action-btn inline-flex items-center space-x-2 bg-white/[0.06] hover:bg-white/[0.13] border border-white/[0.09] hover:border-white/25 text-white text-xs font-bold px-4 py-2.5 rounded-full transition group"
                             >
                                 <span class="action-btn-label">{{ 'Manage server' if is_default_connected else 'Add Sofiya' }}</span>
@@ -594,7 +699,7 @@
         </div>
     </main>
 
-    <!-- ==================== SLIDE-OVER SERVER INSPECTOR DRAWER (WITH WORKING MODULE SWITCHES) ==================== -->
+    <!-- ==================== SLIDE-OVER SERVER INSPECTOR DRAWER (CONNECTED LIVE TO BOT API & 28 COGS) ==================== -->
     <div id="inspectorBackdrop" onclick="closeServerInspector()" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[90] hidden opacity-0 transition-opacity duration-300"></div>
     <aside id="inspectorDrawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-[#0e1017] border-l border-white/10 z-[95] translate-x-full transition-transform duration-300 flex flex-col justify-between p-6 sm:p-8 shadow-2xl overflow-y-auto">
         <div>
@@ -602,7 +707,7 @@
             <div class="flex items-center justify-between pb-5 border-b border-white/10">
                 <div class="flex items-center space-x-2.5">
                     <span class="w-2.5 h-2.5 rounded-full bg-brandred"></span>
-                    <span class="text-xs font-extrabold uppercase tracking-widest text-gray-400">Server Telemetry & Setup</span>
+                    <span class="text-xs font-extrabold uppercase tracking-widest text-gray-400">Server Telemetry &amp; Setup</span>
                 </div>
                 <button type="button" onclick="closeServerInspector()" class="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -630,7 +735,7 @@
             <div class="grid grid-cols-2 gap-3 mb-6">
                 <div class="bg-[#141722] border border-white/5 rounded-2xl p-4">
                     <span class="text-[11px] font-bold uppercase text-gray-500 block">Assigned Shard</span>
-                    <span class="text-sm font-extrabold text-white mt-1 block">Shard #0 (16ms)</span>
+                    <span id="inspShardInfo" class="text-sm font-extrabold text-white mt-1 block">Shard #0 (16ms)</span>
                 </div>
                 <div class="bg-[#141722] border border-white/5 rounded-2xl p-4">
                     <span class="text-[11px] font-bold uppercase text-gray-500 block">Module Engine</span>
@@ -638,57 +743,57 @@
                 </div>
             </div>
 
-            <!-- Interactive Quick-Toggle Modules Inside Drawer -->
+            <!-- Interactive Quick-Toggle Modules Inside Drawer (Synced with Flask `/api/guild/<id>/modules`) -->
             <div class="space-y-2.5 mb-6">
                 <div class="flex items-center justify-between">
                     <span class="text-xs font-bold uppercase tracking-wider text-gray-400">Quick Module Toggles</span>
-                    <span class="text-[11px] font-semibold text-emerald-400">Live Sync</span>
+                    <span id="inspActiveModSummary" class="text-[11px] font-semibold text-emerald-400">28/28 Active</span>
                 </div>
 
-                <!-- Module Switch 1 -->
+                <!-- Module Switch 1: level (LevelingCog) -->
                 <div class="flex items-center justify-between bg-[#131620] px-4 py-3 rounded-xl border border-white/5 text-xs">
                     <div>
-                        <span class="font-bold text-gray-200 block">Levels & Bento Rank Cards</span>
-                        <span class="text-[10px] text-gray-500">Text & voice XP progression</span>
+                        <span class="font-bold text-gray-200 block">Levels &amp; Bento Rank Cards</span>
+                        <span class="text-[10px] text-gray-500">Text &amp; voice XP progression (LevelingCog)</span>
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" id="modSwitchLevels" class="sr-only peer" checked onchange="toggleInspectorModule('Levels & Bento Rank Cards', this.checked)">
+                        <input type="checkbox" id="modSwitchLevels" class="sr-only peer" checked onchange="toggleInspectorModule('Levels & Bento Rank Cards', this.checked, 'level')">
                         <div class="w-9 h-5 bg-gray-700 rounded-full peer peer-checked:after:translate-x-4 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brandred"></div>
                     </label>
                 </div>
 
-                <!-- Module Switch 2 -->
+                <!-- Module Switch 2: economy (EconomyCog) -->
                 <div class="flex items-center justify-between bg-[#131620] px-4 py-3 rounded-xl border border-white/5 text-xs">
                     <div>
-                        <span class="font-bold text-gray-200 block">Economy & Coins System</span>
-                        <span class="text-[10px] text-gray-500">Daily rewards & global shop</span>
+                        <span class="font-bold text-gray-200 block">Economy &amp; Coins System</span>
+                        <span class="text-[10px] text-gray-500">Daily rewards &amp; global shop (EconomyCog)</span>
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" id="modSwitchEconomy" class="sr-only peer" checked onchange="toggleInspectorModule('Economy & Coins System', this.checked)">
+                        <input type="checkbox" id="modSwitchEconomy" class="sr-only peer" checked onchange="toggleInspectorModule('Economy & Coins System', this.checked, 'economy')">
                         <div class="w-9 h-5 bg-gray-700 rounded-full peer peer-checked:after:translate-x-4 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brandred"></div>
                     </label>
                 </div>
 
-                <!-- Module Switch 3 -->
+                <!-- Module Switch 3: moderation (ModerationCog) -->
                 <div class="flex items-center justify-between bg-[#131620] px-4 py-3 rounded-xl border border-white/5 text-xs">
                     <div>
-                        <span class="font-bold text-gray-200 block">AutoMod & Welcome Cards</span>
-                        <span class="text-[10px] text-gray-500">Anti-raid & greeting banners</span>
+                        <span class="font-bold text-gray-200 block">AutoMod &amp; Welcome Cards</span>
+                        <span class="text-[10px] text-gray-500">Anti-raid &amp; greeting banners (ModerationCog)</span>
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" id="modSwitchAutomod" class="sr-only peer" checked onchange="toggleInspectorModule('AutoMod & Welcome Cards', this.checked)">
+                        <input type="checkbox" id="modSwitchAutomod" class="sr-only peer" checked onchange="toggleInspectorModule('AutoMod & Welcome Cards', this.checked, 'moderation')">
                         <div class="w-9 h-5 bg-gray-700 rounded-full peer peer-checked:after:translate-x-4 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brandred"></div>
                     </label>
                 </div>
 
-                <!-- Module Switch 4 -->
+                <!-- Module Switch 4: tickets (TicketsCog) -->
                 <div class="flex items-center justify-between bg-[#131620] px-4 py-3 rounded-xl border border-white/5 text-xs">
                     <div>
-                        <span class="font-bold text-gray-200 block">Support Tickets & Logs</span>
-                        <span class="text-[10px] text-gray-500">Private channels & transcripts</span>
+                        <span class="font-bold text-gray-200 block">Support Tickets &amp; Logs</span>
+                        <span class="text-[10px] text-gray-500">Private channels &amp; transcripts (TicketsCog)</span>
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" id="modSwitchTickets" class="sr-only peer" checked onchange="toggleInspectorModule('Support Tickets & Logs', this.checked)">
+                        <input type="checkbox" id="modSwitchTickets" class="sr-only peer" checked onchange="toggleInspectorModule('Support Tickets & Logs', this.checked, 'tickets')">
                         <div class="w-9 h-5 bg-gray-700 rounded-full peer peer-checked:after:translate-x-4 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brandred"></div>
                     </label>
                 </div>
@@ -696,12 +801,15 @@
         </div>
 
         <!-- Drawer Bottom Action Buttons -->
-        <div class="space-y-3 pt-5 border-t border-white/10">
+        <div class="space-y-2.5 pt-5 border-t border-white/10">
             <a id="inspManageLink" href="/dashboard" class="w-full py-3.5 px-5 rounded-2xl bg-brandred hover:bg-brandredhover text-white font-bold text-xs sm:text-sm flex items-center justify-center space-x-2 shadow-xl shadow-brandred/25 transition">
                 <span>Open Full Module Dashboard</span>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6l6 6-6 6"/></svg>
             </a>
-            <a id="inspInviteLink" href="#" target="_blank" rel="noopener" class="w-full py-3.5 px-5 rounded-2xl bg-discord/15 hover:bg-discord text-indigo-300 hover:text-white border border-discord/30 font-bold text-xs sm:text-sm flex items-center justify-center space-x-2 transition">
+            <a id="inspPremiumLink" href="/dashboard" class="w-full py-3 px-5 rounded-2xl bg-amber-500/15 hover:bg-goldaccent text-amber-300 hover:text-black border border-amber-500/30 font-extrabold text-xs sm:text-sm flex items-center justify-center space-x-2 transition">
+                <span>&#9733; Open Server Premium Panel</span>
+            </a>
+            <a id="inspInviteLink" href="#" target="_blank" rel="noopener" class="w-full py-3 px-5 rounded-2xl bg-discord/15 hover:bg-discord text-indigo-300 hover:text-white border border-discord/30 font-bold text-xs sm:text-sm flex items-center justify-center space-x-2 transition">
                 <span>Invite / Re-Authorize Bot in Guild</span>
             </a>
         </div>
@@ -716,7 +824,7 @@
             <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-5">
                 <div class="flex items-center space-x-2.5">
                     <span class="w-2.5 h-2.5 rounded-full bg-brandred"></span>
-                    <h3 class="text-base sm:text-lg font-extrabold text-white">Server Inventory & Export Studio</h3>
+                    <h3 class="text-base sm:text-lg font-extrabold text-white">Server Inventory &amp; Export Studio</h3>
                 </div>
                 <button type="button" onclick="closeExportStudioModal()" class="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -751,6 +859,38 @@
                         Download File
                     </button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== DEDICATED SERVER PREMIUM PANEL SELECTOR MODAL ==================== -->
+    <div id="premiumServerModal" class="fixed inset-0 z-[130] hidden flex items-center justify-center px-4">
+        <div onclick="closePremiumServerModal()" class="fixed inset-0 bg-black/75 backdrop-blur-md"></div>
+        <div class="relative w-full max-w-lg bg-[#10131c] border border-amber-500/30 rounded-3xl shadow-2xl p-6 sm:p-8 z-10">
+            <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-5">
+                <div class="flex items-center space-x-2.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-goldaccent"></span>
+                    <h3 class="text-base sm:text-lg font-extrabold text-white">Select Server for Premium &amp; Branding</h3>
+                </div>
+                <button type="button" onclick="closePremiumServerModal()" class="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <p class="text-xs text-gray-400 mb-4 leading-relaxed">
+                Choose a Discord server below to open its dedicated <strong>Premium &amp; Custom Bot Branding ($3.50)</strong> configuration panel:
+            </p>
+            <div class="max-h-64 overflow-y-auto space-y-2 pr-1">
+                {% for guild in guilds %}
+                <a href="/manage/{{ guild.id }}/premium" class="flex items-center justify-between p-3.5 rounded-2xl bg-[#141824] hover:bg-amber-500/15 border border-white/5 hover:border-amber-500/40 transition group">
+                    <div class="flex items-center space-x-3 min-w-0">
+                        <span class="w-2 h-2 rounded-full bg-goldaccent"></span>
+                        <span class="text-xs sm:text-sm font-extrabold text-white truncate">{{ guild.name }}</span>
+                    </div>
+                    <span class="text-xs font-extrabold text-amber-400 group-hover:translate-x-0.5 transition-transform flex-shrink-0">Open Premium &rarr;</span>
+                </a>
+                {% else %}
+                <div class="text-center py-6 text-xs text-gray-400">No servers available. Please login or add Sofiya to a server.</div>
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -824,7 +964,7 @@
                     <li><a href="/features" class="hover:text-white transition">Features</a></li>
                     <li><a href="/commands" class="hover:text-white transition">Commands</a></li>
                     <li><a href="/tutorials" class="hover:text-white transition">Tutorials</a></li>
-                    <li><a href="/dashboard" class="hover:text-white transition">Premium</a></li>
+                    <li><a href="{{ '/manage/' ~ guilds[0].id ~ '/premium' if guilds and guilds|length > 0 else '/dashboard' }}" onclick="openPremiumServerModal(event)" class="hover:text-white transition">Premium</a></li>
                     <li><a href="/dashboard" class="hover:text-white transition">Dashboard</a></li>
                 </ul>
             </div>
@@ -852,7 +992,7 @@
         </div>
     </footer>
 
-    <!-- ==================== DASHBOARD PRO JAVASCRIPT ENGINE ==================== -->
+    <!-- ==================== DASHBOARD PRO JAVASCRIPT ENGINE + LIVE BOT API SYNC ==================== -->
     <script>
         // 1. Live Toast Notification
         let toastTimer;
@@ -868,32 +1008,85 @@
             }, 2600);
         }
 
-        // 2. Navbar Drawer & Language Dropdown
+        // 2. Navbar Drawer, Features/Resources Dropdowns, Language & User Profile Popover
         const menuBtn = document.getElementById('mobileMenuBtn');
         const navDrawer = document.getElementById('navDrawer');
         const langBtn = document.getElementById('langBtn');
         const langDropdown = document.getElementById('langDropdown');
+        const featuresNavBtn = document.getElementById('featuresNavBtn');
+        const featuresNavMenu = document.getElementById('featuresNavMenu');
+        const resourcesNavBtn = document.getElementById('resourcesNavBtn');
+        const resourcesNavMenu = document.getElementById('resourcesNavMenu');
+        const userProfileBtn = document.getElementById('userProfileBtn');
+        const userProfileDropdown = document.getElementById('userProfileDropdown');
+
+        function closeAllNavPopovers() {
+            if (langDropdown) langDropdown.classList.add('hidden');
+            if (featuresNavMenu) featuresNavMenu.classList.add('hidden');
+            if (resourcesNavMenu) resourcesNavMenu.classList.add('hidden');
+            if (userProfileDropdown) userProfileDropdown.classList.add('hidden');
+        }
 
         if (menuBtn && navDrawer) {
-            menuBtn.addEventListener('click', () => {
+            menuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 navDrawer.classList.toggle('hidden');
-                if (langDropdown) langDropdown.classList.add('hidden');
+                closeAllNavPopovers();
             });
         }
         if (langBtn && langDropdown) {
             langBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                langDropdown.classList.toggle('hidden');
+                const isHidden = langDropdown.classList.contains('hidden');
+                closeAllNavPopovers();
                 if (navDrawer) navDrawer.classList.add('hidden');
+                if (isHidden) langDropdown.classList.remove('hidden');
+            });
+        }
+        if (featuresNavBtn && featuresNavMenu) {
+            featuresNavBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isHidden = featuresNavMenu.classList.contains('hidden');
+                closeAllNavPopovers();
+                if (isHidden) featuresNavMenu.classList.remove('hidden');
+            });
+        }
+        if (resourcesNavBtn && resourcesNavMenu) {
+            resourcesNavBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isHidden = resourcesNavMenu.classList.contains('hidden');
+                closeAllNavPopovers();
+                if (isHidden) resourcesNavMenu.classList.remove('hidden');
+            });
+        }
+        if (userProfileBtn && userProfileDropdown) {
+            userProfileBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isHidden = userProfileDropdown.classList.contains('hidden');
+                closeAllNavPopovers();
+                if (isHidden) userProfileDropdown.classList.remove('hidden');
             });
         }
         document.addEventListener('click', () => {
-            if (langDropdown) langDropdown.classList.add('hidden');
+            closeAllNavPopovers();
         });
 
         function setLanguage(code, label) {
             document.getElementById('currentLangCode').textContent = code;
             showToast('Language set to ' + label);
+        }
+
+        // Dedicated Premium Server Selector Modal Trigger
+        function openPremiumServerModal(e) {
+            if (e) e.preventDefault();
+            closeAllNavPopovers();
+            const modal = document.getElementById('premiumServerModal');
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function closePremiumServerModal() {
+            const modal = document.getElementById('premiumServerModal');
+            if (modal) modal.classList.add('hidden');
         }
 
         // 3. Ambient Theme Switcher
@@ -912,7 +1105,7 @@
             showToast('Dashboard theme: ' + t.name);
         });
 
-        // 4. Persistent Connected & Pinned Server State (localStorage)
+        // 4. Persistent Connected & Pinned Server State (localStorage + Backend Bot Status)
         const CONN_STORAGE_KEY = 'sofiya_connected_servers_v2';
         const PIN_STORAGE_KEY = 'sofiya_pinned_servers_v2';
 
@@ -925,7 +1118,7 @@
 
             cards.forEach((card, index) => {
                 const gid = card.getAttribute('data-guild-id');
-                let isConn = (index === 0);
+                let isConn = card.getAttribute('data-connected') === 'true' || (index === 0);
                 if (typeof savedConn[gid] === 'boolean') isConn = savedConn[gid];
                 const isPinned = Boolean(savedPins[gid]);
 
@@ -938,9 +1131,11 @@
         }
 
         function applyCardConnectionUI(card, isConn) {
+            const gid = card.getAttribute('data-guild-id');
             card.setAttribute('data-connected', isConn ? 'true' : 'false');
             const dot = card.querySelector('.status-dot');
             const txt = card.querySelector('.status-text');
+            const btn = card.querySelector('.action-btn');
             const btnLabel = card.querySelector('.action-btn-label');
 
             if (isConn) {
@@ -948,11 +1143,13 @@
                 txt.textContent = 'Sofiya connected';
                 txt.className = 'status-text text-gray-200 group-hover:text-white transition';
                 btnLabel.textContent = 'Manage server';
+                if (btn && gid) btn.setAttribute('href', `/manage/${gid}`);
             } else {
                 dot.className = 'status-dot w-2 h-2 rounded-full bg-gray-500';
                 txt.textContent = 'Ready to connect';
                 txt.className = 'status-text text-gray-400 group-hover:text-white transition';
                 btnLabel.textContent = 'Add Sofiya';
+                if (btn && gid) btn.setAttribute('href', `/invite/${gid}`);
             }
         }
 
@@ -1117,7 +1314,7 @@
             showToast('All filters reset');
         }
 
-        // 6. Slide-Over Server Inspector Drawer + Working Module Switches
+        // 6. Slide-Over Server Inspector Drawer + Live Bot Module & Cog Sync
         let currentInspectedGuildId = null;
 
         function openServerInspector(guildId) {
@@ -1146,7 +1343,32 @@
             }
 
             document.getElementById('inspManageLink').href = `/manage/${guildId}`;
-            document.getElementById('inspInviteLink').href = `https://discord.com/api/v10/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&permissions=8&scope=bot%20applications.commands&guild_id=${guildId}&disable_guild_select=true`;
+            if (document.getElementById('inspPremiumLink')) {
+                document.getElementById('inspPremiumLink').href = `/manage/${guildId}/premium`;
+            }
+            document.getElementById('inspInviteLink').href = `/invite/${guildId}`;
+
+            // Fetch live module states from Flask Backend (`/api/guild/<id>/modules`)
+            fetch(`/api/guild/${guildId}/modules`)
+                .then(r => {
+                    if (r.status === 401) {
+                        showToast('Discord OAuth2 session expired — please re-login');
+                        return null;
+                    }
+                    return r.json();
+                })
+                .then(data => {
+                    if (data && data.ok && data.modules) {
+                        const m = data.modules;
+                        if (document.getElementById('modSwitchLevels')) document.getElementById('modSwitchLevels').checked = Boolean(m.level);
+                        if (document.getElementById('modSwitchEconomy')) document.getElementById('modSwitchEconomy').checked = Boolean(m.economy);
+                        if (document.getElementById('modSwitchAutomod')) document.getElementById('modSwitchAutomod').checked = Boolean(m.moderation);
+                        if (document.getElementById('modSwitchTickets')) document.getElementById('modSwitchTickets').checked = Boolean(m.tickets);
+                        const sumEl = document.getElementById('inspActiveModSummary');
+                        const totalMods = Object.keys(m).length || 28;
+                        if (sumEl) sumEl.textContent = `${data.active_count}/${totalMods} Active`;
+                    }
+                }).catch(() => {});
 
             const backdrop = document.getElementById('inspectorBackdrop');
             const drawer = document.getElementById('inspectorDrawer');
@@ -1163,8 +1385,33 @@
             setTimeout(() => backdrop.classList.add('hidden'), 300);
         }
 
-        function toggleInspectorModule(moduleName, isEnabled) {
-            showToast(`${moduleName} ${isEnabled ? 'Enabled' : 'Disabled'}`);
+        function toggleInspectorModule(moduleName, isEnabled, modKey) {
+            const cogMap = {
+                level: 'LevelingCog',
+                economy: 'EconomyCog',
+                moderation: 'ModerationCog',
+                tickets: 'TicketsCog'
+            };
+            const targetCog = cogMap[modKey] || 'CoreCog';
+
+            if (currentInspectedGuildId && modKey) {
+                fetch(`/api/guild/${currentInspectedGuildId}/modules`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        module_key: modKey,
+                        cog_name: targetCog,
+                        enabled: Boolean(isEnabled)
+                    })
+                }).then(r => r.json()).then(data => {
+                    if (data && data.ok) {
+                        const sumEl = document.getElementById('inspActiveModSummary');
+                        const totalMods = data.modules ? Object.keys(data.modules).length : 28;
+                        if (sumEl) sumEl.textContent = `${data.active_count}/${totalMods} Active`;
+                    }
+                }).catch(() => {});
+            }
+            showToast(`${moduleName} (${targetCog}) ${isEnabled ? 'Enabled' : 'Disabled'}`);
         }
 
         // 7. Ctrl+K Command Palette Modal
@@ -1270,7 +1517,7 @@
             closeExportStudioModal();
         }
 
-        // 9. Grid vs List View & Refresh Button
+        // 9. Grid vs List View & Live Gateway Refresh Button
         function setViewMode(mode) {
             const grid = document.getElementById('serversGrid');
             const gridBtn = document.getElementById('gridViewBtn');
@@ -1299,7 +1546,24 @@
             }
             const ping = Math.floor(Math.random() * 6) + 14;
             document.getElementById('shardPingLabel').textContent = `Gateway Connected (${ping}ms)`;
-            showToast(`Synchronized {{ guilds|length }} servers (${ping}ms)`);
+
+            const firstCard = document.querySelector('.guild-card');
+            const firstGuildId = firstCard ? firstCard.getAttribute('data-guild-id') : null;
+            if (firstGuildId) {
+                fetch(`/api/guild/${firstGuildId}/diagnostics`)
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data && data.ok) {
+                            updateStatCounters();
+                            showToast(`Synchronized {{ guilds|length }} servers with Bot Gateway (${ping}ms)`);
+                        } else {
+                            showToast(`Synchronized {{ guilds|length }} servers (${ping}ms)`);
+                        }
+                    })
+                    .catch(() => showToast(`Synchronized {{ guilds|length }} servers (${ping}ms)`));
+            } else {
+                showToast(`Synchronized {{ guilds|length }} servers (${ping}ms)`);
+            }
         }
 
         // 10. Keyboard Shortcuts ('/' for Search, 'Ctrl+K' for Palette, 'ESC' to close modals)
@@ -1314,6 +1578,8 @@
                 closeCommandPalette();
                 closeServerInspector();
                 closeExportStudioModal();
+                closePremiumServerModal();
+                closeAllNavPopovers();
             }
         });
 

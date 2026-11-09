@@ -1,96 +1,6 @@
 {
-    "1568187829022892062": {
-        "prefix": "!",
-        "leveling_enabled": false,
-        "theme": "crimson",
-        "bg_url": "",
-        "multiplier": 1.0,
-        "economy_enabled": true,
-        "currency_name": "Coins",
-        "starting_balance": 1000,
-        "automod_enabled": true,
-        "welcome_enabled": true,
-        "welcome_msg": "Welcome to the server!",
-        "name": "GumGum",
-        "bot_nickname": "Sofiya",
-        "bot_status": "Watching over GumGum",
-        "modules": {
-            "customiser": true,
-            "welcomer": true,
-            "level": true,
-            "economy": true,
-            "music": true,
-            "moderation": true,
-            "logs": true,
-            "giveaways": true,
-            "tickets": true,
-            "reaction_roles": true,
-            "sticky_roles": true,
-            "counters": true,
-            "starboard": true,
-            "suggestions": true,
-            "birthdays": true,
-            "embeds": true,
-            "timers": true,
-            "sticky_messages": true,
-            "notifications": true,
-            "automations": true,
-            "custom_commands": true,
-            "temp_channels": true,
-            "roleplay": true,
-            "analytics": true,
-            "connect": true,
-            "verify": true
-        },
-        "module_configs": {},
-        "audit_logs": []
-    },
-    "1541004653951590432": {
-        "prefix": "!",
-        "leveling_enabled": false,
-        "theme": "crimson",
-        "bg_url": "",
-        "multiplier": 1.0,
-        "economy_enabled": true,
-        "currency_name": "Coins",
-        "starting_balance": 1000,
-        "automod_enabled": true,
-        "welcome_enabled": true,
-        "welcome_msg": "Welcome to the server!",
-        "name": "DEAD NPC SOCIETY \ud83e\udea6",
-        "bot_nickname": "Sofiya",
-        "bot_status": "Watching over DEAD NPC SOCIETY \ud83e\udea6",
-        "modules": {
-            "customiser": true,
-            "welcomer": true,
-            "level": true,
-            "economy": true,
-            "music": true,
-            "moderation": true,
-            "logs": true,
-            "giveaways": true,
-            "tickets": true,
-            "reaction_roles": true,
-            "sticky_roles": true,
-            "counters": true,
-            "starboard": true,
-            "suggestions": true,
-            "birthdays": true,
-            "embeds": true,
-            "timers": true,
-            "sticky_messages": true,
-            "notifications": true,
-            "automations": true,
-            "custom_commands": true,
-            "temp_channels": true,
-            "roleplay": true,
-            "analytics": true,
-            "connect": true,
-            "verify": true
-        },
-        "module_configs": {}
-    },
     "866932175878225950": {
+        "name": "CHILL BC \ud83e\uddcb",
         "prefix": "!",
         "leveling_enabled": true,
         "theme": "crimson",
@@ -102,9 +12,8 @@
         "automod_enabled": true,
         "welcome_enabled": true,
         "welcome_msg": "Welcome to the server!",
-        "name": "CHILL BC \ud83e\uddcb",
         "bot_nickname": "Sofiya",
-        "bot_status": "Watching over CHILL BC \ud83e\uddcb",
+        "bot_status": "Watching over Discord Guild",
         "modules": {
             "customiser": true,
             "welcomer": true,
@@ -137,31 +46,58 @@
         "audit_logs": [
             {
                 "user": "sujaanz",
-                "action": "Enabled module 'level'",
-                "timestamp": 1794199998
+                "action": "Enabled all 26 modules",
+                "timestamp": 1794209098
             },
             {
                 "user": "sujaanz",
-                "action": "Disabled module 'level'",
-                "timestamp": 1794199996
+                "action": "Paused all 26 modules",
+                "timestamp": 1794209097
+            },
+            {
+                "user": "sujaanz",
+                "action": "Paused all 26 modules",
+                "timestamp": 1794209096
+            },
+            {
+                "user": "sujaanz",
+                "action": "Enabled all 26 modules",
+                "timestamp": 1794208832
+            },
+            {
+                "user": "sujaanz",
+                "action": "Paused all 26 modules",
+                "timestamp": 1794208823
+            },
+            {
+                "user": "sujaanz",
+                "action": "Paused all 26 modules",
+                "timestamp": 1794208823
+            },
+            {
+                "user": "sujaanz",
+                "action": "Paused all 26 modules",
+                "timestamp": 1794208615
+            },
+            {
+                "user": "sujaanz",
+                "action": "Enabled all 26 modules",
+                "timestamp": 1794208384
+            },
+            {
+                "user": "sujaanz",
+                "action": "Enabled all 26 modules",
+                "timestamp": 1794208384
+            },
+            {
+                "user": "sujaanz",
+                "action": "Paused all 26 modules",
+                "timestamp": 1794208382
             }
         ]
     },
-    "862720870291865640": {
-        "prefix": "!",
-        "leveling_enabled": false,
-        "theme": "crimson",
-        "bg_url": "",
-        "multiplier": 1.0,
-        "economy_enabled": true,
-        "currency_name": "Coins",
-        "starting_balance": 1000,
-        "automod_enabled": true,
-        "welcome_enabled": true,
-        "welcome_msg": "Welcome to the server!"
-    },
-    "915228773203456030": {
-        "name": "XMAN",
+    "1568187829022892062": {
+        "name": "GumGum",
         "prefix": "!",
         "leveling_enabled": true,
         "theme": "crimson",
@@ -174,7 +110,7 @@
         "welcome_enabled": true,
         "welcome_msg": "Welcome to the server!",
         "bot_nickname": "Sofiya",
-        "bot_status": "Watching over XMAN",
+        "bot_status": "Watching over GumGum",
         "modules": {
             "customiser": true,
             "welcomer": true,
@@ -203,7 +139,8 @@
             "connect": true,
             "verify": true
         },
-        "module_configs": {}
+        "module_configs": {},
+        "audit_logs": []
     },
     "1267931011283554354": {
         "name": "No",
@@ -248,6 +185,53 @@
             "connect": true,
             "verify": true
         },
-        "module_configs": {}
+        "module_configs": {},
+        "audit_logs": []
+    },
+    "915228773203456030": {
+        "name": "XMAN",
+        "prefix": "!",
+        "leveling_enabled": true,
+        "theme": "crimson",
+        "bg_url": "",
+        "multiplier": 1.0,
+        "economy_enabled": true,
+        "currency_name": "Coins",
+        "starting_balance": 1000,
+        "automod_enabled": true,
+        "welcome_enabled": true,
+        "welcome_msg": "Welcome to the server!",
+        "bot_nickname": "Sofiya",
+        "bot_status": "Watching over XMAN",
+        "modules": {
+            "customiser": true,
+            "welcomer": true,
+            "level": true,
+            "economy": true,
+            "music": true,
+            "moderation": true,
+            "logs": true,
+            "giveaways": true,
+            "tickets": true,
+            "reaction_roles": true,
+            "sticky_roles": true,
+            "counters": true,
+            "starboard": true,
+            "suggestions": true,
+            "birthdays": true,
+            "embeds": true,
+            "timers": true,
+            "sticky_messages": true,
+            "notifications": true,
+            "automations": true,
+            "custom_commands": true,
+            "temp_channels": true,
+            "roleplay": true,
+            "analytics": true,
+            "connect": true,
+            "verify": true
+        },
+        "module_configs": {},
+        "audit_logs": []
     }
 }

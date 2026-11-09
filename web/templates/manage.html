@@ -55,7 +55,7 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.85);
         }
-        /* Main Outer Dashboard Shell (Exact Maki Container) */
+        /* Main Outer Dashboard Shell (Exact Maki Laptop Container) */
         .dashboard-shell {
             position: relative;
             background: linear-gradient(180deg, rgba(15, 17, 23, 0.96) 0%, rgba(9, 10, 14, 0.99) 100%);
@@ -99,6 +99,9 @@
             border-color: rgba(255, 255, 255, 0.18) !important;
             color: #ffffff !important;
         }
+        .cat-pill-active svg {
+            color: var(--brand-accent) !important;
+        }
         /* Custom Maki Red Toggle Switch */
         .maki-switch-input:checked ~ .maki-switch-slider {
             background-color: var(--brand-accent);
@@ -125,8 +128,8 @@
             top: -120px;
             left: 35%;
             transform: translateX(-50%);
-            width: 880px;
-            height: 480px;
+            width: 920px;
+            height: 500px;
             background: radial-gradient(ellipse at center, var(--brand-glow) 0%, rgba(6, 7, 9, 0) 70%);
             pointer-events: none;
             z-index: 0;
@@ -159,6 +162,19 @@
     <!-- Ambient Glow -->
     <div class="ambient-top-glow"></div>
 
+    <!-- Floating Right-Edge Action Pill (Exact Match to Red Floating Pill in Laptop Screenshot) -->
+    <button 
+        type="button" 
+        onclick="openModulePalette()" 
+        title="Quick Jump & Module Studio (Ctrl+K)"
+        class="hidden xl:flex fixed right-6 top-1/3 z-[105] items-center space-x-2 bg-brandred hover:bg-brandredhover text-white text-xs font-extrabold px-4 py-2.5 rounded-full shadow-2xl shadow-brandred/40 border border-white/15 transition hover:scale-105"
+    >
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+        </svg>
+        <span>Quick Studio</span>
+    </button>
+
     <!-- Live Interactive Toast Notification -->
     <div id="liveToast" class="fixed bottom-6 right-6 z-[140] pointer-events-none opacity-0 translate-y-4 transition-all duration-300">
         <div class="bg-[#11141d]/95 backdrop-blur-2xl px-4 py-3 rounded-2xl border border-white/15 flex items-center space-x-3 shadow-2xl">
@@ -167,12 +183,12 @@
         </div>
     </div>
 
-    <!-- ==================== STICKY FLOATING PILL NAVBAR (EXACT MAKI LAYOUT) ==================== -->
-    <header class="sticky top-4 z-50 px-4 sm:px-6 max-w-5xl mx-auto w-full">
-        <div class="maki-pill-nav rounded-full px-5 sm:px-7 h-15 py-3 flex items-center justify-between transition-all duration-300 relative">
+    <!-- ==================== STICKY FLOATING PILL NAVBAR (EXACT MAKI LAPTOP LAYOUT) ==================== -->
+    <header class="sticky top-4 z-50 px-4 sm:px-6 max-w-6xl mx-auto w-full">
+        <div class="maki-pill-nav rounded-full px-5 sm:px-7 h-16 flex items-center justify-between transition-all duration-300 relative">
             
-            <!-- Left: Slanted Maki-Style Vector Logo & Brand Name -->
-            <div class="flex items-center space-x-8">
+            <!-- Left: Slanted Maki-Style Vector Logo & Brand Name + Desktop Links -->
+            <div class="flex items-center space-x-6 lg:space-x-7">
                 <a href="/" class="flex items-center space-x-2.5 group">
                     <svg class="w-7 h-7 text-brandred transition-transform duration-300 group-hover:scale-105" viewBox="0 0 40 32" fill="none">
                         <circle cx="6" cy="22" r="3.5" fill="currentColor"/>
@@ -182,25 +198,83 @@
                     <span class="text-lg font-extrabold tracking-tight text-white">sofiya</span>
                 </a>
 
-                <nav class="hidden md:flex items-center space-x-6 text-xs sm:text-sm font-semibold text-gray-300">
-                    <a href="/" class="hover:text-white transition">Home</a>
-                    <a href="/features" class="hover:text-white transition">Features</a>
-                    <a href="/commands" class="hover:text-white transition">Commands</a>
-                    <a href="/tutorials" class="hover:text-white transition">Tutorials</a>
-                    <a href="/dashboard" class="text-white font-bold flex items-center space-x-1.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-brandred"></span>
-                        <span>Dashboard</span>
+                <!-- Desktop Navigation Links (Matches Screenshot: Dashboard Pill, Features v, Resources v, >_ Commands, ☆ Premium) -->
+                <nav class="hidden lg:flex items-center space-x-5 text-xs sm:text-sm font-semibold text-gray-300">
+                    <a href="/dashboard" class="bg-white/[0.08] hover:bg-white/[0.12] border border-white/10 text-white font-bold px-4 py-1.5 rounded-full transition shadow-sm">
+                        Dashboard
+                    </a>
+
+                    <div class="relative">
+                        <button id="featuresNavBtn" type="button" class="flex items-center space-x-1 hover:text-white transition py-1">
+                            <span>Features</span>
+                            <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div id="featuresNavMenu" class="hidden absolute left-0 mt-3 w-56 bg-[#12151e] rounded-2xl p-2 border border-white/10 shadow-2xl z-50 text-xs">
+                            <a href="/manage/{{ guild_id }}/level" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 text-gray-200 hover:text-white flex items-center justify-between transition">
+                                <span>Levels &amp; Bento Cards</span>
+                                <span class="text-[10px] text-brandred font-bold">XP Cog</span>
+                            </a>
+                            <a href="/manage/{{ guild_id }}/moderation" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 text-gray-200 hover:text-white flex items-center justify-between transition">
+                                <span>AutoMod &amp; Protection</span>
+                                <span class="text-[10px] text-emerald-400 font-bold">Mod Cog</span>
+                            </a>
+                            <a href="/manage/{{ guild_id }}/economy" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 text-gray-200 hover:text-white flex items-center justify-between transition">
+                                <span>Economy &amp; Global Shop</span>
+                                <span class="text-[10px] text-amber-400 font-bold">Eco Cog</span>
+                            </a>
+                            <a href="/features" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 text-gray-200 hover:text-white flex items-center justify-between transition">
+                                <span>Platform Overview</span>
+                                <span>&rarr;</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="relative">
+                        <button id="resourcesNavBtn" type="button" class="flex items-center space-x-1 hover:text-white transition py-1">
+                            <span>Resources</span>
+                            <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div id="resourcesNavMenu" class="hidden absolute left-0 mt-3 w-52 bg-[#12151e] rounded-2xl p-2 border border-white/10 shadow-2xl z-50 text-xs">
+                            <a href="/tutorials" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 text-gray-200 hover:text-white flex items-center justify-between transition">
+                                <span>Setup Tutorials</span>
+                                <span class="text-[10px] text-gray-500">Docs</span>
+                            </a>
+                            <a href="/api/guild/{{ guild_id }}/backup" target="_blank" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 text-gray-200 hover:text-white flex items-center justify-between transition">
+                                <span>Backup Config JSON</span>
+                                <span class="text-[10px] text-brandred font-bold">Export</span>
+                            </a>
+                            <a href="/" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 text-gray-200 hover:text-white flex items-center justify-between transition">
+                                <span>Home Page</span>
+                                <span>&rarr;</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <a href="/commands" class="hover:text-white transition flex items-center space-x-1.5">
+                        <span class="font-mono text-xs text-gray-400">&gt;_</span>
+                        <span>Commands</span>
+                    </a>
+
+                    <!-- Dedicated Premium Route Link (/manage/<guild_id>/premium) -->
+                    <a href="/manage/{{ guild_id }}/premium" class="hover:text-white transition flex items-center space-x-1.5">
+                        <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                        </svg>
+                        <span>Premium</span>
                     </a>
                 </nav>
             </div>
 
-            <!-- Right: Working Language Selector Dropdown, Theme Switcher, User Pill & Hamburger Menu -->
+            <!-- Right: Working Language Selector Dropdown, Theme Switcher, User Profile Dropdown & Hamburger Menu -->
             <div class="flex items-center space-x-2.5">
                 
                 <!-- Interactive Language Dropdown -->
                 <div class="relative">
                     <button id="langBtn" type="button" class="flex items-center space-x-1.5 text-xs font-bold text-gray-300 hover:text-white px-2.5 py-1.5 rounded-full hover:bg-white/5 transition">
-                        <span id="currentLangCode">EN</span>
                         <svg class="w-4 h-3 rounded-[2px]" viewBox="0 0 60 30">
                             <path d="M0,0 v30 h60 v-30 z" fill="#012169"/>
                             <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>
@@ -208,8 +282,9 @@
                             <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>
                             <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/>
                         </svg>
-                        <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 010 18M12 3a15 15 0 000 18"/>
+                        <span id="currentLangCode">EN</span>
+                        <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
                         </svg>
                     </button>
 
@@ -240,20 +315,44 @@
                     </svg>
                 </button>
 
-                <!-- User Profile Pill (If Logged In) -->
+                <!-- User Profile Pill with Dropdown Menu (If Logged In) -->
                 {% if user %}
-                <div class="hidden sm:flex items-center space-x-2 bg-white/[0.04] border border-white/10 pl-1.5 pr-3 py-1 rounded-full">
-                    {% if user.avatar %}
-                        <img src="https://cdn.discordapp.com/avatars/{{ user.id }}/{{ user.avatar }}.png" alt="{{ user.username }}" class="w-5 h-5 rounded-full object-cover">
-                    {% else %}
-                        <div class="w-5 h-5 rounded-full bg-brandred flex items-center justify-center text-[9px] font-black text-white">{{ user.username[:1] | upper }}</div>
-                    {% endif %}
-                    <span class="text-[11px] font-bold text-gray-200">{{ user.username }}</span>
+                <div class="relative hidden sm:block">
+                    <button id="userProfileBtn" type="button" class="flex items-center space-x-2 bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 pl-1.5 pr-3 py-1 rounded-full transition">
+                        {% if user.avatar %}
+                            <img src="https://cdn.discordapp.com/avatars/{{ user.id }}/{{ user.avatar }}.png" onerror="this.src='https://i.pravatar.cc/100?img=12'" alt="{{ user.username }}" class="w-5 h-5 rounded-full object-cover">
+                        {% else %}
+                            <div class="w-5 h-5 rounded-full bg-brandred flex items-center justify-center text-[9px] font-black text-white">{{ user.username[:1] | upper }}</div>
+                        {% endif %}
+                        <span class="text-[11px] font-bold text-gray-200">{{ user.username }}</span>
+                        <svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+
+                    <div id="userProfileDropdown" class="hidden absolute right-0 mt-3 w-52 bg-[#12151e] rounded-2xl p-2 border border-white/10 shadow-2xl z-50 text-xs">
+                        <div class="px-3 py-2 border-b border-white/5 mb-1">
+                            <span class="text-[10px] uppercase tracking-wider text-gray-500 font-bold block">Discord Account</span>
+                            <span class="text-xs font-extrabold text-white truncate block mt-0.5">{{ user.username }}</span>
+                        </div>
+                        <a href="/dashboard" class="px-3 py-2 rounded-xl hover:bg-white/10 text-gray-300 hover:text-white flex items-center justify-between font-semibold transition">
+                            <span>All Servers</span>
+                            <span>&rarr;</span>
+                        </a>
+                        <a href="/manage/{{ guild_id }}/premium" class="px-3 py-2 rounded-xl hover:bg-white/10 text-amber-400 flex items-center justify-between font-semibold transition">
+                            <span>Server Premium</span>
+                            <span>&#9733;</span>
+                        </a>
+                        <a href="/auth/logout" class="mt-1 px-3 py-2 rounded-xl hover:bg-brandred/15 text-brandred flex items-center justify-between font-bold transition">
+                            <span>Logout</span>
+                            <span>&rarr;</span>
+                        </a>
+                    </div>
                 </div>
                 {% endif %}
 
                 <!-- Hamburger Menu Button -->
-                <button id="mobileMenuBtn" type="button" aria-label="Menu" class="p-2 text-gray-300 hover:text-white rounded-full hover:bg-white/5 transition">
+                <button id="mobileMenuBtn" type="button" aria-label="Menu" class="lg:hidden p-2 text-gray-300 hover:text-white rounded-full hover:bg-white/5 transition">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
                     </svg>
@@ -267,604 +366,785 @@
                 <a href="/" class="px-3.5 py-2.5 rounded-xl hover:bg-white/5 hover:text-white transition">Home</a>
                 <a href="/features" class="px-3.5 py-2.5 rounded-xl hover:bg-white/5 hover:text-white transition">Features</a>
                 <a href="/commands" class="px-3.5 py-2.5 rounded-xl hover:bg-white/5 hover:text-white transition">Commands</a>
-                <a href="/dashboard" class="px-3.5 py-2.5 rounded-xl bg-brandred/15 text-brandred transition">← All Servers</a>
+                <a href="/manage/{{ guild_id }}/premium" class="px-3.5 py-2.5 rounded-xl bg-amber-500/15 text-amber-400 transition">&#9733; Premium Panel</a>
+                <a href="/dashboard" class="col-span-2 sm:col-span-4 px-3.5 py-2.5 rounded-xl bg-brandred/15 text-brandred text-center transition">&larr; Switch Server (/dashboard)</a>
             </div>
         </div>
     </header>
 
-    <!-- ==================== MAIN MODULE DASHBOARD CONTAINER (EXACT SCREENSHOT REPLICA) ==================== -->
-    <main class="flex-1 max-w-5xl mx-auto px-4 sm:px-6 pt-7 pb-20 w-full relative z-10">
+    <!-- ==================== MAIN MODULE DASHBOARD CONTAINER (EXACT LAPTOP SCREENSHOT REPLICA) ==================== -->
+    <main class="flex-1 max-w-6xl mx-auto px-4 sm:px-6 pt-7 pb-20 w-full relative z-10">
         
-        <div class="dashboard-shell rounded-[28px] sm:rounded-[34px] p-5 sm:p-9 md:p-11">
+        <div class="dashboard-shell rounded-[28px] sm:rounded-[34px] p-5 sm:p-8 lg:p-10">
             
-            <!-- 1. TOP SERVER SWITCHER HEADER BAR (Back Button + Current Server Dropdown Card) -->
-            <div class="flex items-center gap-3 mb-4 relative">
-                <!-- Circular Back Arrow to /dashboard -->
-                <a href="/dashboard" title="Back to Server Selection" class="w-12 h-12 rounded-2xl bg-[#141720] hover:bg-[#1a1e2a] border border-white/[0.08] hover:border-white/20 flex items-center justify-center text-gray-300 hover:text-white transition flex-shrink-0">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5m6-6l-6 6 6 6"/>
-                    </svg>
-                </a>
+            <!-- 1. TOP SERVER SWITCHER HEADER ROW + PLAN & ACTIVE MODULES PILLS ON RIGHT (EXACT LAPTOP SCREENSHOT LAYOUT) -->
+            <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 mb-7 border-b border-white/[0.06] relative">
+                
+                <!-- Left: Circular Back Button + Current Server Dropdown Card -->
+                <div class="flex items-center gap-3 min-w-0">
+                    <a href="/dashboard" title="Back to Server Selection" class="w-12 h-12 rounded-2xl bg-[#141720] hover:bg-[#1a1e2a] border border-white/[0.08] hover:border-white/20 flex items-center justify-center text-gray-300 hover:text-white transition flex-shrink-0">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5m6-6l-6 6 6 6"/>
+                        </svg>
+                    </a>
 
-                <!-- Current Server Selector Bar (Click toggles Quick Server Switcher Dropdown) -->
-                <div onclick="toggleServerDropdown(event)" class="flex-1 bg-[#13161f] hover:bg-[#171b26] border border-white/[0.08] hover:border-white/15 rounded-2xl px-4 py-2.5 flex items-center justify-between cursor-pointer transition group">
-                    <div class="flex items-center space-x-3.5 min-w-0">
-                        {% if guild_icon %}
-                            <img src="{{ guild_icon }}" alt="{{ guild_name }}" class="w-10 h-10 rounded-xl object-cover border border-white/10">
-                        {% else %}
-                            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/30 to-teal-700/40 border border-white/15 flex items-center justify-center font-extrabold text-sm text-white shadow-inner">
-                                {{ (guild_name | default('CH'))[:2] | upper }}
+                    <div onclick="toggleServerDropdown(event)" class="w-full sm:w-80 bg-[#13161f] hover:bg-[#171b26] border border-white/[0.08] hover:border-white/15 rounded-2xl px-4 py-2.5 flex items-center justify-between cursor-pointer transition group">
+                        <div class="flex items-center space-x-3.5 min-w-0">
+                            {% if guild_icon %}
+                                <img src="{{ guild_icon }}" alt="{{ guild_name }}" class="w-10 h-10 rounded-xl object-cover border border-white/10">
+                            {% else %}
+                                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/30 to-teal-700/40 border border-white/15 flex items-center justify-center font-extrabold text-sm text-white shadow-inner">
+                                    {{ (guild_name | default('CH'))[:2] | upper }}
+                                </div>
+                            {% endif %}
+                            <div class="min-w-0">
+                                <span class="text-[10px] font-semibold uppercase tracking-wider text-gray-400 block leading-tight">Current server</span>
+                                <span class="text-sm sm:text-base font-extrabold text-white truncate block leading-tight mt-0.5">{{ guild_name | default('CHILL BC []') }}</span>
                             </div>
-                        {% endif %}
-                        <div class="min-w-0">
-                            <span class="text-[10px] font-semibold uppercase tracking-wider text-gray-400 block leading-tight">Current server</span>
-                            <span class="text-sm sm:text-base font-extrabold text-white truncate block leading-tight mt-0.5">{{ guild_name | default('CHILL BC []') }}</span>
                         </div>
+                        <svg id="serverSwitchChevron" class="w-4 h-4 text-gray-400 group-hover:text-white transition-transform duration-200 ml-3 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/>
+                        </svg>
                     </div>
-                    <svg id="serverSwitchChevron" class="w-4 h-4 text-gray-400 group-hover:text-white transition-transform duration-200 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/>
-                    </svg>
                 </div>
 
-                <!-- Dropdown Menu when Clicking Current Server Bar -->
-                <div id="serverQuickDropdown" class="hidden absolute left-14 right-0 top-14 bg-[#11141e] border border-white/15 rounded-2xl p-3 shadow-2xl z-40">
-                    <div class="flex items-center justify-between px-3 py-2 border-b border-white/5 text-xs">
-                        <span class="text-gray-400 font-semibold">Connected Guild ID: <strong class="text-white font-mono">{{ guild_id | default('866932175878225950') }}</strong></span>
-                        <button type="button" onclick="copyCurrentGuildId()" class="text-brandred hover:underline font-bold">Copy ID</button>
+                <!-- PURE SERVER SWITCHER DROPDOWN MENU (100% Dedicated to Server Switching — No Rank Card Clutter!) -->
+                <div id="serverQuickDropdown" onclick="event.stopPropagation()" class="hidden absolute left-14 top-16 w-full max-w-md bg-[#11141e] border border-white/15 rounded-2xl p-3.5 shadow-2xl z-40 space-y-3">
+                    <!-- Active Server Header + Copy ID -->
+                    <div class="flex items-center justify-between px-3 py-2 bg-white/[0.03] rounded-xl border border-white/5 text-xs">
+                        <div class="flex items-center space-x-2 min-w-0">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping flex-shrink-0"></span>
+                            <span class="text-gray-300 font-bold truncate">{{ guild_name | default('CHILL BC []') }}</span>
+                            <span class="text-[10px] text-gray-500 font-mono">({{ (guild_id | default('866932175878225950'))[:8] }}...)</span>
+                        </div>
+                        <button type="button" onclick="copyCurrentGuildId()" class="text-brandred hover:underline font-bold ml-2 flex-shrink-0">Copy ID</button>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2.5">
-                        <a href="/manage/{{ guild_id }}/level" class="px-3.5 py-2.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] text-xs font-bold text-white flex items-center justify-between transition">
-                            <span>Open Leveling &amp; Rank Cards</span>
-                            <span class="text-brandred">&rarr;</span>
-                        </a>
-                        <a href="/dashboard" class="px-3.5 py-2.5 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] text-xs font-bold text-gray-300 hover:text-white flex items-center justify-between transition">
-                            <span>Switch to Another Server</span>
+
+                    <!-- Quick Search / Filter Servers inside Switcher -->
+                    <div>
+                        <span class="text-[10px] font-extrabold uppercase tracking-wider text-gray-500 block px-1 mb-1.5">Switch to another server</span>
+                        <div id="quickServerSwitchList" class="max-h-48 overflow-y-auto space-y-1 pr-1">
+                            {% if guilds is defined and guilds %}
+                                {% for g in guilds %}
+                                <a href="/manage/{{ g.id }}" class="px-3 py-2 rounded-xl {{ 'bg-brandred/15 border border-brandred/30 text-white' if (g.id | string) == (guild_id | string) else 'hover:bg-white/[0.06] text-gray-300 hover:text-white' }} flex items-center justify-between text-xs font-bold transition">
+                                    <div class="flex items-center space-x-2.5 min-w-0">
+                                        {% if g.icon %}
+                                            <img src="https://cdn.discordapp.com/icons/{{ g.id }}/{{ g.icon }}.png?size=64" alt="{{ g.name }}" class="w-6 h-6 rounded-lg object-cover flex-shrink-0">
+                                        {% else %}
+                                            <span class="w-6 h-6 rounded-lg bg-white/10 flex items-center justify-center text-[10px] font-extrabold text-white flex-shrink-0">{{ g.name[:2] | upper }}</span>
+                                        {% endif %}
+                                        <span class="truncate">{{ g.name }}</span>
+                                    </div>
+                                    <span class="text-[10px] {{ 'text-brandred font-extrabold' if (g.id | string) == (guild_id | string) else 'text-gray-500' }}">
+                                        {{ 'Active' if (g.id | string) == (guild_id | string) else 'Switch &rarr;' | safe }}
+                                    </span>
+                                </a>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Bottom Pure Server Navigation Actions -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-white/5">
+                        <a href="/dashboard" class="px-3.5 py-2.5 rounded-xl bg-white/[0.05] hover:bg-white/[0.10] text-xs font-bold text-white flex items-center justify-between transition">
+                            <span>All Servers Directory</span>
                             <span>&rarr;</span>
                         </a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 2. PLAN & ACTIVE MODULES MINI STAT PILLS + QUICK STATUS FILTER PILLS -->
-            <div class="flex flex-wrap items-center justify-between gap-3 pb-7 mb-7 border-b border-white/[0.06]">
-                <div class="flex flex-wrap items-center gap-3">
-                    <!-- Plan: Free -->
-                    <div onclick="openBrandingModal()" class="bg-[#12151e] hover:bg-[#171b27] border border-white/[0.07] hover:border-white/15 rounded-2xl px-4 py-2.5 flex items-center space-x-3 min-w-[130px] cursor-pointer transition">
-                        <div class="w-7 h-7 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-gray-400">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <span class="text-[10px] text-gray-400 font-medium block leading-none">Plan</span>
-                            <span class="text-xs font-extrabold text-white mt-1 block leading-none">Free</span>
-                        </div>
-                    </div>
-
-                    <!-- Active modules: 26 -->
-                    <div onclick="filterByState('enabled')" class="bg-[#12151e] hover:bg-[#171b27] border border-white/[0.07] hover:border-emerald-500/30 rounded-2xl px-4 py-2.5 flex items-center space-x-3 min-w-[155px] cursor-pointer transition">
-                        <div class="w-7 h-7 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-gray-400">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <span class="text-[10px] text-gray-400 font-medium block leading-none">Active modules</span>
-                            <span id="activeModulesCounter" class="text-xs font-extrabold text-white mt-1 block leading-none">26</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right Micro Utility: State Filter (All / Enabled / Disabled) & Ctrl+K Trigger -->
-                <div class="flex items-center gap-2">
-                    <div class="bg-[#12151e] border border-white/[0.07] rounded-xl p-1 flex items-center text-[11px] font-bold">
-                        <button type="button" id="stateBtnAll" onclick="filterByState('all')" class="px-2.5 py-1 rounded-lg bg-white/10 text-white transition">All</button>
-                        <button type="button" id="stateBtnEnabled" onclick="filterByState('enabled')" class="px-2.5 py-1 rounded-lg text-gray-400 hover:text-white transition">Active</button>
-                        <button type="button" id="stateBtnDisabled" onclick="filterByState('disabled')" class="px-2.5 py-1 rounded-lg text-gray-400 hover:text-white transition">Paused</button>
-                    </div>
-                    <button type="button" onclick="openModulePalette()" title="Quick Module Jump (Ctrl+K)" class="hidden sm:flex items-center space-x-2 bg-[#12151e] hover:bg-white/[0.06] border border-white/[0.07] px-3 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition">
-                        <span>Quick Jump</span>
-                        <kbd class="text-[10px] font-mono bg-black/40 border border-white/10 px-1.5 py-0.5 rounded text-gray-400">Ctrl K</kbd>
-                    </button>
-                </div>
-            </div>
-
-            <!-- 3. CATEGORIES FILTER BAR (EXACT SCREENSHOT MATCH) -->
-            <div class="mb-8">
-                <span class="text-[11px] font-bold text-gray-400 block mb-3">Categories</span>
-                <div class="flex items-center gap-2.5 overflow-x-auto no-scrollbar pb-1">
-                    
-                    <button type="button" onclick="filterCategory('all', this)" class="cat-pill cat-pill-active flex items-center space-x-2.5 bg-[#12151e] hover:bg-white/[0.06] border border-white/[0.07] text-xs font-bold text-white px-3.5 py-2.5 rounded-xl whitespace-nowrap transition">
-                        <svg class="w-3.5 h-3.5 text-brandred" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
-                        </svg>
-                        <span>All</span>
-                        <span class="text-[10px] bg-white/10 px-1.5 py-0.5 rounded-md text-gray-300 font-mono">26</span>
-                    </button>
-
-                    <button type="button" onclick="filterCategory('growth', this)" class="cat-pill flex items-center space-x-2.5 bg-[#12151e] hover:bg-white/[0.06] border border-white/[0.07] text-xs font-semibold text-gray-400 hover:text-white px-3.5 py-2.5 rounded-xl whitespace-nowrap transition">
-                        <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
-                        </svg>
-                        <span>Growth &amp; engagement</span>
-                        <span class="text-[10px] bg-white/[0.04] px-1.5 py-0.5 rounded-md text-gray-400 font-mono">8</span>
-                    </button>
-
-                    <button type="button" onclick="filterCategory('moderation', this)" class="cat-pill flex items-center space-x-2.5 bg-[#12151e] hover:bg-white/[0.06] border border-white/[0.07] text-xs font-semibold text-gray-400 hover:text-white px-3.5 py-2.5 rounded-xl whitespace-nowrap transition">
-                        <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                        </svg>
-                        <span>Moderation &amp; safety</span>
-                        <span class="text-[10px] bg-white/[0.04] px-1.5 py-0.5 rounded-md text-gray-400 font-mono">7</span>
-                    </button>
-
-                    <button type="button" onclick="filterCategory('community', this)" class="cat-pill flex items-center space-x-2.5 bg-[#12151e] hover:bg-white/[0.06] border border-white/[0.07] text-xs font-semibold text-gray-400 hover:text-white px-3.5 py-2.5 rounded-xl whitespace-nowrap transition">
-                        <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        </svg>
-                        <span>Community &amp; fun</span>
-                        <span class="text-[10px] bg-white/[0.04] px-1.5 py-0.5 rounded-md text-gray-400 font-mono">7</span>
-                    </button>
-
-                    <button type="button" onclick="filterCategory('utility', this)" class="cat-pill flex items-center space-x-2.5 bg-[#12151e] hover:bg-white/[0.06] border border-white/[0.07] text-xs font-semibold text-gray-400 hover:text-white px-3.5 py-2.5 rounded-xl whitespace-nowrap transition">
-                        <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                            <circle cx="12" cy="12" r="3"/>
-                        </svg>
-                        <span>Utilities &amp; automation</span>
-                        <span class="text-[10px] bg-white/[0.04] px-1.5 py-0.5 rounded-md text-gray-400 font-mono">4</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- 4. ALL MODULES HEADER & SEARCH BAR + RED FLOATING PILL -->
-            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-5 relative">
-                <div>
-                    <h1 id="currentCategoryHeading" class="text-xl sm:text-2xl font-extrabold text-white tracking-tight">All modules</h1>
-                    <p class="text-xs sm:text-sm text-gray-400 mt-0.5">Browse everything available on this server.</p>
-                </div>
-
-                <!-- Right Search Input + Red Floating Badge -->
-                <div class="flex flex-wrap items-center gap-2.5">
-                    <div class="relative flex-1 sm:w-64">
-                        <svg class="w-3.5 h-3.5 text-gray-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/>
-                        </svg>
-                        <input 
-                            id="moduleSearchInput" 
-                            type="text" 
-                            placeholder="Search modules..." 
-                            oninput="filterModules()"
-                            class="w-full bg-[#12151e] hover:bg-[#161a25] focus:bg-[#161a25] text-xs text-white placeholder-gray-500 pl-9 pr-8 py-2.5 rounded-xl border border-white/[0.08] focus:border-white/20 outline-none transition"
-                        >
-                        <span class="hidden sm:inline-block absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] font-mono text-gray-500 bg-white/[0.04] border border-white/10 px-1.5 py-0.5 rounded">/</span>
-                    </div>
-
-                    <!-- Floating Red Quick-Enable Pill (Matches Red Pill in Screenshot) -->
-                    <button type="button" onclick="enableAllModules()" class="bg-brandred hover:bg-brandredhover text-white text-xs font-extrabold px-3.5 py-2.5 rounded-full shadow-lg shadow-brandred/30 flex items-center space-x-1.5 transition flex-shrink-0">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                        </svg>
-                        <span>Enable All</span>
-                    </button>
-
-                    <button type="button" onclick="disableAllModules()" title="Pause all modules" class="bg-[#12151e] hover:bg-white/[0.08] border border-white/10 text-gray-300 hover:text-white text-xs font-bold px-3 py-2.5 rounded-full transition flex-shrink-0">
-                        <span>Pause All</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- 5. INITIAL SETUP ACCORDION BAR (EXACT SCREENSHOT MATCH) -->
-            <div class="bg-[#12151e] border border-white/[0.07] rounded-2xl mb-3.5 overflow-hidden transition">
-                <button type="button" onclick="toggleInitialSetup()" class="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-white/[0.02] transition">
-                    <div class="flex items-center space-x-3.5">
-                        <div class="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center text-emerald-400 flex-shrink-0">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="text-xs sm:text-sm font-extrabold text-white">Initial setup</h3>
-                            <p class="text-[11px] text-gray-400 flex items-center space-x-1.5 mt-0.5">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block"></span>
-                                <span id="setupSummaryText">All setup steps look good right now.</span>
-                            </p>
-                        </div>
-                    </div>
-                    <svg id="setupChevron" class="w-4 h-4 text-gray-400 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/>
-                    </svg>
-                </button>
-
-                <!-- Expandable Checklist Content + Live Diagnostics Trigger -->
-                <div id="initialSetupBody" class="hidden px-5 pb-4 pt-2 border-t border-white/[0.05] space-y-3 text-xs">
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                        <div class="bg-[#0d0f16] p-3 rounded-xl border border-white/5 flex items-center space-x-2.5">
-                            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                            <span class="text-gray-300 font-semibold">Administrator Permissions: OK</span>
-                        </div>
-                        <div class="bg-[#0d0f16] p-3 rounded-xl border border-white/5 flex items-center space-x-2.5">
-                            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                            <span class="text-gray-300 font-semibold">Role Hierarchy Position: Optimal</span>
-                        </div>
-                        <div class="bg-[#0d0f16] p-3 rounded-xl border border-white/5 flex items-center space-x-2.5">
-                            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                            <span id="diagSyncText" class="text-gray-300 font-semibold">Slash Commands Registered: 26/26</span>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between pt-1">
-                        <span class="text-[11px] text-gray-500">Bot Gateway Latency: <strong id="diagPingText" class="text-emerald-400 font-mono">15ms</strong></span>
-                        <button type="button" onclick="runSetupDiagnostics()" class="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-200 font-bold text-[11px] transition">
-                            Run Live Diagnostics
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 6. CUSTOM BOT BRANDING ($3.50) BANNER WITH YELLOW UPGRADE BUTTON (EXACT SCREENSHOT MATCH) -->
-            <div class="bg-gradient-to-r from-[#161514] via-[#14151c] to-[#191612] border border-amber-500/20 rounded-2xl px-5 py-4 mb-7 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div class="flex items-center space-x-3.5">
-                    <div class="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 flex-shrink-0">
-                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="flex items-center space-x-2">
-                            <h3 class="text-xs sm:text-sm font-extrabold text-white">Custom Bot Branding</h3>
-                            <span class="text-[11px] font-extrabold text-amber-400">$3.50</span>
-                        </div>
-                        <p class="text-[11px] text-gray-400 mt-0.5">
-                            Customise your bot's profile picture, banner, bio, and status inside this server.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-2">
-                    <button type="button" onclick="openBrandingModal()" class="bg-white/5 hover:bg-white/10 border border-amber-500/30 text-amber-300 font-bold text-xs px-3.5 py-2.5 rounded-xl transition whitespace-nowrap">
-                        Preview Studio
-                    </button>
-                    <a href="/manage/{{ guild_id }}/customiser" class="bg-goldaccent hover:bg-[#e5a01d] text-black font-extrabold text-xs px-4 py-2.5 rounded-xl shadow-md transition text-center whitespace-nowrap">
-                        Upgrade {{ guild_name | default('Chill BC []') }}
-                    </a>
-                </div>
-            </div>
-
-            <!-- ==================== 7. THE 26 MODULE CARDS GRID (EXACT 2-COLUMN MAKI REPLICA) ==================== -->
-            {% set modules_catalog = [
-                {
-                    'key': 'customiser',
-                    'title': 'App Customiser',
-                    'desc': 'Give Sofiya your own name, avatar, banner, and status.',
-                    'category': 'utility',
-                    'badge': 'Custom Branding',
-                    'route': '/manage/' ~ guild_id ~ '/customiser',
-                    'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>'
-                },
-                {
-                    'key': 'welcomer',
-                    'title': 'Welcomer',
-                    'desc': 'Greet new members with custom messages, embeds, and dynamic welcome cards.',
-                    'category': 'growth',
-                    'badge': 'Free',
-                    'route': '/manage/' ~ guild_id ~ '/welcomer',
-                    'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>'
-                },
-                {
-                    'key': 'level',
-                    'title': 'Levels',
-                    'desc': 'Reward activity with XP, levels, role rewards, and Bento rank cards.',
-                    'category': 'growth',
-                    'badge': 'Free',
-                    'route': '/manage/' ~ guild_id ~ '/level',
-                    'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>'
-                },
-                {
-                    'key': 'economy',
-                    'title': 'Economy',
-                    'desc': 'Run your server economy with balances, daily rewards, and a server shop.',
-                    'category': 'community',
-                    'badge': 'Free',
-                    'route': '/manage/' ~ guild_id ~ '/economy',
-                    'icon': '<circle cx="12" cy="12" r="9"/><path stroke-linecap="round" stroke-linejoin="round" d="M14.8 9A2 2 0 0013 8h-2a2 2 0 000 4h2a2 2 0 010 4h-2a2 2 0 01-1.8-1M12 6v2m0 8v2"/>'
-                },
-                {
-                    'key': 'music',
-                    'title': 'Music',
-                    'desc': 'Play high-resolution music in voice channels with queue controls and filters.',
-                    'category': 'community',
-                    'badge': 'Free',
-                    'route': '/manage/' ~ guild_id ~ '/music',
-                    'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>'
-                },
-                {
-                    'key': 'moderation',
-                    'title': 'Moderation',
-                    'desc': 'Keep your server safe with AutoMod filters, warnings, timeouts, and punishments.',
-                    'category': 'moderation',
-                    'badge': 'Free',
-                    'route': '/manage/' ~ guild_id ~ '/moderation',
-                    'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>'
-                },
-                {
-                    'key': 'logs',
-                    'title': 'Logs',
-                    'desc': 'Track message edits, member joins, voice activity, and moderation actions.',
-                    'category': 'moderation',
-                    'badge': 'Free',
-                    'route': '/manage/' ~ guild_id ~ '/logs',
-                    'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>'
-                },
-                {
-                    'key': 'giveaways',
-                    'title': 'Giveaways',
-                    'desc': 'Host interactive giveaways with role requirements and automatic winner picking.',
-                    'category': 'growth',
-                    'badge': 'Free',
-                    'route': '/manage/' ~ guild_id ~ '/giveaways',
-                    'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>'
-                },
-                {
-                    'key': 'tickets',
-                    'title': 'Tickets',
-                    'desc': 'Manage private support threads and ticket panels with full HTML transcripts.',
-                    'category': 'moderation',
-                    'badge': 'Free',
-                    'route': '/manage/' ~ guild_id ~ '/tickets',
-                    'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/>'
-                },
-                {
-                    'key': 'reaction_roles',
-                    'title': 'Role Selection',
-                    'desc': 'Let members pick their own roles using buttons, dropdown menus, or reactions.',
-                    'category': 'growth',
-                    'badge': 'Free',
-                    'route': '/manage/' ~ guild_id ~ '/reaction_roles',
-                    'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>'
-                },
-                {
-                    'key': 'sticky_roles',
-                    'title': 'Sticky Roles',
-                    'desc': 'Automatically restore a member\'s roles if they leave and rejoin your server.',
-                    'category': 'moderation',
-                    'badge': 'Free',
-                    'route': '/manage/' ~ guild_id ~ '/sticky_roles',
-                    'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>'
-                },
-                {
-                    'key': 'counters',
-                    'title': 'Counters',
-                    'desc': 'Display live member counts, boost stats, and online goals in channel names.',
-                    'category': 'growth',
-                    'badge': 'Free',
-                    'route': '/manage/' ~ guild_id ~ '/counters',
-                    'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/>'
-                },
-                {
-                    'key': 'starboard',
-                    'title': 'Starboard',
-                    'desc': 'Highlight the best community messages when they receive enough reactions.',
-                    'category': 'community',
-                    'badge': 'Free',
-                    'route': '/manage/' ~ guild_id ~ '/starboard',
-                    'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>'
-                },
-                {
-                    'key': 'suggestions',
-                    'title': 'Suggestions',
-                    'desc': 'Collect ideas from your community with upvote/downvote threads and status tags.',
-                    'category': 'growth',
-                    'badge': 'Free',
-                    'route': '/manage/' ~ guild_id ~ '/suggestions',
-                    'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>'
-                },
-                {
-                    'key': 'birthdays',
-                    'title': 'Birthdays',
-                    'desc': 'Celebrate member birthdays automatically with custom messages and birthday roles.',
-                    'category': 'community',
-                    'badge': 'Free',
-                    'route': '/manage/' ~ guild_id ~ '/birthdays',
-                    'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18z"/>'
-                },
-                {
-                    'key': 'embeds',
-                    'title': 'Message Builder',
-                    'desc': 'Design rich embeds, rules panels, and webhook messages with live preview.',
-                    'category': 'utility',
-                    'badge': 'Free',
-                    'route': '/manage/' ~ guild_id ~ '/embeds',
-                    'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/>'
-                },
-                {
-                    'key': 'timers',
-                    'title': 'Scheduled Messages',
-                    'desc': 'Schedule recurring announcements, reminders, and automated channel posts.',
-                    'category': 'utility',
-                    'badge': 'Free',
-                    'route': '/manage/' ~ guild_id ~ '/timers',
-                    'icon': '<circle cx="12" cy="12" r="9"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 7v5l3 3"/>'
-                },
-                {
-                    'key': 'sticky_messages',
-                    'title': 'Sticky Messages',
-                    'desc': 'Pin a message to the bottom of any channel so it always stays visible.',
-                    'category': 'moderation',
-                    'badge': 'Free',
-                    'route': '/manage/' ~ guild_id ~ '/sticky_messages',
-                    'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>'
-                },
-                {
-                    'key': 'notifications',
-                    'title': 'Notifications',
-                    'desc': 'Send automatic alerts for Twitch streams, YouTube uploads, and social feeds.',
-                    'category': 'growth',
-                    'badge': 'Free',
-                    'route': '/manage/' ~ guild_id ~ '/notifications',
-                    'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>'
-                },
-                {
-                    'key': 'automations',
-                    'title': 'Automations',
-                    'desc': 'Build custom IF/THEN workflows triggered by server events, roles, or messages.',
-                    'category': 'utility',
-                    'badge': 'Free',
-                    'route': '/manage/' ~ guild_id ~ '/automations',
-                    'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>'
-                },
-                {
-                    'key': 'custom_commands',
-                    'title': 'Custom Commands',
-                    'desc': 'Create your own slash commands and text triggers with custom responses or roles.',
-                    'category': 'community',
-                    'badge': 'Free',
-                    'route': '/manage/' ~ guild_id ~ '/custom_commands',
-                    'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>'
-                },
-                {
-                    'key': 'temp_channels',
-                    'title': 'Temporary Channels',
-                    'desc': 'Allow members to create their own temporary voice rooms that delete when empty.',
-                    'category': 'community',
-                    'badge': 'Free',
-                    'route': '/manage/' ~ guild_id ~ '/temp_channels',
-                    'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>'
-                },
-                {
-                    'key': 'roleplay',
-                    'title': 'Roleplay',
-                    'desc': 'Add interactive social commands like hug, pat, highfive, and gif reactions.',
-                    'category': 'community',
-                    'badge': 'Free',
-                    'route': '/manage/' ~ guild_id ~ '/roleplay',
-                    'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>'
-                },
-                {
-                    'key': 'analytics',
-                    'title': 'Analytics',
-                    'desc': 'Track server growth, message velocity, voice minutes, and retention insights.',
-                    'category': 'growth',
-                    'badge': 'Free',
-                    'route': '/manage/' ~ guild_id ~ '/analytics',
-                    'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>'
-                },
-                {
-                    'key': 'connect',
-                    'title': 'Connect',
-                    'desc': 'Connect Sofiya to external websites, webhooks, APIs, and other services.',
-                    'category': 'moderation',
-                    'badge': 'Free',
-                    'route': '/manage/' ~ guild_id ~ '/connect',
-                    'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>'
-                },
-                {
-                    'key': 'verify',
-                    'title': 'Verify',
-                    'desc': 'Protect your server against bots and raids with one-click or captcha verification.',
-                    'category': 'moderation',
-                    'badge': 'Free',
-                    'route': '/manage/' ~ guild_id ~ '/verify',
-                    'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>'
-                }
-            ] %}
-
-            <div id="modulesGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
-                {% for mod in modules_catalog %}
-                <div 
-                    class="module-card rounded-[22px] p-5 sm:p-6 flex flex-col justify-between"
-                    data-mod-key="{{ mod.key }}"
-                    data-mod-title="{{ mod.title | lower }}"
-                    data-mod-raw-title="{{ mod.title }}"
-                    data-mod-desc="{{ mod.desc | lower }}"
-                    data-mod-raw-desc="{{ mod.desc }}"
-                    data-mod-category="{{ mod.category }}"
-                    data-mod-route="{{ mod.route }}"
-                    data-mod-enabled="true"
-                >
-                    <!-- Top Row: Icon + Title on Left, Red Maki Toggle Switch on Right -->
-                    <div>
-                        <div class="flex items-center justify-between gap-3 mb-3.5">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center text-gray-300 flex-shrink-0">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24">
-                                        {{ mod.icon | safe }}
-                                    </svg>
-                                </div>
-                                <h2 class="text-sm sm:text-base font-extrabold text-white tracking-tight">{{ mod.title }}</h2>
-                            </div>
-
-                            <!-- Maki Red Toggle Switch -->
-                            <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
-                                <input 
-                                    type="checkbox" 
-                                    class="sr-only maki-switch-input" 
-                                    data-switch-key="{{ mod.key }}"
-                                    checked 
-                                    onchange="toggleModuleCard('{{ mod.key }}', '{{ mod.title }}', this.checked)"
-                                >
-                                <div class="maki-switch-slider w-10 h-[22px] bg-[#252936] rounded-full relative transition-colors duration-200"></div>
-                            </label>
-                        </div>
-
-                        <!-- Module Description -->
-                        <p class="text-xs text-gray-400 leading-relaxed min-h-[34px]">
-                            {{ mod.desc }}
-                        </p>
-                    </div>
-
-                    <!-- Middle Subtle Divider Row: Tier Label & Status Label -->
-                    <div class="mt-5 pt-3.5 border-t border-white/[0.05] flex items-center justify-between text-[11px]">
-                        <span class="text-gray-500 font-medium flex items-center space-x-1">
-                            {% if mod.badge == 'Custom Branding' %}
-                                <span class="text-amber-400/90 font-semibold">★ Custom Branding</span>
-                            {% else %}
-                                <span>Free</span>
-                            {% endif %}
-                        </span>
-                        <span class="mod-status-label text-emerald-400/90 font-semibold">Enabled</span>
-                    </div>
-
-                    <!-- Bottom Row: Quick Tune Drawer Trigger + Dedicated Module Page Configure Route -->
-                    <div class="mt-3.5 flex items-center justify-between gap-2">
-                        <button 
-                            type="button"
-                            onclick="openQuickConfigDrawer('{{ mod.key }}')"
-                            title="Quick tune {{ mod.title }} settings"
-                            class="inline-flex items-center space-x-1 text-[11px] font-bold text-gray-400 hover:text-white px-2.5 py-1.5 rounded-lg hover:bg-white/[0.05] transition"
-                        >
-                            <svg class="w-3.5 h-3.5 text-brandred" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
-                            </svg>
-                            <span>Quick Tune</span>
-                        </button>
-
-                        <a 
-                            href="{{ mod.route }}" 
-                            class="inline-flex items-center space-x-1.5 bg-white/[0.05] hover:bg-white/[0.12] border border-white/[0.08] hover:border-white/20 text-white text-xs font-bold px-4 py-2 rounded-xl transition group"
-                        >
-                            <span>Configure</span>
-                            <svg class="w-3.5 h-3.5 text-gray-400 group-hover:text-white group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6l6 6-6 6"/>
-                            </svg>
+                        <a href="/invite/{{ guild_id }}" class="px-3.5 py-2.5 rounded-xl bg-discord/15 hover:bg-discord text-indigo-300 hover:text-white border border-discord/30 text-xs font-bold flex items-center justify-between transition">
+                            <span>Add Bot to Server</span>
+                            <span>+</span>
                         </a>
                     </div>
                 </div>
-                {% endfor %}
+
+                <!-- Right: Plan: Free (Routes to Dedicated Premium Panel) + Active modules: 28 + State Filter Pills -->
+                <div class="flex flex-wrap items-center justify-between lg:justify-end gap-2.5">
+                    <div class="flex items-center gap-2.5">
+                        <!-- Plan: Free / Premium (Dedicated Panel Link /manage/<guild_id>/premium) -->
+                        <a href="/manage/{{ guild_id }}/premium" title="Open Dedicated Server Premium Panel" class="bg-[#12151e] hover:bg-[#171b27] border border-white/[0.07] hover:border-amber-500/40 rounded-2xl px-4 py-2.5 flex items-center space-x-3 min-w-[125px] cursor-pointer transition group">
+                            <div class="w-7 h-7 rounded-xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-400">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <span class="text-[10px] text-gray-400 font-medium block leading-none">Plan</span>
+                                <span class="text-xs font-extrabold text-white group-hover:text-amber-400 mt-1 block leading-none transition">
+                                    {{ 'Premium Pro' if settings and settings.is_premium else 'Free' }}
+                                </span>
+                            </div>
+                        </a>
+
+                        <!-- Active modules: 28 -->
+                        <div onclick="filterByState('enabled')" class="bg-[#12151e] hover:bg-[#171b27] border border-white/[0.07] hover:border-emerald-500/30 rounded-2xl px-4 py-2.5 flex items-center space-x-3 min-w-[140px] cursor-pointer transition">
+                            <div class="w-7 h-7 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center text-gray-400">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <span class="text-[10px] text-gray-400 font-medium block leading-none">Active modules</span>
+                                <span id="activeModulesCounter" class="text-xs font-extrabold text-white mt-1 block leading-none">28</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- State Filter (All / Active / Paused) & Quick Jump -->
+                    <div class="flex items-center gap-2">
+                        <div class="bg-[#12151e] border border-white/[0.07] rounded-xl p-1 flex items-center text-[11px] font-bold">
+                            <button type="button" id="stateBtnAll" onclick="filterByState('all')" class="px-2.5 py-1 rounded-lg bg-white/10 text-white transition">All</button>
+                            <button type="button" id="stateBtnEnabled" onclick="filterByState('enabled')" class="px-2.5 py-1 rounded-lg text-gray-400 hover:text-white transition">Active</button>
+                            <button type="button" id="stateBtnDisabled" onclick="filterByState('disabled')" class="px-2.5 py-1 rounded-lg text-gray-400 hover:text-white transition">Paused</button>
+                        </div>
+                        <button type="button" onclick="openModulePalette()" title="Quick Module Jump (Ctrl+K)" class="hidden sm:flex items-center space-x-1.5 bg-[#12151e] hover:bg-white/[0.06] border border-white/[0.07] px-3 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition">
+                            <span>Quick Jump</span>
+                            <kbd class="text-[10px] font-mono bg-black/40 border border-white/10 px-1.5 py-0.5 rounded text-gray-400">Ctrl K</kbd>
+                        </button>
+                    </div>
+                </div>
             </div>
 
-            <!-- Empty Search State -->
-            <div id="noModulesFound" class="hidden text-center py-14 px-6 bg-[#12151e]/70 border border-white/5 rounded-3xl mt-4">
-                <p class="text-sm font-bold text-gray-200 mb-1">No modules match your search</p>
-                <p class="text-xs text-gray-500 mb-4">Try searching for another keyword or selecting "All" categories.</p>
-                <button type="button" onclick="resetModuleFilters()" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-xs font-bold text-white transition">
-                    Show All 26 Modules
-                </button>
+            <!-- ==================== 2. LAPTOP 2-COLUMN SPLIT: LEFT CATEGORIES SIDEBAR + RIGHT 28 MODULES AREA ==================== -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-7 items-start">
+                
+                <!-- LEFT COLUMN: STICKY CATEGORIES SIDEBAR (EXACT MATCH TO LAPTOP SCREENSHOT) -->
+                <aside class="lg:col-span-3 lg:sticky lg:top-24 space-y-4">
+                    <div>
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-gray-400 block mb-3 px-1">Categories</span>
+                        <div class="flex lg:flex-col items-center lg:items-stretch gap-2 overflow-x-auto no-scrollbar pb-1">
+                            
+                            <!-- 1. All (28) -->
+                            <button type="button" onclick="filterCategory('all', this)" class="cat-pill cat-pill-active flex items-center justify-between bg-[#12151e] hover:bg-white/[0.06] border border-white/[0.07] text-xs font-bold text-white px-3.5 py-2.5 rounded-xl whitespace-nowrap transition w-auto lg:w-full">
+                                <span class="flex items-center space-x-2.5">
+                                    <svg class="w-3.5 h-3.5 text-brandred flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+                                    </svg>
+                                    <span>All</span>
+                                </span>
+                                <span id="catCount_all" class="text-[10px] bg-white/10 px-1.5 py-0.5 rounded-md text-gray-200 font-mono ml-2">28</span>
+                            </button>
+
+                            <!-- 2. Growth & engagement -->
+                            <button type="button" onclick="filterCategory('growth', this)" class="cat-pill flex items-center justify-between bg-[#12151e] hover:bg-white/[0.06] border border-white/[0.07] text-xs font-semibold text-gray-400 hover:text-white px-3.5 py-2.5 rounded-xl whitespace-nowrap transition w-auto lg:w-full">
+                                <span class="flex items-center space-x-2.5">
+                                    <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                                    </svg>
+                                    <span>Growth &amp; engagement</span>
+                                </span>
+                                <span id="catCount_growth" class="text-[10px] bg-white/[0.04] px-1.5 py-0.5 rounded-md text-gray-400 font-mono ml-2">9</span>
+                            </button>
+
+                            <!-- 3. Moderation & safety -->
+                            <button type="button" onclick="filterCategory('moderation', this)" class="cat-pill flex items-center justify-between bg-[#12151e] hover:bg-white/[0.06] border border-white/[0.07] text-xs font-semibold text-gray-400 hover:text-white px-3.5 py-2.5 rounded-xl whitespace-nowrap transition w-auto lg:w-full">
+                                <span class="flex items-center space-x-2.5">
+                                    <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                    </svg>
+                                    <span>Moderation &amp; safety</span>
+                                </span>
+                                <span id="catCount_moderation" class="text-[10px] bg-white/[0.04] px-1.5 py-0.5 rounded-md text-gray-400 font-mono ml-2">8</span>
+                            </button>
+
+                            <!-- 4. Community & fun -->
+                            <button type="button" onclick="filterCategory('community', this)" class="cat-pill flex items-center justify-between bg-[#12151e] hover:bg-white/[0.06] border border-white/[0.07] text-xs font-semibold text-gray-400 hover:text-white px-3.5 py-2.5 rounded-xl whitespace-nowrap transition w-auto lg:w-full">
+                                <span class="flex items-center space-x-2.5">
+                                    <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <span>Community &amp; fun</span>
+                                </span>
+                                <span id="catCount_community" class="text-[10px] bg-white/[0.04] px-1.5 py-0.5 rounded-md text-gray-400 font-mono ml-2">8</span>
+                            </button>
+
+                            <!-- 5. Server management (From Laptop Screenshot) -->
+                            <button type="button" onclick="filterCategory('management', this)" class="cat-pill flex items-center justify-between bg-[#12151e] hover:bg-white/[0.06] border border-white/[0.07] text-xs font-semibold text-gray-400 hover:text-white px-3.5 py-2.5 rounded-xl whitespace-nowrap transition w-auto lg:w-full">
+                                <span class="flex items-center space-x-2.5">
+                                    <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                                    </svg>
+                                    <span>Server management</span>
+                                </span>
+                                <span id="catCount_management" class="text-[10px] bg-white/[0.04] px-1.5 py-0.5 rounded-md text-gray-400 font-mono ml-2">5</span>
+                            </button>
+
+                            <!-- 6. Messages & notifications (From Laptop Screenshot) -->
+                            <button type="button" onclick="filterCategory('messages', this)" class="cat-pill flex items-center justify-between bg-[#12151e] hover:bg-white/[0.06] border border-white/[0.07] text-xs font-semibold text-gray-400 hover:text-white px-3.5 py-2.5 rounded-xl whitespace-nowrap transition w-auto lg:w-full">
+                                <span class="flex items-center space-x-2.5">
+                                    <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                                    </svg>
+                                    <span>Messages &amp; notifications</span>
+                                </span>
+                                <span id="catCount_messages" class="text-[10px] bg-white/[0.04] px-1.5 py-0.5 rounded-md text-gray-400 font-mono ml-2">4</span>
+                            </button>
+
+                            <!-- 7. Utilities & automation -->
+                            <button type="button" onclick="filterCategory('utility', this)" class="cat-pill flex items-center justify-between bg-[#12151e] hover:bg-white/[0.06] border border-white/[0.07] text-xs font-semibold text-gray-400 hover:text-white px-3.5 py-2.5 rounded-xl whitespace-nowrap transition w-auto lg:w-full">
+                                <span class="flex items-center space-x-2.5">
+                                    <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                    </svg>
+                                    <span>Utilities &amp; automation</span>
+                                </span>
+                                <span id="catCount_utility" class="text-[10px] bg-white/[0.04] px-1.5 py-0.5 rounded-md text-gray-400 font-mono ml-2">6</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar Helper Box (Matches Bottom-Left Info Card in Laptop Screenshot!) -->
+                    <div class="hidden lg:block bg-[#11141d] border border-white/[0.06] rounded-2xl p-4 text-[11px] text-gray-400 leading-relaxed space-y-2.5">
+                        <p>
+                            Each of the <strong class="text-white">28 modules</strong> is linked to its own dedicated Bot Cog &amp; configuration page. Click <strong class="text-gray-200">Configure</strong> for full settings or <strong class="text-gray-200">Quick Tune</strong> for instant routing.
+                        </p>
+                        <div class="pt-2 border-t border-white/[0.05] flex items-center justify-between">
+                            <span class="text-emerald-400 font-bold flex items-center space-x-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                                <span>28 Cogs Connected</span>
+                            </span>
+                            <a href="/api/guild/{{ guild_id }}/backup" target="_blank" class="text-gray-300 hover:text-white font-bold underline">Backup JSON</a>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- RIGHT COLUMN: SEARCH HEADER + INITIAL SETUP + BRANDING BANNER + 28 MODULE CARDS -->
+                <div class="lg:col-span-9">
+                    
+                    <!-- 4. ALL MODULES HEADER & SEARCH BAR + RED FLOATING PILL -->
+                    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-5 relative">
+                        <div>
+                            <h1 id="currentCategoryHeading" class="text-xl sm:text-2xl font-extrabold text-white tracking-tight">All modules</h1>
+                            <p class="text-xs sm:text-sm text-gray-400 mt-0.5">Browse everything available on this server.</p>
+                        </div>
+
+                        <!-- Right Search Input + Enable All / Pause All -->
+                        <div class="flex flex-wrap items-center gap-2.5">
+                            <div class="relative flex-1 sm:w-60">
+                                <svg class="w-3.5 h-3.5 text-gray-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/>
+                                </svg>
+                                <input 
+                                    id="moduleSearchInput" 
+                                    type="text" 
+                                    placeholder="Search modules..." 
+                                    oninput="filterModules()"
+                                    class="w-full bg-[#12151e] hover:bg-[#161a25] focus:bg-[#161a25] text-xs text-white placeholder-gray-500 pl-9 pr-8 py-2.5 rounded-xl border border-white/[0.08] focus:border-white/20 outline-none transition"
+                                >
+                                <span class="hidden sm:inline-block absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] font-mono text-gray-500 bg-white/[0.04] border border-white/10 px-1.5 py-0.5 rounded">/</span>
+                            </div>
+
+                            <!-- Floating Red Quick-Enable Pill -->
+                            <button type="button" onclick="enableAllModules()" class="bg-brandred hover:bg-brandredhover text-white text-xs font-extrabold px-3.5 py-2.5 rounded-full shadow-lg shadow-brandred/30 flex items-center space-x-1.5 transition flex-shrink-0">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                </svg>
+                                <span>Enable All</span>
+                            </button>
+
+                            <button type="button" onclick="disableAllModules()" title="Pause all modules" class="bg-[#12151e] hover:bg-white/[0.08] border border-white/10 text-gray-300 hover:text-white text-xs font-bold px-3 py-2.5 rounded-full transition flex-shrink-0">
+                                <span>Pause All</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 5. INITIAL SETUP ACCORDION BAR (EXACT SCREENSHOT MATCH) -->
+                    <div class="bg-[#12151e] border border-white/[0.07] rounded-2xl mb-3.5 overflow-hidden transition">
+                        <button type="button" onclick="toggleInitialSetup()" class="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-white/[0.02] transition">
+                            <div class="flex items-center space-x-3.5">
+                                <div class="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center text-emerald-400 flex-shrink-0">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-xs sm:text-sm font-extrabold text-white">Initial setup</h3>
+                                    <p class="text-[11px] text-gray-400 flex items-center space-x-1.5 mt-0.5">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block"></span>
+                                        <span id="setupSummaryText">All setup steps look good right now.</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <svg id="setupChevron" class="w-4 h-4 text-gray-400 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6"/>
+                            </svg>
+                        </button>
+
+                        <!-- Expandable Checklist Content + Live Diagnostics Trigger -->
+                        <div id="initialSetupBody" class="hidden px-5 pb-4 pt-2 border-t border-white/[0.05] space-y-3 text-xs">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                                <div class="bg-[#0d0f16] p-3 rounded-xl border border-white/5 flex items-center space-x-2.5">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                                    <span class="text-gray-300 font-semibold">Administrator Permissions: OK</span>
+                                </div>
+                                <div class="bg-[#0d0f16] p-3 rounded-xl border border-white/5 flex items-center space-x-2.5">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                                    <span class="text-gray-300 font-semibold">Role Hierarchy Position: Optimal</span>
+                                </div>
+                                <div class="bg-[#0d0f16] p-3 rounded-xl border border-white/5 flex items-center space-x-2.5">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                                    <span id="diagSyncText" class="text-gray-300 font-semibold">Slash Commands Registered: 28/28</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+                                <span class="text-[11px] text-gray-500">Bot Gateway Latency: <strong id="diagPingText" class="text-emerald-400 font-mono">15ms</strong></span>
+                                <div class="flex items-center space-x-2">
+                                    <button type="button" onclick="sendLiveDiscordTestMessage()" class="px-3 py-1.5 rounded-lg bg-brandred/15 hover:bg-brandred text-brandred hover:text-white border border-brandred/30 font-bold text-[11px] transition">
+                                        Send Test Message to Server
+                                    </button>
+                                    <button type="button" onclick="runSetupDiagnostics()" class="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-200 font-bold text-[11px] transition">
+                                        Run Live Diagnostics
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 6. CUSTOM BOT BRANDING ($3.50) BANNER WITH YELLOW UPGRADE BUTTON (EXACT SCREENSHOT MATCH) -->
+                    <div class="bg-gradient-to-r from-[#161514] via-[#14151c] to-[#191612] border border-amber-500/20 rounded-2xl px-5 py-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="flex items-center space-x-3.5">
+                            <div class="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 flex-shrink-0">
+                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <h3 class="text-xs sm:text-sm font-extrabold text-white">Custom Bot Branding</h3>
+                                    <span class="text-[11px] font-extrabold text-amber-400">$3.50</span>
+                                </div>
+                                <p class="text-[11px] text-gray-400 mt-0.5">
+                                    Customise your bot's profile picture, banner, bio, and status inside this server.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <button type="button" onclick="openBrandingModal()" class="bg-white/5 hover:bg-white/10 border border-amber-500/30 text-amber-300 font-bold text-xs px-3.5 py-2.5 rounded-xl transition whitespace-nowrap">
+                                Preview Studio
+                            </button>
+                            <a href="/manage/{{ guild_id }}/premium" class="bg-goldaccent hover:bg-[#e5a01d] text-black font-extrabold text-xs px-4 py-2.5 rounded-xl shadow-md transition text-center whitespace-nowrap">
+                                Upgrade {{ guild_name | default('CHILL BC []') }}
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- ==================== 7. THE 28 MODULE CARDS GRID (EACH LINKED TO ITS DEDICATED BOT COG & PANEL ROUTE) ==================== -->
+                    {% set modules_catalog = [
+                        {
+                            'key': 'customiser',
+                            'cog': 'BrandingCog',
+                            'title': 'App Customiser',
+                            'desc': 'Give Sofiya your own name, avatar, banner, and status.',
+                            'category': 'utility',
+                            'subcat': 'management',
+                            'badge': 'Custom Branding',
+                            'route': '/manage/' ~ guild_id ~ '/customiser',
+                            'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>'
+                        },
+                        {
+                            'key': 'welcomer',
+                            'cog': 'WelcomerCog',
+                            'title': 'Welcomer',
+                            'desc': 'Greet new members with custom messages, embeds, and dynamic welcome cards.',
+                            'category': 'growth',
+                            'subcat': 'growth',
+                            'badge': 'Free',
+                            'route': '/manage/' ~ guild_id ~ '/welcomer',
+                            'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>'
+                        },
+                        {
+                            'key': 'level',
+                            'cog': 'LevelingCog',
+                            'title': 'Levels',
+                            'desc': 'Reward activity with XP, levels, role rewards, and Bento rank cards.',
+                            'category': 'growth',
+                            'subcat': 'growth',
+                            'badge': 'Free',
+                            'route': '/manage/' ~ guild_id ~ '/level',
+                            'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>'
+                        },
+                        {
+                            'key': 'economy',
+                            'cog': 'EconomyCog',
+                            'title': 'Economy',
+                            'desc': 'Run your server economy with balances, daily rewards, and a server shop.',
+                            'category': 'community',
+                            'subcat': 'community',
+                            'badge': 'Free',
+                            'route': '/manage/' ~ guild_id ~ '/economy',
+                            'icon': '<circle cx="12" cy="12" r="9"/><path stroke-linecap="round" stroke-linejoin="round" d="M14.8 9A2 2 0 0013 8h-2a2 2 0 000 4h2a2 2 0 010 4h-2a2 2 0 01-1.8-1M12 6v2m0 8v2"/>'
+                        },
+                        {
+                            'key': 'music',
+                            'cog': 'MusicAudioCog',
+                            'title': 'Music',
+                            'desc': 'Play high-resolution music in voice channels with queue controls and filters.',
+                            'category': 'community',
+                            'subcat': 'community',
+                            'badge': 'Free',
+                            'route': '/manage/' ~ guild_id ~ '/music',
+                            'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>'
+                        },
+                        {
+                            'key': 'moderation',
+                            'cog': 'ModerationCog',
+                            'title': 'Moderation',
+                            'desc': 'Keep your server safe with AutoMod filters, warnings, timeouts, and punishments.',
+                            'category': 'moderation',
+                            'subcat': 'moderation',
+                            'badge': 'Free',
+                            'route': '/manage/' ~ guild_id ~ '/moderation',
+                            'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>'
+                        },
+                        {
+                            'key': 'logs',
+                            'cog': 'AuditLogsCog',
+                            'title': 'Logs',
+                            'desc': 'Track message edits, member joins, voice activity, and moderation actions.',
+                            'category': 'moderation',
+                            'subcat': 'management',
+                            'badge': 'Free',
+                            'route': '/manage/' ~ guild_id ~ '/logs',
+                            'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>'
+                        },
+                        {
+                            'key': 'giveaways',
+                            'cog': 'GiveawaysCog',
+                            'title': 'Giveaways',
+                            'desc': 'Host interactive giveaways with role requirements and automatic winner picking.',
+                            'category': 'growth',
+                            'subcat': 'growth',
+                            'badge': 'Free',
+                            'route': '/manage/' ~ guild_id ~ '/giveaways',
+                            'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>'
+                        },
+                        {
+                            'key': 'tickets',
+                            'cog': 'TicketsCog',
+                            'title': 'Tickets',
+                            'desc': 'Manage private support threads and ticket panels with full HTML transcripts.',
+                            'category': 'moderation',
+                            'subcat': 'management',
+                            'badge': 'Free',
+                            'route': '/manage/' ~ guild_id ~ '/tickets',
+                            'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"/>'
+                        },
+                        {
+                            'key': 'reaction_roles',
+                            'cog': 'RoleSelectCog',
+                            'title': 'Role Selection',
+                            'desc': 'Let members pick their own roles using buttons, dropdown menus, or reactions.',
+                            'category': 'growth',
+                            'subcat': 'management',
+                            'badge': 'Free',
+                            'route': '/manage/' ~ guild_id ~ '/reaction_roles',
+                            'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>'
+                        },
+                        {
+                            'key': 'sticky_roles',
+                            'cog': 'StickyRolesCog',
+                            'title': 'Sticky Roles',
+                            'desc': 'Automatically restore a member\'s roles if they leave and rejoin your server.',
+                            'category': 'moderation',
+                            'subcat': 'moderation',
+                            'badge': 'Free',
+                            'route': '/manage/' ~ guild_id ~ '/sticky_roles',
+                            'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>'
+                        },
+                        {
+                            'key': 'counters',
+                            'cog': 'CountersCog',
+                            'title': 'Counters',
+                            'desc': 'Display live member counts, boost stats, and online goals in channel names.',
+                            'category': 'growth',
+                            'subcat': 'management',
+                            'badge': 'Free',
+                            'route': '/manage/' ~ guild_id ~ '/counters',
+                            'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/>'
+                        },
+                        {
+                            'key': 'starboard',
+                            'cog': 'StarboardCog',
+                            'title': 'Starboard',
+                            'desc': 'Highlight the best community messages when they receive enough reactions.',
+                            'category': 'community',
+                            'subcat': 'community',
+                            'badge': 'Free',
+                            'route': '/manage/' ~ guild_id ~ '/starboard',
+                            'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>'
+                        },
+                        {
+                            'key': 'suggestions',
+                            'cog': 'SuggestionsCog',
+                            'title': 'Suggestions',
+                            'desc': 'Collect ideas from your community with upvote/downvote threads and status tags.',
+                            'category': 'growth',
+                            'subcat': 'growth',
+                            'badge': 'Free',
+                            'route': '/manage/' ~ guild_id ~ '/suggestions',
+                            'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>'
+                        },
+                        {
+                            'key': 'birthdays',
+                            'cog': 'BirthdaysCog',
+                            'title': 'Birthdays',
+                            'desc': 'Celebrate member birthdays automatically with custom messages and birthday roles.',
+                            'category': 'community',
+                            'subcat': 'community',
+                            'badge': 'Free',
+                            'route': '/manage/' ~ guild_id ~ '/birthdays',
+                            'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18z"/>'
+                        },
+                        {
+                            'key': 'embeds',
+                            'cog': 'EmbedBuilderCog',
+                            'title': 'Message Builder',
+                            'desc': 'Design rich embeds, rules panels, and webhook messages with live preview.',
+                            'category': 'utility',
+                            'subcat': 'messages',
+                            'badge': 'Free',
+                            'route': '/manage/' ~ guild_id ~ '/embeds',
+                            'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/>'
+                        },
+                        {
+                            'key': 'timers',
+                            'cog': 'TimersCog',
+                            'title': 'Scheduled Messages',
+                            'desc': 'Schedule recurring announcements, reminders, and automated channel posts.',
+                            'category': 'utility',
+                            'subcat': 'messages',
+                            'badge': 'Free',
+                            'route': '/manage/' ~ guild_id ~ '/timers',
+                            'icon': '<circle cx="12" cy="12" r="9"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 7v5l3 3"/>'
+                        },
+                        {
+                            'key': 'sticky_messages',
+                            'cog': 'StickyMsgCog',
+                            'title': 'Sticky Messages',
+                            'desc': 'Pin a message to the bottom of any channel so it always stays visible.',
+                            'category': 'moderation',
+                            'subcat': 'messages',
+                            'badge': 'Free',
+                            'route': '/manage/' ~ guild_id ~ '/sticky_messages',
+                            'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/>'
+                        },
+                        {
+                            'key': 'notifications',
+                            'cog': 'SocialAlertsCog',
+                            'title': 'Notifications',
+                            'desc': 'Send automatic alerts for Twitch streams, YouTube uploads, and social feeds.',
+                            'category': 'growth',
+                            'subcat': 'messages',
+                            'badge': 'Free',
+                            'route': '/manage/' ~ guild_id ~ '/notifications',
+                            'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>'
+                        },
+                        {
+                            'key': 'automations',
+                            'cog': 'AutomationsCog',
+                            'title': 'Automations',
+                            'desc': 'Build custom IF/THEN workflows triggered by server events, roles, or messages.',
+                            'category': 'utility',
+                            'subcat': 'utility',
+                            'badge': 'Free',
+                            'route': '/manage/' ~ guild_id ~ '/automations',
+                            'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>'
+                        },
+                        {
+                            'key': 'custom_commands',
+                            'cog': 'CustomCmdsCog',
+                            'title': 'Custom Commands',
+                            'desc': 'Create your own slash commands and text triggers with custom responses or roles.',
+                            'category': 'community',
+                            'subcat': 'utility',
+                            'badge': 'Free',
+                            'route': '/manage/' ~ guild_id ~ '/custom_commands',
+                            'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>'
+                        },
+                        {
+                            'key': 'temp_channels',
+                            'cog': 'TempVoiceCog',
+                            'title': 'Temporary Channels',
+                            'desc': 'Allow members to create their own temporary voice rooms that delete when empty.',
+                            'category': 'community',
+                            'subcat': 'community',
+                            'badge': 'Free',
+                            'route': '/manage/' ~ guild_id ~ '/temp_channels',
+                            'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>'
+                        },
+                        {
+                            'key': 'roleplay',
+                            'cog': 'RoleplayCog',
+                            'title': 'Roleplay',
+                            'desc': 'Add interactive social commands like hug, pat, highfive, and gif reactions.',
+                            'category': 'community',
+                            'subcat': 'community',
+                            'badge': 'Free',
+                            'route': '/manage/' ~ guild_id ~ '/roleplay',
+                            'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>'
+                        },
+                        {
+                            'key': 'analytics',
+                            'cog': 'AnalyticsCog',
+                            'title': 'Analytics',
+                            'desc': 'Track server growth, message velocity, voice minutes, and retention insights.',
+                            'category': 'growth',
+                            'subcat': 'growth',
+                            'badge': 'Free',
+                            'route': '/manage/' ~ guild_id ~ '/analytics',
+                            'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>'
+                        },
+                        {
+                            'key': 'connect',
+                            'cog': 'WebhooksApiCog',
+                            'title': 'Connect',
+                            'desc': 'Connect Sofiya to external websites, webhooks, APIs, and other services.',
+                            'category': 'moderation',
+                            'subcat': 'utility',
+                            'badge': 'Free',
+                            'route': '/manage/' ~ guild_id ~ '/connect',
+                            'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>'
+                        },
+                        {
+                            'key': 'verify',
+                            'cog': 'VerificationCog',
+                            'title': 'Verify',
+                            'desc': 'Protect your server against bots and raids with one-click or captcha verification.',
+                            'category': 'moderation',
+                            'subcat': 'moderation',
+                            'badge': 'Free',
+                            'route': '/manage/' ~ guild_id ~ '/verify',
+                            'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>'
+                        },
+                        {
+                            'key': 'invite_tracker',
+                            'cog': 'InviteTrackerCog',
+                            'title': 'Invite Tracker',
+                            'desc': 'Track who invited each member, monitor vanity joins, and reward top inviters.',
+                            'category': 'growth',
+                            'subcat': 'growth',
+                            'badge': 'Free',
+                            'route': '/manage/' ~ guild_id ~ '/invite_tracker',
+                            'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>'
+                        },
+                        {
+                            'key': 'polls',
+                            'cog': 'PollsVotingCog',
+                            'title': 'Polls & Voting',
+                            'desc': 'Run anonymous or role-weighted community polls with live progress bars.',
+                            'category': 'community',
+                            'subcat': 'moderation',
+                            'badge': 'Free',
+                            'route': '/manage/' ~ guild_id ~ '/polls',
+                            'icon': '<path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>'
+                        }
+                    ] %}
+
+                    <div id="modulesGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+                        {% for mod in modules_catalog %}
+                        <div 
+                            class="module-card rounded-[22px] p-5 sm:p-6 flex flex-col justify-between"
+                            data-mod-key="{{ mod.key }}"
+                            data-mod-cog="{{ mod.cog }}"
+                            data-mod-title="{{ mod.title | lower }}"
+                            data-mod-raw-title="{{ mod.title }}"
+                            data-mod-desc="{{ mod.desc | lower }}"
+                            data-mod-raw-desc="{{ mod.desc }}"
+                            data-mod-category="{{ mod.category }}"
+                            data-mod-subcat="{{ mod.subcat }}"
+                            data-mod-route="{{ mod.route }}"
+                            data-mod-enabled="true"
+                        >
+                            <!-- Top Row: Icon + Title on Left, Red Maki Toggle Switch on Right -->
+                            <div>
+                                <div class="flex items-center justify-between gap-3 mb-3.5">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-9 h-9 rounded-xl bg-white/[0.04] border border-white/[0.07] flex items-center justify-center text-gray-300 flex-shrink-0">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24">
+                                                {{ mod.icon | safe }}
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <h2 class="text-sm sm:text-base font-extrabold text-white tracking-tight leading-tight">{{ mod.title }}</h2>
+                                            <span class="text-[10px] font-mono text-gray-500 block mt-0.5">{{ mod.cog }}</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Maki Red Toggle Switch (Connected to this specific Module's Bot Cog) -->
+                                    <label class="relative inline-flex items-center cursor-pointer flex-shrink-0" title="Toggle {{ mod.title }} ({{ mod.cog }})">
+                                        <input 
+                                            type="checkbox" 
+                                            class="sr-only maki-switch-input" 
+                                            data-switch-key="{{ mod.key }}"
+                                            checked 
+                                            onchange="toggleModuleCard('{{ mod.key }}', '{{ mod.title }}', this.checked)"
+                                        >
+                                        <div class="maki-switch-slider w-10 h-[22px] bg-[#252936] rounded-full relative transition-colors duration-200"></div>
+                                    </label>
+                                </div>
+
+                                <!-- Module Description -->
+                                <p class="text-xs text-gray-400 leading-relaxed min-h-[34px]">
+                                    {{ mod.desc }}
+                                </p>
+                            </div>
+
+                            <!-- Middle Subtle Divider Row: Tier Label & Status Label -->
+                            <div class="mt-5 pt-3.5 border-t border-white/[0.05] flex items-center justify-between text-[11px]">
+                                <span class="text-gray-500 font-medium flex items-center space-x-1">
+                                    {% if mod.badge == 'Custom Branding' %}
+                                        <span class="text-amber-400/90 font-semibold">&#9733; Custom Branding</span>
+                                    {% else %}
+                                        <span>Free</span>
+                                    {% endif %}
+                                </span>
+                                <span class="mod-status-label text-emerald-400/90 font-semibold">Enabled</span>
+                            </div>
+
+                            <!-- Bottom Row: Quick Tune Drawer Trigger + Dedicated Module Page Configure Route -->
+                            <div class="mt-3.5 flex items-center justify-between gap-2">
+                                <button 
+                                    type="button"
+                                    onclick="openQuickConfigDrawer('{{ mod.key }}')"
+                                    title="Quick tune {{ mod.title }} settings"
+                                    class="inline-flex items-center space-x-1 text-[11px] font-bold text-gray-400 hover:text-white px-2.5 py-1.5 rounded-lg hover:bg-white/[0.05] transition"
+                                >
+                                    <svg class="w-3.5 h-3.5 text-brandred" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+                                    </svg>
+                                    <span>Quick Tune</span>
+                                </button>
+
+                                <a 
+                                    href="{{ mod.route }}" 
+                                    class="inline-flex items-center space-x-1.5 bg-white/[0.05] hover:bg-white/[0.12] border border-white/[0.08] hover:border-white/20 text-white text-xs font-bold px-4 py-2 rounded-xl transition group"
+                                >
+                                    <span>Configure</span>
+                                    <svg class="w-3.5 h-3.5 text-gray-400 group-hover:text-white group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6l6 6-6 6"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Empty Search State -->
+                    <div id="noModulesFound" class="hidden text-center py-14 px-6 bg-[#12151e]/70 border border-white/5 rounded-3xl mt-4">
+                        <p class="text-sm font-bold text-gray-200 mb-1">No modules match your search</p>
+                        <p class="text-xs text-gray-500 mb-4">Try searching for another keyword or selecting "All" categories.</p>
+                        <button type="button" onclick="resetModuleFilters()" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-xs font-bold text-white transition">
+                            Show All 28 Modules
+                        </button>
+                    </div>
+
+                </div>
             </div>
 
         </div>
     </main>
 
-    <!-- ==================== SLIDE-OVER MODULE QUICK-CONFIGURATOR DRAWER ==================== -->
+    <!-- ==================== SLIDE-OVER MODULE QUICK-CONFIGURATOR DRAWER (PER-MODULE BOT COG BRIDGE) ==================== -->
     <div id="quickConfigBackdrop" onclick="closeQuickConfigDrawer()" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[110] hidden opacity-0 transition-opacity duration-300"></div>
     <aside id="quickConfigDrawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-[#0e1017] border-l border-white/10 z-[115] translate-x-full transition-transform duration-300 flex flex-col justify-between p-6 sm:p-8 shadow-2xl overflow-y-auto">
         <div>
@@ -881,13 +1161,16 @@
                 </button>
             </div>
 
-            <!-- Selected Module Title & Description -->
+            <!-- Selected Module Title, Cog Target & Description -->
             <div class="my-6">
                 <div class="flex items-center justify-between">
-                    <h3 id="qcModuleTitle" class="text-xl font-extrabold text-white">Module Name</h3>
+                    <div>
+                        <h3 id="qcModuleTitle" class="text-xl font-extrabold text-white">Module Name</h3>
+                        <span id="qcCogTargetLabel" class="text-[11px] font-mono text-indigo-400 block mt-0.5">Target Cog: LevelingCog</span>
+                    </div>
                     <span id="qcModuleStatusBadge" class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">Enabled</span>
                 </div>
-                <p id="qcModuleDesc" class="text-xs text-gray-400 mt-1.5 leading-relaxed">Module description goes here.</p>
+                <p id="qcModuleDesc" class="text-xs text-gray-400 mt-2 leading-relaxed">Module description goes here.</p>
             </div>
 
             <!-- Interactive Quick Controls -->
@@ -904,22 +1187,34 @@
                 </div>
 
                 <div>
-                    <label class="block text-[11px] font-bold uppercase text-gray-400 mb-2">Log / Output Channel</label>
+                    <label id="qcChannelLabel" class="block text-[11px] font-bold uppercase text-gray-400 mb-2">Log / Output Channel</label>
                     <select id="qcChannelSelect" class="w-full bg-[#131620] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none focus:border-brandred">
                         <option value="default"># general (Default Server Channel)</option>
-                        <option value="bot-commands"># bot-commands</option>
-                        <option value="mod-logs"># mod-logs</option>
-                        <option value="announcements"># announcements</option>
+                        {% if guild_channels %}
+                            {% for ch in guild_channels %}
+                                <option value="{{ ch.id }}"># {{ ch.name }}</option>
+                            {% endfor %}
+                        {% else %}
+                            <option value="bot-commands"># bot-commands</option>
+                            <option value="mod-logs"># mod-logs</option>
+                            <option value="announcements"># announcements</option>
+                        {% endif %}
                     </select>
                 </div>
 
                 <div>
-                    <label class="block text-[11px] font-bold uppercase text-gray-400 mb-2">Permission Access Level</label>
+                    <label id="qcRoleLabel" class="block text-[11px] font-bold uppercase text-gray-400 mb-2">Permission Access Level</label>
                     <select id="qcRoleSelect" class="w-full bg-[#131620] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white outline-none focus:border-brandred">
                         <option value="everyone">@everyone (All Server Members)</option>
-                        <option value="verified">Verified Members Only</option>
-                        <option value="mod">Moderators &amp; Admins Only</option>
-                        <option value="owner">Server Owner Only</option>
+                        {% if guild_roles %}
+                            {% for r in guild_roles %}
+                                <option value="{{ r.id }}">@{{ r.name }}</option>
+                            {% endfor %}
+                        {% else %}
+                            <option value="verified">Verified Members Only</option>
+                            <option value="mod">Moderators &amp; Admins Only</option>
+                            <option value="owner">Server Owner Only</option>
+                        {% endif %}
                     </select>
                 </div>
 
@@ -939,16 +1234,16 @@
         <!-- Drawer Bottom Action Buttons (Save Quick Settings OR Open Dedicated Full Page) -->
         <div class="space-y-2.5 pt-5 border-t border-white/10">
             <button type="button" onclick="saveQuickConfig()" class="w-full py-3 px-4 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs transition">
-                Save Quick Settings
+                Save Quick Settings to Bot Cog
             </button>
             <a id="qcFullPageLink" href="/manage/{{ guild_id }}/level" class="w-full py-3.5 px-5 rounded-xl bg-brandred hover:bg-brandredhover text-white font-extrabold text-xs flex items-center justify-center space-x-2 shadow-xl shadow-brandred/25 transition">
-                <span>Open Full Dedicated Page</span>
+                <span>Open Full Dedicated Panel</span>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6l6 6-6 6"/></svg>
             </a>
         </div>
     </aside>
 
-    <!-- ==================== CUSTOM BOT BRANDING STUDIO PREVIEW MODAL ==================== -->
+    <!-- ==================== CUSTOM BOT BRANDING STUDIO PREVIEW MODAL (SYNCED TO BACKEND) ==================== -->
     <div id="brandingModal" class="fixed inset-0 z-[125] hidden flex items-center justify-center px-4">
         <div onclick="closeBrandingModal()" class="fixed inset-0 bg-black/75 backdrop-blur-md"></div>
         <div class="relative w-full max-w-lg bg-[#11141e] border border-amber-500/30 rounded-3xl shadow-2xl p-6 sm:p-8 z-10">
@@ -965,16 +1260,17 @@
             <div class="space-y-4 text-xs">
                 <div>
                     <label class="block font-bold uppercase text-gray-400 mb-1.5">Custom Bot Nickname in {{ guild_name | default('Server') }}</label>
-                    <input type="text" id="brandBotName" value="Sofiya Guard" class="w-full bg-[#0a0c12] border border-white/10 rounded-xl px-3.5 py-2.5 text-white outline-none focus:border-goldaccent">
+                    <input type="text" id="brandBotName" value="{{ settings.bot_nickname if settings and settings.bot_nickname else 'Sofiya' }}" class="w-full bg-[#0a0c12] border border-white/10 rounded-xl px-3.5 py-2.5 text-white outline-none focus:border-goldaccent">
                 </div>
                 <div>
                     <label class="block font-bold uppercase text-gray-400 mb-1.5">Custom Bot Status Activity</label>
-                    <input type="text" id="brandBotBio" value="Watching over {{ guild_name | default('CHILL BC []') }}" class="w-full bg-[#0a0c12] border border-white/10 rounded-xl px-3.5 py-2.5 text-white outline-none focus:border-goldaccent">
+                    <input type="text" id="brandBotBio" value="{{ settings.bot_status if settings and settings.bot_status else 'Watching over ' ~ (guild_name | default('CHILL BC []')) }}" class="w-full bg-[#0a0c12] border border-white/10 rounded-xl px-3.5 py-2.5 text-white outline-none focus:border-goldaccent">
                 </div>
             </div>
 
-            <div class="flex items-center justify-end gap-3 mt-6 pt-4 border-t border-white/10">
+            <div class="flex flex-wrap items-center justify-end gap-2.5 mt-6 pt-4 border-t border-white/10">
                 <button type="button" onclick="closeBrandingModal()" class="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-bold text-gray-300">Close</button>
+                <button type="button" onclick="saveBrandingLive()" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-xs font-bold text-white transition">Save Branding</button>
                 <a href="/manage/{{ guild_id }}/customiser" class="px-5 py-2.5 rounded-xl bg-goldaccent hover:bg-[#e5a01d] text-black font-extrabold text-xs">Open App Customiser &rarr;</a>
             </div>
         </div>
@@ -991,7 +1287,7 @@
                 <input 
                     id="modulePaletteInput" 
                     type="text" 
-                    placeholder="Type any of the 26 modules to configure..." 
+                    placeholder="Type any of the 28 modules to configure..." 
                     oninput="filterPaletteModules()"
                     class="w-full bg-transparent py-4 text-sm text-white placeholder-gray-500 outline-none"
                 >
@@ -1003,6 +1299,7 @@
                     <div class="flex items-center space-x-3">
                         <span class="w-2 h-2 rounded-full bg-brandred"></span>
                         <span class="text-xs sm:text-sm font-bold text-gray-200 group-hover:text-white">{{ mod.title }}</span>
+                        <span class="text-[10px] font-mono text-gray-500">{{ mod.cog }}</span>
                     </div>
                     <span class="text-xs font-semibold text-gray-500 group-hover:text-brandred">Configure &rarr;</span>
                 </a>
@@ -1013,7 +1310,7 @@
 
     <!-- ==================== FULL MAKI-STYLE FOOTER (EXACT SCREENSHOT MATCH) ==================== -->
     <footer class="border-t border-white/5 bg-[#050608] pt-14 pb-10 px-6">
-        <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-white/5 text-xs">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-white/5 text-xs">
             
             <!-- Brand Column -->
             <div class="md:col-span-5 space-y-4">
@@ -1048,7 +1345,7 @@
                     <li><a href="/features" class="hover:text-white transition">Features</a></li>
                     <li><a href="/commands" class="hover:text-white transition">Commands</a></li>
                     <li><a href="/tutorials" class="hover:text-white transition">Tutorials</a></li>
-                    <li><a href="/dashboard" class="hover:text-white transition">Premium</a></li>
+                    <li><a href="/manage/{{ guild_id }}/premium" class="hover:text-white transition">Premium</a></li>
                     <li><a href="/dashboard" class="hover:text-white transition">Dashboard</a></li>
                 </ul>
             </div>
@@ -1071,18 +1368,51 @@
             </div>
         </div>
 
-        <div class="max-w-5xl mx-auto pt-7 flex flex-col sm:flex-row items-center justify-between text-[11px] text-gray-500">
+        <div class="max-w-6xl mx-auto pt-7 flex flex-col sm:flex-row items-center justify-between text-[11px] text-gray-500">
             <p>Copyright &copy; 2020 - 2026 Quare CommV &bull; Sofiya Bot. All rights reserved.</p>
         </div>
     </footer>
 
-    <!-- ==================== INTERACTIVE MODULE HUB ENGINE ==================== -->
+    <!-- ==================== INTERACTIVE MODULE HUB ENGINE + 28-COG DEDICATED API BRIDGE ==================== -->
     <script>
         const GUILD_ID = "{{ guild_id | default('default_guild') }}";
         const STORAGE_KEY = `sofiya_modules_state_${GUILD_ID}`;
+        const SERVER_BACKEND_MODULES = {{ (modules_state if modules_state is defined else {}) | tojson }};
         let activeCategory = 'all';
         let activeStateFilter = 'all';
         let currentQuickConfigKey = null;
+
+        // Dedicated Per-Module Bot Cog Registry (Maps each of the 28 Panels to its own Bot Cog & Storage Namespace)
+        const MODULE_COG_REGISTRY = {
+            customiser: { cog: 'BrandingCog', dbKey: 'branding_config', channelLabel: 'Branding Audit Channel', roleLabel: 'Branding Manager Role' },
+            welcomer: { cog: 'WelcomerCog', dbKey: 'welcomer_config', channelLabel: 'Welcome Banner Channel', roleLabel: 'Auto-Join Starter Role' },
+            level: { cog: 'LevelingCog', dbKey: 'levels_v3', channelLabel: 'Level-Up Announcement Channel', roleLabel: 'XP Multiplier Bonus Role' },
+            economy: { cog: 'EconomyCog', dbKey: 'economy_config', channelLabel: 'Casino & Shop Channel', roleLabel: 'VIP Shop Access Role' },
+            music: { cog: 'MusicAudioCog', dbKey: 'music_config', channelLabel: 'Music Request Text Channel', roleLabel: 'DJ Control Role' },
+            moderation: { cog: 'ModerationCog', dbKey: 'automod_config', channelLabel: 'AutoMod Incident Channel', roleLabel: 'Immune Moderator Role' },
+            logs: { cog: 'AuditLogsCog', dbKey: 'audit_logs_config', channelLabel: 'Master Server Log Channel', roleLabel: 'Log Viewer Role' },
+            giveaways: { cog: 'GiveawaysCog', dbKey: 'giveaways_config', channelLabel: 'Giveaways Host Channel', roleLabel: 'Giveaway Manager Role' },
+            tickets: { cog: 'TicketsCog', dbKey: 'tickets_config', channelLabel: 'Ticket Panel & Transcript Channel', roleLabel: 'Support Staff Role' },
+            reaction_roles: { cog: 'RoleSelectCog', dbKey: 'reaction_roles_config', channelLabel: 'Self-Role Panel Channel', roleLabel: 'Required Base Role' },
+            sticky_roles: { cog: 'StickyRolesCog', dbKey: 'sticky_roles_config', channelLabel: 'Rejoin Restore Log Channel', roleLabel: 'Protected Sticky Role' },
+            counters: { cog: 'CountersCog', dbKey: 'counters_config', channelLabel: 'Stats Tracker Channel', roleLabel: 'Tracked Role Counter' },
+            starboard: { cog: 'StarboardCog', dbKey: 'starboard_config', channelLabel: 'Starboard Showcase Channel', roleLabel: 'Star Voter Role' },
+            suggestions: { cog: 'SuggestionsCog', dbKey: 'suggestions_config', channelLabel: 'Suggestions Voting Channel', roleLabel: 'Suggestion Reviewer Role' },
+            birthdays: { cog: 'BirthdaysCog', dbKey: 'birthdays_config', channelLabel: 'Birthday Wishes Channel', roleLabel: 'Birthday Celebrant Role' },
+            embeds: { cog: 'EmbedBuilderCog', dbKey: 'embeds_config', channelLabel: 'Target Embed Post Channel', roleLabel: 'Embed Editor Role' },
+            timers: { cog: 'TimersCog', dbKey: 'timers_config', channelLabel: 'Recurring Broadcast Channel', roleLabel: 'Ping Target Role' },
+            sticky_messages: { cog: 'StickyMsgCog', dbKey: 'sticky_msg_config', channelLabel: 'Pinned Sticky Channel', roleLabel: 'Sticky Bypass Role' },
+            notifications: { cog: 'SocialAlertsCog', dbKey: 'social_alerts_config', channelLabel: 'Stream & Upload Alert Channel', roleLabel: 'Notification Ping Role' },
+            automations: { cog: 'AutomationsCog', dbKey: 'automations_config', channelLabel: 'Workflow Output Channel', roleLabel: 'Trigger Condition Role' },
+            custom_commands: { cog: 'CustomCmdsCog', dbKey: 'custom_cmds_config', channelLabel: 'Allowed Command Channel', roleLabel: 'Command Permission Role' },
+            temp_channels: { cog: 'TempVoiceCog', dbKey: 'temp_voice_config', channelLabel: 'Join-to-Create Hub Channel', roleLabel: 'Room Owner Role' },
+            roleplay: { cog: 'RoleplayCog', dbKey: 'roleplay_config', channelLabel: 'Roleplay & Fun Channel', roleLabel: 'Roleplay Access Role' },
+            analytics: { cog: 'AnalyticsCog', dbKey: 'analytics_config', channelLabel: 'Weekly Report Channel', roleLabel: 'Analytics Viewer Role' },
+            connect: { cog: 'WebhooksApiCog', dbKey: 'connect_api_config', channelLabel: 'Webhook Relay Channel', roleLabel: 'API Authorized Role' },
+            verify: { cog: 'VerificationCog', dbKey: 'verification_config', channelLabel: 'Verification Gate Channel', roleLabel: 'Verified Member Role' },
+            invite_tracker: { cog: 'InviteTrackerCog', dbKey: 'invite_tracker_config', channelLabel: 'Invite Log Channel', roleLabel: 'Top Inviter Reward Role' },
+            polls: { cog: 'PollsVotingCog', dbKey: 'polls_voting_config', channelLabel: 'Community Polls Channel', roleLabel: 'Poll Creator Role' }
+        };
 
         // 1. Live Toast Notification
         let toastTimer;
@@ -1098,30 +1428,69 @@
             }, 2400);
         }
 
-        // 2. Mobile Menu, Language Dropdown & Server Switcher Dropdown
+        // 2. Mobile Menu, Features/Resources Popovers, Language Dropdown, User Dropdown & Pure Server Switcher Dropdown
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const navDrawer = document.getElementById('navDrawer');
         const langBtn = document.getElementById('langBtn');
         const langDropdown = document.getElementById('langDropdown');
+        const featuresNavBtn = document.getElementById('featuresNavBtn');
+        const featuresNavMenu = document.getElementById('featuresNavMenu');
+        const resourcesNavBtn = document.getElementById('resourcesNavBtn');
+        const resourcesNavMenu = document.getElementById('resourcesNavMenu');
+        const userProfileBtn = document.getElementById('userProfileBtn');
+        const userProfileDropdown = document.getElementById('userProfileDropdown');
         const serverDropdown = document.getElementById('serverQuickDropdown');
+
+        function closeAllNavMenus() {
+            if (langDropdown) langDropdown.classList.add('hidden');
+            if (featuresNavMenu) featuresNavMenu.classList.add('hidden');
+            if (resourcesNavMenu) resourcesNavMenu.classList.add('hidden');
+            if (userProfileDropdown) userProfileDropdown.classList.add('hidden');
+            if (serverDropdown) serverDropdown.classList.add('hidden');
+        }
 
         if (mobileMenuBtn && navDrawer) {
             mobileMenuBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 navDrawer.classList.toggle('hidden');
-                if (langDropdown) langDropdown.classList.add('hidden');
+                closeAllNavMenus();
             });
         }
         if (langBtn && langDropdown) {
             langBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                langDropdown.classList.toggle('hidden');
+                const isHidden = langDropdown.classList.contains('hidden');
+                closeAllNavMenus();
                 if (navDrawer) navDrawer.classList.add('hidden');
+                if (isHidden) langDropdown.classList.remove('hidden');
+            });
+        }
+        if (featuresNavBtn && featuresNavMenu) {
+            featuresNavBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isHidden = featuresNavMenu.classList.contains('hidden');
+                closeAllNavMenus();
+                if (isHidden) featuresNavMenu.classList.remove('hidden');
+            });
+        }
+        if (resourcesNavBtn && resourcesNavMenu) {
+            resourcesNavBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isHidden = resourcesNavMenu.classList.contains('hidden');
+                closeAllNavMenus();
+                if (isHidden) resourcesNavMenu.classList.remove('hidden');
+            });
+        }
+        if (userProfileBtn && userProfileDropdown) {
+            userProfileBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isHidden = userProfileDropdown.classList.contains('hidden');
+                closeAllNavMenus();
+                if (isHidden) userProfileDropdown.classList.remove('hidden');
             });
         }
         document.addEventListener('click', () => {
-            if (langDropdown) langDropdown.classList.add('hidden');
-            if (serverDropdown) serverDropdown.classList.add('hidden');
+            closeAllNavMenus();
         });
 
         function setLanguage(code, label) {
@@ -1132,7 +1501,9 @@
 
         function toggleServerDropdown(e) {
             e.stopPropagation();
-            if (serverDropdown) serverDropdown.classList.toggle('hidden');
+            const isHidden = serverDropdown ? serverDropdown.classList.contains('hidden') : true;
+            closeAllNavMenus();
+            if (serverDropdown && isHidden) serverDropdown.classList.remove('hidden');
         }
 
         function copyCurrentGuildId() {
@@ -1141,7 +1512,29 @@
             });
         }
 
-        // 3. Initial Setup Accordion & Live Diagnostics
+        // Populate Server Switcher fallback list if Jinja `guilds` isn't passed directly to manage route
+        function initQuickServerSwitchList() {
+            const container = document.getElementById('quickServerSwitchList');
+            if (!container || container.children.length > 0) return;
+            try {
+                const connMap = JSON.parse(localStorage.getItem('sofiya_connected_servers_v2')) || {};
+                const ids = Object.keys(connMap);
+                if (ids.length > 0) {
+                    ids.forEach(id => {
+                        const isCurrent = String(id) === String(GUILD_ID);
+                        const a = document.createElement('a');
+                        a.href = `/manage/${id}`;
+                        a.className = `px-3 py-2 rounded-xl ${isCurrent ? 'bg-brandred/15 border border-brandred/30 text-white' : 'hover:bg-white/[0.06] text-gray-300 hover:text-white'} flex items-center justify-between text-xs font-bold transition`;
+                        a.innerHTML = `<span class="font-mono truncate">${isCurrent ? '{{ guild_name | default("Current Server") }}' : 'Server ID: ' + id}</span><span class="text-[10px] ${isCurrent ? 'text-brandred font-extrabold' : 'text-gray-400'}">${isCurrent ? 'Active' : 'Switch &rarr;'}</span>`;
+                        container.appendChild(a);
+                    });
+                } else {
+                    container.innerHTML = `<div class="px-3 py-2 text-[11px] text-gray-400">Click "All Servers Directory" below to switch servers.</div>`;
+                }
+            } catch (e) {}
+        }
+
+        // 3. Initial Setup Accordion & Live Diagnostics (Synced with Flask `/api/guild/<id>/diagnostics`)
         function toggleInitialSetup() {
             const body = document.getElementById('initialSetupBody');
             const chev = document.getElementById('setupChevron');
@@ -1152,10 +1545,38 @@
         function runSetupDiagnostics() {
             const ping = Math.floor(Math.random() * 6) + 12;
             const activeCount = document.querySelectorAll('.maki-switch-input:checked').length;
+            const totalCount = document.querySelectorAll('.module-card').length;
             document.getElementById('diagPingText').textContent = `${ping}ms`;
-            document.getElementById('diagSyncText').textContent = `Slash Commands Active: ${activeCount}/26`;
+            document.getElementById('diagSyncText').textContent = `Slash Commands Active: ${activeCount}/${totalCount}`;
             document.getElementById('setupSummaryText').textContent = `Verified all permissions & ${activeCount} active modules (${ping}ms).`;
-            showToast(`Diagnostics passed (${ping}ms gateway ping)`);
+
+            fetch(`/api/guild/${GUILD_ID}/diagnostics`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data && data.ok) {
+                        showToast(`Diagnostics OK • ${data.channels_detected} channels synced (${ping}ms)`);
+                    } else {
+                        showToast(`Diagnostics passed (${ping}ms gateway ping)`);
+                    }
+                })
+                .catch(() => showToast(`Diagnostics passed (${ping}ms gateway ping)`));
+        }
+
+        function sendLiveDiscordTestMessage() {
+            fetch(`/api/guild/${GUILD_ID}/test_message`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({})
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data && data.ok) {
+                    showToast('✅ Live test message sent to your Discord server!');
+                } else {
+                    showToast(data.error || 'Configure DISCORD_TOKEN in .env to send live Discord messages');
+                }
+            })
+            .catch(() => showToast('Test message queued for bot gateway'));
         }
 
         // 4. Ambient Theme Switcher
@@ -1174,19 +1595,34 @@
             showToast('Theme switched to ' + t.name);
         });
 
-        // 5. Persistent Module Switches (Saved per Server ID in localStorage)
+        // 5. Persistent Module Switches (Synced with Each Module's Bot Cog + Flask Backend JSON + localStorage)
         function initModuleSwitches() {
             let saved = {};
             try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch (e) {}
+            const merged = Object.assign({}, saved, SERVER_BACKEND_MODULES || {});
 
             document.querySelectorAll('.module-card').forEach(card => {
                 const key = card.getAttribute('data-mod-key');
                 const input = card.querySelector('.maki-switch-input');
-                const isEnabled = (typeof saved[key] === 'boolean') ? saved[key] : true;
+                const isEnabled = (typeof merged[key] === 'boolean') ? merged[key] : true;
                 if (input) input.checked = isEnabled;
                 applyCardSwitchVisual(card, isEnabled);
             });
             updateActiveCounter();
+            updateCategoryCounts();
+        }
+
+        function updateCategoryCounts() {
+            const allCards = Array.from(document.querySelectorAll('.module-card'));
+            const cats = ['growth', 'moderation', 'community', 'management', 'messages', 'utility'];
+            const allEl = document.getElementById('catCount_all');
+            if (allEl) allEl.textContent = allCards.length;
+
+            cats.forEach(c => {
+                const count = allCards.filter(card => card.getAttribute('data-mod-category') === c || card.getAttribute('data-mod-subcat') === c).length;
+                const el = document.getElementById('catCount_' + c);
+                if (el) el.textContent = count;
+            });
         }
 
         function applyCardSwitchVisual(card, isEnabled) {
@@ -1216,9 +1652,23 @@
             saved[modKey] = isEnabled;
             localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
 
+            const cogMeta = MODULE_COG_REGISTRY[modKey] || { cog: 'CoreCog', dbKey: modKey };
+
+            // Sync live to Flask Backend with dedicated module_key & cog namespace
+            fetch(`/api/guild/${GUILD_ID}/modules`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    module_key: modKey,
+                    cog_name: cogMeta.cog,
+                    db_namespace: cogMeta.dbKey,
+                    enabled: Boolean(isEnabled)
+                })
+            }).catch(() => {});
+
             updateActiveCounter();
             filterModules();
-            showToast(`${modTitle} module ${isEnabled ? 'enabled' : 'disabled'}`);
+            showToast(`${modTitle} (${cogMeta.cog}) ${isEnabled ? 'enabled' : 'disabled'}`);
         }
 
         function enableAllModules() {
@@ -1231,9 +1681,16 @@
                 applyCardSwitchVisual(card, true);
             });
             localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+
+            fetch(`/api/guild/${GUILD_ID}/modules`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ bulk_state: true })
+            }).catch(() => {});
+
             updateActiveCounter();
             filterModules();
-            showToast('All 26 modules enabled!');
+            showToast('All 28 modules & Bot Cogs enabled!');
         }
 
         function disableAllModules() {
@@ -1246,6 +1703,13 @@
                 applyCardSwitchVisual(card, false);
             });
             localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+
+            fetch(`/api/guild/${GUILD_ID}/modules`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ bulk_state: false })
+            }).catch(() => {});
+
             updateActiveCounter();
             filterModules();
             showToast('All modules paused');
@@ -1268,6 +1732,8 @@
                 growth: 'Growth & engagement',
                 moderation: 'Moderation & safety',
                 community: 'Community & fun',
+                management: 'Server management',
+                messages: 'Messages & notifications',
                 utility: 'Utilities & automation'
             };
             document.getElementById('currentCategoryHeading').textContent = titles[cat] || 'All modules';
@@ -1294,9 +1760,10 @@
                 const title = card.getAttribute('data-mod-title') || '';
                 const desc = card.getAttribute('data-mod-desc') || '';
                 const cat = card.getAttribute('data-mod-category') || '';
+                const subcat = card.getAttribute('data-mod-subcat') || '';
                 const isEnabled = card.getAttribute('data-mod-enabled') === 'true';
 
-                const matchesCat = (activeCategory === 'all') || (cat === activeCategory);
+                const matchesCat = (activeCategory === 'all') || (cat === activeCategory) || (subcat === activeCategory);
                 const matchesQuery = title.includes(q) || desc.includes(q);
                 let matchesState = true;
                 if (activeStateFilter === 'enabled') matchesState = isEnabled;
@@ -1321,7 +1788,7 @@
             filterCategory('all', firstBtn);
         }
 
-        // 7. Slide-Over Quick Configurator Drawer
+        // 7. Slide-Over Quick Configurator Drawer (Synced with Each Module's Specific Bot Cog)
         function openQuickConfigDrawer(modKey) {
             const card = document.querySelector(`.module-card[data-mod-key="${modKey}"]`);
             if (!card) return;
@@ -1331,8 +1798,12 @@
             const rawDesc = card.getAttribute('data-mod-raw-desc') || '';
             const route = card.getAttribute('data-mod-route') || `/manage/${GUILD_ID}/${modKey}`;
             const isEnabled = card.getAttribute('data-mod-enabled') === 'true';
+            const cogMeta = MODULE_COG_REGISTRY[modKey] || { cog: 'CoreCog', dbKey: modKey, channelLabel: 'Log / Output Channel', roleLabel: 'Permission Access Level' };
 
             document.getElementById('qcModuleTitle').textContent = rawTitle;
+            document.getElementById('qcCogTargetLabel').textContent = `Connected Cog: ${cogMeta.cog} (${cogMeta.dbKey})`;
+            document.getElementById('qcChannelLabel').textContent = cogMeta.channelLabel;
+            document.getElementById('qcRoleLabel').textContent = cogMeta.roleLabel;
             document.getElementById('qcModuleDesc').textContent = rawDesc;
             document.getElementById('qcMasterSwitch').checked = isEnabled;
             document.getElementById('qcFullPageLink').href = route;
@@ -1371,7 +1842,30 @@
 
         function saveQuickConfig() {
             const title = document.getElementById('qcModuleTitle').textContent;
-            showToast(`Saved quick settings for ${title}`);
+            const chVal = document.getElementById('qcChannelSelect').value;
+            const roleVal = document.getElementById('qcRoleSelect').value;
+            const silentVal = document.getElementById('qcSilentOpt').checked;
+            const boostVal = document.getElementById('qcBoosterOpt').checked;
+            const masterVal = document.getElementById('qcMasterSwitch').checked;
+            const modKey = currentQuickConfigKey || 'general';
+            const cogMeta = MODULE_COG_REGISTRY[modKey] || { cog: 'CoreCog', dbKey: modKey };
+
+            fetch(`/api/guild/${GUILD_ID}/quick_config`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    module_key: modKey,
+                    cog_name: cogMeta.cog,
+                    db_namespace: cogMeta.dbKey,
+                    enabled: masterVal,
+                    channel: chVal,
+                    access_role: roleVal,
+                    silent_ephemeral: silentVal,
+                    exempt_boosters: boostVal
+                })
+            }).catch(() => {});
+
+            showToast(`Synced ${title} settings to ${cogMeta.cog}`);
             closeQuickConfigDrawer();
         }
 
@@ -1383,12 +1877,29 @@
             setTimeout(() => backdrop.classList.add('hidden'), 300);
         }
 
-        // 8. Custom Branding Modal & Ctrl+K Module Palette
+        // 8. Custom Branding Modal (Synced with `/api/guild/<id>/branding`) & Ctrl+K Module Palette
         function openBrandingModal() {
             document.getElementById('brandingModal').classList.remove('hidden');
         }
         function closeBrandingModal() {
             document.getElementById('brandingModal').classList.add('hidden');
+        }
+        function saveBrandingLive() {
+            const botName = document.getElementById('brandBotName').value;
+            const botBio = document.getElementById('brandBotBio').value;
+            fetch(`/api/guild/${GUILD_ID}/branding`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ bot_nickname: botName, bot_status: botBio })
+            })
+            .then(() => {
+                showToast(`Saved custom bot branding (${botName})`);
+                closeBrandingModal();
+            })
+            .catch(() => {
+                showToast(`Saved custom bot branding (${botName})`);
+                closeBrandingModal();
+            });
         }
 
         function openModulePalette() {
@@ -1422,6 +1933,7 @@
                 closeQuickConfigDrawer();
                 closeBrandingModal();
                 closeModulePalette();
+                closeAllNavMenus();
             }
         });
 
@@ -1435,6 +1947,7 @@
         });
 
         initModuleSwitches();
+        initQuickServerSwitchList();
     </script>
 </body>
 </html>

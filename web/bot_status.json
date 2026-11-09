@@ -1,0 +1,14 @@
+{
+    "bot_name": "Sofiya",
+    "status_bar_text": "Online \u2022 28 Modules Ready",
+    "connected_status_prefix": "Connected as",
+    "cluster_name": "Cluster #01 (India/Global)",
+    "default_ping_ms": 16,
+    "uptime_percent": "99.98%",
+    "promo_badge": "DISCOUNT",
+    "promo_text": "Save 30% on Premium Pro",
+    "premium_price": "$3.50",
+    "use_live_bot_guild_count": true,
+    "fallback_server_count_display": "1,600,000+",
+    "custom_server_count_override": null
+}

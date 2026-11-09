@@ -40,10 +40,22 @@
             "roleplay": true,
             "analytics": true,
             "connect": true,
-            "verify": true
+            "verify": true,
+            "invite_tracker": true,
+            "polls": true
         },
         "module_configs": {},
         "audit_logs": [
+            {
+                "user": "sujaanz",
+                "action": "Enabled module 'level'",
+                "timestamp": 1794232225
+            },
+            {
+                "user": "sujaanz",
+                "action": "Disabled module 'level'",
+                "timestamp": 1794232224
+            },
             {
                 "user": "sujaanz",
                 "action": "Enabled all 26 modules",
@@ -94,7 +106,42 @@
                 "action": "Paused all 26 modules",
                 "timestamp": 1794208382
             }
-        ]
+        ],
+        "is_premium": false,
+        "premium_plan": "Free",
+        "bot_avatar": "",
+        "bot_banner": "",
+        "bot_bio": "One Discord app for Discord Guild, built to grow with you.",
+        "cog_states": {
+            "BrandingCog": true,
+            "WelcomerCog": true,
+            "LevelingCog": true,
+            "EconomyCog": true,
+            "MusicAudioCog": true,
+            "ModerationCog": true,
+            "AuditLogsCog": true,
+            "GiveawaysCog": true,
+            "TicketsCog": true,
+            "RoleSelectCog": true,
+            "StickyRolesCog": true,
+            "CountersCog": true,
+            "StarboardCog": true,
+            "SuggestionsCog": true,
+            "BirthdaysCog": true,
+            "EmbedBuilderCog": true,
+            "TimersCog": true,
+            "StickyMsgCog": true,
+            "SocialAlertsCog": true,
+            "AutomationsCog": true,
+            "CustomCmdsCog": true,
+            "TempVoiceCog": true,
+            "RoleplayCog": true,
+            "AnalyticsCog": true,
+            "WebhooksApiCog": true,
+            "VerificationCog": true,
+            "InviteTrackerCog": true,
+            "PollsVotingCog": true
+        }
     },
     "1568187829022892062": {
         "name": "GumGum",

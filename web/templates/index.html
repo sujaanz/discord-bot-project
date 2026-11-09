@@ -23,6 +23,7 @@
                         cardbg: '#12151e',
                         brandred: 'var(--brand-accent, #ff3b5c)',
                         brandredhover: 'var(--brand-accent-hover, #e62e4d)',
+                        goldaccent: '#f5b027',
                         discord: '#5865F2',
                         discordhover: '#4752C4'
                     }
@@ -104,6 +105,32 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.65);
         }
+        /* Custom Maki Red Toggle Switch */
+        .maki-switch-input:checked ~ .maki-switch-slider {
+            background-color: var(--brand-accent);
+            box-shadow: 0 0 14px rgba(255, 59, 92, 0.45);
+        }
+        .maki-switch-input:checked ~ .maki-switch-slider::after {
+            transform: translateX(18px);
+        }
+        .maki-switch-slider::after {
+            content: "";
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 18px;
+            height: 18px;
+            background-color: #ffffff;
+            border-radius: 9999px;
+            transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.35);
+        }
+        /* Active Module Pill Highlight in 28-Module Cloud */
+        .mod-pill-active {
+            border-color: var(--brand-accent) !important;
+            background: rgba(255, 59, 92, 0.14) !important;
+            color: #ffffff !important;
+        }
         /* Ambient Background Glows */
         .hero-radial-glow {
             position: absolute;
@@ -183,12 +210,12 @@
         </div>
     </div>
 
-    <!-- ==================== STICKY FLOATING PILL NAVBAR (EXACT LAPTOP UI MATCH) ==================== -->
+    <!-- ==================== STICKY FLOATING PILL NAVBAR (EXACT LAPTOP UI SCREENSHOT MATCH) ==================== -->
     <header class="sticky top-4 z-50 px-4 sm:px-6 max-w-6xl mx-auto w-full">
         <div class="maki-pill-nav rounded-full px-5 sm:px-7 h-16 flex items-center justify-between transition-all duration-300 relative">
             
             <!-- Left: Slanted Maki-Style Vector Logo & Brand Name + Desktop Links -->
-            <div class="flex items-center space-x-8">
+            <div class="flex items-center space-x-6 lg:space-x-7">
                 <a href="/" class="flex items-center space-x-3 group">
                     <svg class="w-8 h-8 text-brandred transition-transform duration-300 group-hover:scale-105" viewBox="0 0 40 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="6" cy="22" r="3.5" fill="currentColor"/>
@@ -198,12 +225,40 @@
                     <span class="text-xl font-extrabold tracking-tight text-white">sofiya</span>
                 </a>
 
-                <!-- Desktop Navigation Links (Matches Screenshot: Features, Commands, Tutorials, Resources v, Dashboard) -->
-                <nav class="hidden lg:flex items-center space-x-6 text-xs sm:text-sm font-semibold text-gray-300">
-                    <a href="#bento-features" class="hover:text-white transition">Features</a>
-                    <a href="/commands" class="hover:text-white transition">Commands</a>
-                    <a href="/tutorials" class="hover:text-white transition">Tutorials</a>
-                    
+                <!-- Desktop Navigation Links (Matches Screenshot: Dashboard Pill, Features v, Resources v, >_ Commands, Tutorials, ☆ Premium) -->
+                <nav class="hidden lg:flex items-center space-x-5 text-xs sm:text-sm font-semibold text-gray-300">
+                    <a href="/dashboard" class="bg-white/[0.08] hover:bg-white/[0.13] border border-white/10 text-white font-bold px-4 py-1.5 rounded-full transition shadow-sm">
+                        Dashboard
+                    </a>
+
+                    <!-- Features Dropdown (Matches Screenshot) -->
+                    <div class="relative">
+                        <button id="featuresDropdownBtn" type="button" class="flex items-center space-x-1 hover:text-white transition py-1">
+                            <span>Features</span>
+                            <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div id="featuresDropdownMenu" class="hidden absolute left-0 mt-3 w-56 bg-[#11141d] rounded-2xl p-2 border border-white/10 shadow-2xl z-50 text-xs">
+                            <a href="#bento-features" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 text-gray-200 hover:text-white flex items-center justify-between transition">
+                                <span>Interactive Bento Controls</span>
+                                <span class="text-[10px] text-brandred font-bold">Live</span>
+                            </a>
+                            <a href="#levelTabRank" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 text-gray-200 hover:text-white flex items-center justify-between transition">
+                                <span>Levels &amp; Bento Rank Cards</span>
+                                <span class="text-[10px] text-indigo-400 font-bold">XP Cog</span>
+                            </a>
+                            <a href="#modules-cloud" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 text-gray-200 hover:text-white flex items-center justify-between transition">
+                                <span>Explore All 28 Modules</span>
+                                <span class="text-[10px] text-emerald-400 font-bold">28 Cogs</span>
+                            </a>
+                            <a href="/features" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 text-gray-200 hover:text-white flex items-center justify-between transition">
+                                <span>Full Features Page</span>
+                                <span>&rarr;</span>
+                            </a>
+                        </div>
+                    </div>
+
                     <!-- Resources Dropdown (From Laptop Screenshot) -->
                     <div class="relative">
                         <button id="resourcesDropdownBtn" type="button" class="flex items-center space-x-1 hover:text-white transition py-1">
@@ -214,8 +269,8 @@
                         </button>
                         <div id="resourcesDropdownMenu" class="hidden absolute left-0 mt-3 w-52 bg-[#11141d] rounded-2xl p-2 border border-white/10 shadow-2xl z-50 text-xs">
                             <a href="#modules-cloud" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 text-gray-200 hover:text-white flex items-center justify-between transition">
-                                <span>All 26 Modules</span>
-                                <span class="text-[10px] text-brandred font-bold">26</span>
+                                <span>All 28 Modules</span>
+                                <span class="text-[10px] text-brandred font-bold">28</span>
                             </a>
                             <a href="/tutorials" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 text-gray-200 hover:text-white flex items-center justify-between transition">
                                 <span>Setup Documentation</span>
@@ -232,8 +287,20 @@
                         </div>
                     </div>
 
-                    <a href="/dashboard" class="hover:text-white transition flex items-center space-x-1.5">
-                        <span>Dashboard</span>
+                    <!-- >_ Commands Link -->
+                    <a href="/commands" class="hover:text-white transition flex items-center space-x-1.5">
+                        <span class="font-mono text-xs text-gray-400">&gt;_</span>
+                        <span>Commands</span>
+                    </a>
+
+                    <a href="/tutorials" class="hover:text-white transition">Tutorials</a>
+
+                    <!-- ☆ Premium Link (Connected directly to Dedicated Server Premium File / Modal) -->
+                    <a id="navPremiumLink" href="/dashboard" onclick="openPremiumServerModal(event)" class="hover:text-white transition flex items-center space-x-1.5">
+                        <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                        </svg>
+                        <span>Premium</span>
                     </a>
                 </nav>
             </div>
@@ -243,8 +310,7 @@
                 
                 <!-- Working Language Selector Dropdown -->
                 <div class="relative">
-                    <button id="langBtn" type="button" class="flex items-center space-x-2 text-xs font-bold text-gray-300 hover:text-white px-2.5 py-1.5 rounded-full hover:bg-white/5 transition">
-                        <span id="currentLangCode">EN</span>
+                    <button id="langBtn" type="button" class="flex items-center space-x-1.5 text-xs font-bold text-gray-300 hover:text-white px-2.5 py-1.5 rounded-full hover:bg-white/5 transition">
                         <svg class="w-4 h-3 rounded-[2px] shadow-sm" viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
                             <clipPath id="uk-clip"><path d="M0,0 v30 h60 v-30 z"/></clipPath>
                             <g clip-path="url(#uk-clip)">
@@ -255,9 +321,9 @@
                                 <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/>
                             </g>
                         </svg>
-                        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                            <circle cx="12" cy="12" r="9"/>
-                            <path d="M3.6 9h16.8M3.6 15h16.8M12 3a15 15 0 010 18M12 3a15 15 0 000 18"/>
+                        <span id="currentLangCode">EN</span>
+                        <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
                         </svg>
                     </button>
 
@@ -293,11 +359,40 @@
                 <!-- User / Login Pill (Desktop - Connected to Discord Session & Bot Invite) -->
                 <div class="hidden sm:flex items-center space-x-2">
                     {% if user %}
-                        <a href="/dashboard" class="flex items-center space-x-2.5 bg-white/5 hover:bg-white/10 border border-white/10 pl-2 pr-4 py-1.5 rounded-full transition">
-                            <img src="https://cdn.discordapp.com/avatars/{{ user.id }}/{{ user.avatar }}.png" onerror="this.src='https://i.pravatar.cc/100?img=12'" alt="Avatar" class="w-6 h-6 rounded-full object-cover">
-                            <span class="text-xs font-bold text-white">{{ user.username }}</span>
-                            <span class="w-2 h-2 rounded-full bg-emerald-400" title="Connected to Discord OAuth2"></span>
-                        </a>
+                        <div class="relative">
+                            <button id="userProfileBtn" type="button" class="flex items-center space-x-2.5 bg-white/5 hover:bg-white/10 border border-white/10 pl-2 pr-3.5 py-1.5 rounded-full transition">
+                                <img src="https://cdn.discordapp.com/avatars/{{ user.id }}/{{ user.avatar }}.png" onerror="this.src='https://i.pravatar.cc/100?img=12'" alt="Avatar" class="w-6 h-6 rounded-full object-cover">
+                                <span class="text-xs font-bold text-white">{{ user.username }}</span>
+                                <span class="w-2 h-2 rounded-full bg-emerald-400" title="Connected to Discord OAuth2"></span>
+                                <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </button>
+
+                            <!-- User Profile Dropdown -->
+                            <div id="userProfileDropdown" class="hidden absolute right-0 mt-3 w-56 bg-[#11141d] rounded-2xl p-2.5 border border-white/10 shadow-2xl z-50 text-xs">
+                                <div class="px-3 py-2 border-b border-white/5 mb-1">
+                                    <span class="text-[10px] uppercase tracking-wider text-gray-500 font-bold block">Discord OAuth2 Session</span>
+                                    <span class="text-xs font-extrabold text-white truncate block mt-0.5">{{ user.username }}</span>
+                                </div>
+                                <a href="/dashboard" class="px-3 py-2 rounded-xl hover:bg-white/10 text-gray-200 hover:text-white flex items-center justify-between font-semibold transition">
+                                    <span>Manage Servers</span>
+                                    <span>&rarr;</span>
+                                </a>
+                                <button type="button" onclick="openPremiumServerModal(event)" class="w-full px-3 py-2 rounded-xl hover:bg-white/10 text-amber-400 flex items-center justify-between font-semibold transition">
+                                    <span>Server Premium Panel</span>
+                                    <span>&#9733;</span>
+                                </button>
+                                <button type="button" onclick="openIndexPalette()" class="w-full px-3 py-2 rounded-xl hover:bg-white/10 text-gray-300 hover:text-white flex items-center justify-between font-semibold transition">
+                                    <span>Quick Studio</span>
+                                    <kbd class="text-[10px] font-mono bg-white/5 px-1.5 py-0.5 rounded text-gray-400">Ctrl K</kbd>
+                                </button>
+                                <a href="/auth/logout" class="mt-1 px-3 py-2 rounded-xl hover:bg-brandred/15 text-brandred flex items-center justify-between font-bold transition">
+                                    <span>Logout</span>
+                                    <span>&rarr;</span>
+                                </a>
+                            </div>
+                        </div>
                     {% else %}
                         <a href="/auth/login" class="text-xs font-bold text-gray-300 hover:text-white px-3.5 py-2 rounded-full hover:bg-white/5 transition">
                             Login
@@ -309,7 +404,7 @@
                 </div>
 
                 <!-- Hamburger Menu Button -->
-                <button id="mobileMenuBtn" type="button" aria-label="Open Navigation Menu" class="p-2 text-gray-300 hover:text-white rounded-full hover:bg-white/5 transition">
+                <button id="mobileMenuBtn" type="button" aria-label="Open Navigation Menu" class="lg:hidden p-2 text-gray-300 hover:text-white rounded-full hover:bg-white/5 transition">
                     <svg id="hamburgerIcon" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
                     </svg>
@@ -326,7 +421,7 @@
                 </a>
                 <a href="/features" class="px-4 py-3 rounded-xl hover:bg-white/5 hover:text-white transition flex items-center justify-between">
                     <span>Features &amp; Modules</span>
-                    <span class="text-xs text-gray-500">26 Active</span>
+                    <span class="text-xs text-gray-500">28 Active</span>
                 </a>
                 <a href="/commands" class="px-4 py-3 rounded-xl hover:bg-white/5 hover:text-white transition flex items-center justify-between">
                     <span>Slash Commands</span>
@@ -335,6 +430,10 @@
                 <a href="/tutorials" class="px-4 py-3 rounded-xl hover:bg-white/5 hover:text-white transition flex items-center justify-between">
                     <span>Setup Tutorials</span>
                     <span class="text-xs text-gray-500">Docs</span>
+                </a>
+                <a href="/dashboard" onclick="openPremiumServerModal(event)" class="px-4 py-3 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400 transition flex items-center justify-between sm:col-span-2">
+                    <span>&#9733; Server Premium &amp; Custom Bot Branding</span>
+                    <span class="text-xs font-extrabold">$3.50 &rarr;</span>
                 </a>
                 <a href="/dashboard" class="px-4 py-3 rounded-xl hover:bg-white/5 hover:text-white transition flex items-center justify-between sm:col-span-2">
                     <span>Server Control Dashboard</span>
@@ -359,8 +458,8 @@
         <!-- 1. HERO SECTION (EXACT SCREENSHOT MATCH) -->
         <section class="max-w-4xl mx-auto px-5 pt-12 sm:pt-20 pb-14 text-center">
             
-            <!-- Discount Promo Pill -->
-            <a href="#modules-cloud" class="inline-flex items-center space-x-3 bg-[#12141c]/90 hover:bg-[#191c26] border border-white/10 pl-2 pr-4 py-1.5 rounded-full text-xs sm:text-sm text-gray-200 shadow-lg mb-8 transition group">
+            <!-- Discount Promo Pill (Connected to Dedicated Premium Panel Flow!) -->
+            <a id="heroDiscountPill" href="/dashboard" onclick="openPremiumServerModal(event)" class="inline-flex items-center space-x-3 bg-[#12141c]/90 hover:bg-[#191c26] border border-white/10 pl-2 pr-4 py-1.5 rounded-full text-xs sm:text-sm text-gray-200 shadow-lg mb-8 transition group">
                 <span class="bg-brandred text-white text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">DISCOUNT</span>
                 <span id="heroPromoText" class="font-medium">Save 30% on Premium Pro</span>
                 <svg class="w-4 h-4 text-gray-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -424,10 +523,13 @@
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
                     <span class="text-gray-300 font-semibold">Sofiya Bot Engine:</span>
                     <span id="liveBridgeServerLabel" class="text-white font-bold font-mono">
-                        {% if user %}Connected as {{ user.username }}{% else %}Online &bull; 26 Modules Ready{% endif %}
+                        {% if user %}Connected as {{ user.username }} &bull; 28 Cogs Ready{% else %}Online &bull; 28 Modules Ready{% endif %}
                     </span>
                 </div>
                 <div class="flex items-center space-x-2">
+                    <a id="liveBridgePremiumBtn" href="/dashboard" onclick="openPremiumServerModal(event)" class="px-2.5 py-1 rounded-lg bg-amber-500/15 hover:bg-goldaccent text-amber-300 hover:text-black border border-amber-500/30 font-bold transition">
+                        &#9733; Premium
+                    </a>
                     <a id="liveBridgeManageBtn" href="/dashboard" class="px-3 py-1 rounded-lg bg-brandred/15 hover:bg-brandred text-brandred hover:text-white border border-brandred/30 font-bold transition">
                         {% if user %}Open Server Hub &rarr;{% else %}Connect Server &rarr;{% endif %}
                     </a>
@@ -477,7 +579,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-12 gap-5">
                 
-                <!-- Bento Card 1: Interactive Module Toggles (7 cols - Connected to Backend API) -->
+                <!-- Bento Card 1: Interactive Module Toggles (7 cols - Connected to Backend Bot Cogs API) -->
                 <div class="md:col-span-7 glass-card glass-card-hover rounded-3xl p-7 flex flex-col justify-between">
                     <div class="space-y-3 mb-6 bg-[#090b10] p-4 rounded-2xl border border-white/5">
                         <div class="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-gray-400 px-1 pb-1">
@@ -485,7 +587,7 @@
                             <span id="activeModuleCount" class="text-brandred">3 / 3 Active</span>
                         </div>
 
-                        <!-- Interactive Toggle Row 1 -->
+                        <!-- Interactive Toggle Row 1: LevelingCog -->
                         <div class="flex items-center justify-between bg-[#131620] px-4 py-3 rounded-xl border border-white/5">
                             <div class="flex items-center space-x-3">
                                 <div class="w-8 h-8 rounded-lg bg-brandred/15 border border-brandred/30 flex items-center justify-center text-brandred">
@@ -493,7 +595,7 @@
                                 </div>
                                 <div>
                                     <div class="text-xs font-bold text-white">Levels &amp; Rank Cards</div>
-                                    <div class="text-[11px] text-gray-400">Text &amp; voice XP progression</div>
+                                    <div class="text-[11px] text-gray-400">Text &amp; voice XP progression (LevelingCog)</div>
                                 </div>
                             </div>
                             <label class="relative inline-flex items-center cursor-pointer">
@@ -502,7 +604,7 @@
                             </label>
                         </div>
 
-                        <!-- Interactive Toggle Row 2 -->
+                        <!-- Interactive Toggle Row 2: ModerationCog -->
                         <div class="flex items-center justify-between bg-[#131620] px-4 py-3 rounded-xl border border-white/5">
                             <div class="flex items-center space-x-3">
                                 <div class="w-8 h-8 rounded-lg bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-400">
@@ -510,7 +612,7 @@
                                 </div>
                                 <div>
                                     <div class="text-xs font-bold text-white">AutoMod Protection</div>
-                                    <div class="text-[11px] text-gray-400">Anti-raid, spam &amp; link filtering</div>
+                                    <div class="text-[11px] text-gray-400">Anti-raid, spam &amp; link filtering (ModerationCog)</div>
                                 </div>
                             </div>
                             <label class="relative inline-flex items-center cursor-pointer">
@@ -519,7 +621,7 @@
                             </label>
                         </div>
 
-                        <!-- Interactive Toggle Row 3 -->
+                        <!-- Interactive Toggle Row 3: EconomyCog -->
                         <div class="flex items-center justify-between bg-[#131620] px-4 py-3 rounded-xl border border-white/5">
                             <div class="flex items-center space-x-3">
                                 <div class="w-8 h-8 rounded-lg bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
@@ -527,7 +629,7 @@
                                 </div>
                                 <div>
                                     <div class="text-xs font-bold text-white">Economy &amp; Global Shop</div>
-                                    <div class="text-[11px] text-gray-400">Daily rewards, coins &amp; role store</div>
+                                    <div class="text-[11px] text-gray-400">Daily rewards, coins &amp; role store (EconomyCog)</div>
                                 </div>
                             </div>
                             <label class="relative inline-flex items-center cursor-pointer">
@@ -1211,39 +1313,41 @@
             </div>
         </section>
 
-        <!-- 11. INTERACTIVE 26 MODULES CLOUD ("Plus everything else your server needs.") -->
+        <!-- 11. INTERACTIVE 28 MODULES CLOUD ("Plus everything else your server needs.") -->
         <section id="modules-cloud" class="reveal-section max-w-5xl mx-auto px-5 py-20 text-center border-t border-white/5">
-            <span class="text-indigo-400 text-xs font-extrabold uppercase tracking-widest block mb-2">26 Powerful Modules</span>
+            <span class="text-indigo-400 text-xs font-extrabold uppercase tracking-widest block mb-2">28 Powerful Modules</span>
             <h2 class="text-3xl sm:text-5xl font-extrabold text-white mb-4">Plus everything else your server needs.</h2>
             <p class="text-sm sm:text-base text-gray-400 max-w-xl mx-auto mb-10">
-                Click any module pill below to inspect its capabilities before configuring it in your server dashboard.
+                Click any module pill below to inspect its dedicated Bot Cog &amp; capabilities before configuring it in your server dashboard.
             </p>
 
-            <!-- 26 Interactive Module Pills -->
+            <!-- 28 Interactive Module Pills (All 26 Original + Invite Tracker + Polls & Voting) -->
             <div class="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 mb-8">
                 {% for mod in [
                     'App Customiser', 'Welcomer', 'Levels', 'Economy', 'Music', 'Moderation',
                     'Logs', 'Giveaways', 'Tickets', 'Role Selection', 'Sticky Roles', 'Counters',
                     'Starboard', 'Suggestions', 'Birthdays', 'Message Builder', 'Scheduled Messages',
                     'Sticky Messages', 'Notifications', 'Automations', 'Custom Commands',
-                    'Temporary Channels', 'Roleplay', 'Analytics', 'Connect', 'Verify'
+                    'Temporary Channels', 'Roleplay', 'Analytics', 'Connect', 'Verify',
+                    'Invite Tracker', 'Polls & Voting'
                 ] %}
-                <button type="button" onclick="inspectModule('{{ mod }}')" class="mod-pill px-4 py-2 rounded-full bg-[#131620] hover:bg-[#1e2333] border border-white/10 hover:border-brandred/50 text-xs sm:text-sm font-semibold text-gray-200 transition flex items-center space-x-2">
+                <button type="button" onclick="inspectModule('{{ mod }}', this)" class="mod-pill {{ 'mod-pill-active' if mod == 'Levels' else '' }} px-4 py-2 rounded-full bg-[#131620] hover:bg-[#1e2333] border border-white/10 hover:border-brandred/50 text-xs sm:text-sm font-semibold text-gray-200 transition flex items-center space-x-2">
                     <span class="w-2 h-2 rounded-full bg-brandred"></span>
                     <span>{{ mod }}</span>
                 </button>
                 {% endfor %}
             </div>
 
-            <!-- Live Module Inspector Box (Connected to Active Server Route if Available) -->
+            <!-- Live Module Inspector Box (Connected to Active Server Route & Bot Cog Namespace) -->
             <div class="glass-card max-w-2xl mx-auto rounded-2xl p-5 mb-10 border border-white/10 text-left flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
-                    <div class="flex items-center space-x-2">
+                    <div class="flex flex-wrap items-center gap-2">
                         <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
                         <h4 id="inspectorTitle" class="text-sm font-extrabold text-white">Levels &amp; XP Engine</h4>
+                        <span id="inspectorCogBadge" class="text-[10px] font-mono bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded-full font-bold">LevelingCog</span>
                         <span class="text-[10px] bg-brandred/20 text-brandred px-2 py-0.5 rounded-full font-bold uppercase">Ready</span>
                     </div>
-                    <p id="inspectorDesc" class="text-xs text-gray-400 mt-1">Customize Bento rank cards, voice XP rates, role rewards, and multipliers from the web dashboard.</p>
+                    <p id="inspectorDesc" class="text-xs text-gray-400 mt-1.5">Customize Bento rank cards, voice XP rates, role rewards, and multipliers from the web dashboard.</p>
                 </div>
                 <a id="inspectorConfigLink" href="/dashboard" class="px-4 py-2.5 rounded-xl bg-brandred hover:bg-brandredhover text-white text-xs font-bold flex-shrink-0 transition">
                     Configure Module &rarr;
@@ -1260,7 +1364,7 @@
             </div>
         </section>
 
-        <!-- 12. BOTTOM CTA SECTION -->
+        <!-- 12. BOTTOM CTA SECTION (WITH INTERACTIVE MODULE TOGGLE PREVIEW CARD LIKE SCREENSHOT!) -->
         <section class="reveal-section max-w-5xl mx-auto px-5 py-16">
             <div class="glass-card rounded-3xl p-8 sm:p-12 border border-brandred/30">
                 <div class="max-w-2xl">
@@ -1277,22 +1381,54 @@
                         <a href="/dashboard" class="px-7 py-3.5 rounded-xl bg-[#151822] hover:bg-[#1f2330] border border-white/10 text-white font-bold text-sm transition">
                             Open Dashboard
                         </a>
+                        <button type="button" onclick="openPremiumServerModal(event)" class="px-5 py-3.5 rounded-xl bg-amber-500/15 hover:bg-goldaccent text-amber-300 hover:text-black border border-amber-500/30 font-extrabold text-sm transition">
+                            &#9733; Get Premium Pro
+                        </button>
                     </div>
                 </div>
 
-                <!-- Interactive Dashboard Preview Box Inside CTA -->
-                <div class="bg-[#0b0d13]/90 border border-white/10 rounded-2xl p-5">
+                <!-- Interactive Dashboard Preview Box Inside CTA (Matches Bottom Card in Screenshot!) -->
+                <div class="bg-[#0b0d13]/90 border border-white/10 rounded-2xl p-5 sm:p-6">
                     <div class="flex items-center justify-between pb-4 mb-4 border-b border-white/5">
                         <div class="flex items-center space-x-3">
-                            <span class="w-8 h-8 rounded-lg bg-brandred flex items-center justify-center font-black text-white text-xs">S</span>
+                            <span class="w-9 h-9 rounded-xl bg-brandred flex items-center justify-center font-black text-white text-sm">S</span>
                             <div>
-                                <div class="text-xs font-bold text-white">Sofiya Quick Setup</div>
-                                <div id="ctaActiveSummary" class="text-[11px] text-gray-400">All 26 modules ready to configure</div>
+                                <div class="text-xs sm:text-sm font-extrabold text-white">Sofiya Quick Setup</div>
+                                <div id="ctaActiveSummary" class="text-[11px] text-gray-400">All 28 modules ready to configure</div>
                             </div>
                         </div>
-                        <span class="text-xs font-bold text-emerald-400">&bull; Connected</span>
+                        <span class="text-xs font-bold text-emerald-400 flex items-center space-x-1.5">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                            <span>Connected</span>
+                        </span>
                     </div>
-                    <a id="ctaLaunchPanelBtn" href="/dashboard" class="block w-full py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-center text-xs font-bold text-white transition">
+
+                    <!-- Interactive Quick Module Toggles Inside Bottom CTA (Exact Match to Screenshot Rows) -->
+                    <div class="space-y-2.5 mb-5">
+                        <div class="flex items-center justify-between bg-[#12151f] px-4 py-3 rounded-xl border border-white/5 text-xs">
+                            <div>
+                                <span class="font-bold text-white block">Levels &amp; XP</span>
+                                <span class="text-[11px] text-gray-400">Reward active members with Bento rank cards &amp; role rewards</span>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                                <input type="checkbox" class="sr-only maki-switch-input" checked onchange="updateBentoToggles('Levels & XP', this.checked, 'level')">
+                                <div class="maki-switch-slider w-10 h-[22px] bg-[#252936] rounded-full relative transition-colors duration-200"></div>
+                            </label>
+                        </div>
+
+                        <div class="flex items-center justify-between bg-[#12151f] px-4 py-3 rounded-xl border border-white/5 text-xs">
+                            <div>
+                                <span class="font-bold text-white block">AutoMod &amp; Safety</span>
+                                <span class="text-[11px] text-gray-400">Automatically block scam links, raids &amp; mass mentions</span>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                                <input type="checkbox" class="sr-only maki-switch-input" checked onchange="updateBentoToggles('AutoMod & Safety', this.checked, 'moderation')">
+                                <div class="maki-switch-slider w-10 h-[22px] bg-[#252936] rounded-full relative transition-colors duration-200"></div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <a id="ctaLaunchPanelBtn" href="/dashboard" class="block w-full py-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-center text-xs font-bold text-white transition">
                         Launch Server Control Panel &rarr;
                     </a>
                 </div>
@@ -1301,7 +1437,101 @@
 
     </main>
 
-    <!-- ==================== FULL MAKI-STYLE FOOTER ==================== -->
+    <!-- ==================== DEDICATED SERVER PREMIUM PANEL SELECTOR MODAL (ROUTES TO /manage/<guild_id>/premium) ==================== -->
+    <div id="premiumServerModal" class="fixed inset-0 z-[130] hidden flex items-center justify-center px-4">
+        <div onclick="closePremiumServerModal()" class="fixed inset-0 bg-black/75 backdrop-blur-md"></div>
+        <div class="relative w-full max-w-lg bg-[#10131c] border border-amber-500/30 rounded-3xl shadow-2xl p-6 sm:p-8 z-10">
+            <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-5">
+                <div class="flex items-center space-x-2.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-goldaccent"></span>
+                    <h3 class="text-base sm:text-lg font-extrabold text-white">Sofiya Premium Pro &amp; Custom Branding</h3>
+                </div>
+                <button type="button" onclick="closePremiumServerModal()" class="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            <div class="bg-gradient-to-r from-[#181612] via-[#14161f] to-[#1a1612] border border-amber-500/25 rounded-2xl p-4 mb-5 flex items-center justify-between">
+                <div>
+                    <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-400 block">Limited Time Offer &bull; Save 30%</span>
+                    <h4 class="text-sm font-extrabold text-white mt-0.5">Custom Bot Branding &amp; Unlimited Modules</h4>
+                    <p class="text-[11px] text-gray-400 mt-0.5">Custom avatar, banner, bio, status &amp; zero cooldowns.</p>
+                </div>
+                <span class="text-lg font-black text-amber-400 ml-3">$3.50</span>
+            </div>
+
+            <p class="text-xs text-gray-400 mb-3 font-semibold">
+                Select your connected server to open its dedicated <strong>Premium Panel</strong>:
+            </p>
+            <div id="indexPremiumServerList" class="max-h-52 overflow-y-auto space-y-2 pr-1 mb-5">
+                {% if guilds is defined and guilds %}
+                    {% for g in guilds %}
+                    <a href="/manage/{{ g.id }}/premium" class="flex items-center justify-between p-3.5 rounded-2xl bg-[#141824] hover:bg-amber-500/15 border border-white/5 hover:border-amber-500/40 transition group">
+                        <div class="flex items-center space-x-3 min-w-0">
+                            <span class="w-2 h-2 rounded-full bg-goldaccent"></span>
+                            <span class="text-xs sm:text-sm font-extrabold text-white truncate">{{ g.name }}</span>
+                        </div>
+                        <span class="text-xs font-extrabold text-amber-400 group-hover:translate-x-0.5 transition-transform flex-shrink-0">Open Premium &rarr;</span>
+                    </a>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="flex items-center justify-end gap-2.5 pt-4 border-t border-white/10">
+                <button type="button" onclick="closePremiumServerModal()" class="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-bold text-gray-300">Close</button>
+                <a id="directPremiumPanelBtn" href="/dashboard" class="px-5 py-2.5 rounded-xl bg-goldaccent hover:bg-[#e5a01d] text-black font-extrabold text-xs transition">
+                    Choose Server in Dashboard &rarr;
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== CTRL+K QUICK STUDIO & 28-MODULE JUMPER MODAL ==================== -->
+    <div id="indexPaletteModal" class="fixed inset-0 z-[135] hidden flex items-start justify-center pt-20 px-4">
+        <div onclick="closeIndexPalette()" class="fixed inset-0 bg-black/75 backdrop-blur-md"></div>
+        <div class="relative w-full max-w-xl bg-[#10131c] border border-white/15 rounded-3xl shadow-2xl overflow-hidden z-10">
+            <div class="flex items-center px-5 border-b border-white/10">
+                <svg class="w-4 h-4 text-brandred mr-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/>
+                </svg>
+                <input 
+                    id="indexPaletteInput" 
+                    type="text" 
+                    placeholder="Search any of the 28 modules or jump to Premium / Dashboard..." 
+                    oninput="filterIndexPalette()"
+                    class="w-full bg-transparent py-4 text-sm text-white placeholder-gray-500 outline-none"
+                >
+                <button type="button" onclick="closeIndexPalette()" class="text-[10px] font-mono bg-white/5 px-2 py-1 rounded text-gray-400 hover:text-white">ESC</button>
+            </div>
+            <div id="indexPaletteList" class="max-h-72 overflow-y-auto p-3 space-y-1">
+                <a href="/dashboard" onclick="openPremiumServerModal(event)" data-idx-pal="premium custom branding pro upgrade" class="idx-pal-item flex items-center justify-between px-4 py-2.5 rounded-2xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 transition group">
+                    <div class="flex items-center space-x-3">
+                        <span class="w-2 h-2 rounded-full bg-goldaccent"></span>
+                        <span class="text-xs sm:text-sm font-extrabold text-amber-300">&#9733; Server Premium &amp; Custom Bot Branding ($3.50)</span>
+                    </div>
+                    <span class="text-xs font-bold text-amber-400">Open Panel &rarr;</span>
+                </a>
+                {% for mod in [
+                    'App Customiser', 'Welcomer', 'Levels', 'Economy', 'Music', 'Moderation',
+                    'Logs', 'Giveaways', 'Tickets', 'Role Selection', 'Sticky Roles', 'Counters',
+                    'Starboard', 'Suggestions', 'Birthdays', 'Message Builder', 'Scheduled Messages',
+                    'Sticky Messages', 'Notifications', 'Automations', 'Custom Commands',
+                    'Temporary Channels', 'Roleplay', 'Analytics', 'Connect', 'Verify',
+                    'Invite Tracker', 'Polls & Voting'
+                ] %}
+                <a href="#modules-cloud" onclick="closeIndexPalette(); inspectModule('{{ mod }}');" data-idx-pal="{{ mod | lower }}" class="idx-pal-item flex items-center justify-between px-4 py-2.5 rounded-2xl hover:bg-white/[0.06] transition group">
+                    <div class="flex items-center space-x-3">
+                        <span class="w-2 h-2 rounded-full bg-brandred"></span>
+                        <span class="text-xs sm:text-sm font-bold text-gray-200 group-hover:text-white">{{ mod }}</span>
+                    </div>
+                    <span class="text-xs font-semibold text-gray-500 group-hover:text-brandred">Inspect &amp; Configure &rarr;</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== FULL MAKI-STYLE FOOTER (EXACT SCREENSHOT MATCH) ==================== -->
     <footer class="border-t border-white/5 bg-[#050608] pt-16 pb-12 px-6 mt-12">
         <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-white/5 text-xs">
             
@@ -1329,6 +1559,9 @@
                     <a href="https://github.com/sujaanz" target="_blank" rel="noopener" aria-label="GitHub" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-gray-300 hover:text-white transition">
                         <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
                     </a>
+                    <a href="https://linkedin.com/in/sksujaanmondal" target="_blank" rel="noopener" aria-label="LinkedIn" class="w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-gray-300 hover:text-white transition">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+                    </a>
                 </div>
             </div>
 
@@ -1339,6 +1572,7 @@
                     <li><a href="/features" class="hover:text-white transition">Features</a></li>
                     <li><a href="/commands" class="hover:text-white transition">Commands</a></li>
                     <li><a href="/tutorials" class="hover:text-white transition">Tutorials</a></li>
+                    <li><a href="/dashboard" onclick="openPremiumServerModal(event)" class="hover:text-white transition">Premium</a></li>
                     <li><a href="#modules-cloud" class="hover:text-white transition">Modules</a></li>
                     <li><a href="/dashboard" class="hover:text-white transition">Dashboard</a></li>
                 </ul>
@@ -1348,7 +1582,7 @@
                 <h4 class="font-bold text-white uppercase tracking-wider">Resources</h4>
                 <ul class="space-y-2.5 text-gray-400">
                     <li><a href="/tutorials" class="hover:text-white transition">Support Centre</a></li>
-                    <li><a href="#bento-features" class="hover:text-white transition">System Status</a></li>
+                    <li><a href="#bento-features" class="hover:text-white transition">Service Status</a></li>
                 </ul>
             </div>
 
@@ -1363,14 +1597,14 @@
         </div>
 
         <div class="max-w-6xl mx-auto pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500">
-            <p>Copyright &copy; 2020 - 2026 Sofiya Bot. All rights reserved.</p>
+            <p>Copyright &copy; 2020 - 2026 Quare CommV &bull; Sofiya Bot. All rights reserved.</p>
             <button type="button" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="mt-4 sm:mt-0 text-gray-400 hover:text-white font-semibold transition">
                 Back to top &uarr;
             </button>
         </div>
     </footer>
 
-    <!-- ==================== COMPLETE INTERACTIVE ENGINE + LIVE BOT API BRIDGE ==================== -->
+    <!-- ==================== COMPLETE INTERACTIVE ENGINE + 28-COG LIVE BOT API BRIDGE ==================== -->
     <script>
         let activeConnectedGuildId = null;
 
@@ -1388,46 +1622,124 @@
             }, 2600);
         }
 
-        // 2. Mobile Drawer, Resources Dropdown & Language Popover Toggles
+        // 2. Mobile Drawer, Features/Resources Dropdowns, User Profile & Language Popover Toggles
         const menuBtn = document.getElementById('mobileMenuBtn');
         const navDrawer = document.getElementById('navDrawer');
         const langBtn = document.getElementById('langBtn');
         const langDropdown = document.getElementById('langDropdown');
+        const featBtn = document.getElementById('featuresDropdownBtn');
+        const featMenu = document.getElementById('featuresDropdownMenu');
         const resBtn = document.getElementById('resourcesDropdownBtn');
         const resMenu = document.getElementById('resourcesDropdownMenu');
+        const userProfileBtn = document.getElementById('userProfileBtn');
+        const userProfileDropdown = document.getElementById('userProfileDropdown');
+
+        function closeAllHeaderMenus() {
+            if (langDropdown) langDropdown.classList.add('hidden');
+            if (featMenu) featMenu.classList.add('hidden');
+            if (resMenu) resMenu.classList.add('hidden');
+            if (userProfileDropdown) userProfileDropdown.classList.add('hidden');
+        }
 
         if (menuBtn && navDrawer) {
             menuBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 navDrawer.classList.toggle('hidden');
-                if (langDropdown) langDropdown.classList.add('hidden');
-                if (resMenu) resMenu.classList.add('hidden');
+                closeAllHeaderMenus();
             });
         }
         if (langBtn && langDropdown) {
             langBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                langDropdown.classList.toggle('hidden');
+                const isHidden = langDropdown.classList.contains('hidden');
+                closeAllHeaderMenus();
                 if (navDrawer) navDrawer.classList.add('hidden');
-                if (resMenu) resMenu.classList.add('hidden');
+                if (isHidden) langDropdown.classList.remove('hidden');
+            });
+        }
+        if (featBtn && featMenu) {
+            featBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isHidden = featMenu.classList.contains('hidden');
+                closeAllHeaderMenus();
+                if (isHidden) featMenu.classList.remove('hidden');
             });
         }
         if (resBtn && resMenu) {
             resBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                resMenu.classList.toggle('hidden');
-                if (langDropdown) langDropdown.classList.add('hidden');
+                const isHidden = resMenu.classList.contains('hidden');
+                closeAllHeaderMenus();
+                if (isHidden) resMenu.classList.remove('hidden');
+            });
+        }
+        if (userProfileBtn && userProfileDropdown) {
+            userProfileBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isHidden = userProfileDropdown.classList.contains('hidden');
+                closeAllHeaderMenus();
+                if (isHidden) userProfileDropdown.classList.remove('hidden');
             });
         }
         document.addEventListener('click', () => {
-            if (langDropdown) langDropdown.classList.add('hidden');
-            if (resMenu) resMenu.classList.add('hidden');
+            closeAllHeaderMenus();
         });
 
         function setLanguage(code, label) {
             document.getElementById('currentLangCode').textContent = code;
             showToast('Language switched to ' + label);
         }
+
+        // Dedicated Premium Server Selector Modal Trigger (Routes to /manage/<guild_id>/premium)
+        function openPremiumServerModal(e) {
+            if (e) e.preventDefault();
+            closeAllHeaderMenus();
+            const modal = document.getElementById('premiumServerModal');
+            if (modal) modal.classList.remove('hidden');
+        }
+
+        function closePremiumServerModal() {
+            const modal = document.getElementById('premiumServerModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        // Ctrl+K Quick Studio Modal
+        function openIndexPalette() {
+            closeAllHeaderMenus();
+            const modal = document.getElementById('indexPaletteModal');
+            const input = document.getElementById('indexPaletteInput');
+            if (!modal) return;
+            modal.classList.remove('hidden');
+            if (input) {
+                input.value = '';
+                filterIndexPalette();
+                setTimeout(() => input.focus(), 50);
+            }
+        }
+
+        function closeIndexPalette() {
+            const modal = document.getElementById('indexPaletteModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function filterIndexPalette() {
+            const q = (document.getElementById('indexPaletteInput').value || '').toLowerCase().trim();
+            document.querySelectorAll('.idx-pal-item').forEach(el => {
+                const t = el.getAttribute('data-idx-pal') || '';
+                el.classList.toggle('hidden', !t.includes(q));
+            });
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                openIndexPalette();
+            } else if (e.key === 'Escape') {
+                closePremiumServerModal();
+                closeIndexPalette();
+                closeAllHeaderMenus();
+            }
+        });
 
         // 3. Ambient Accent Theme Switcher
         const themes = [
@@ -1445,27 +1757,39 @@
             showToast('Theme switched to ' + t.name);
         });
 
-        // 4. Bento Toggles, Ping & Slash Command Switcher (Connected to Flask Backend API if Server Active)
+        // 4. Bento Toggles, Ping & Slash Command Switcher (Connected to Flask Backend API & Specific Bot Cogs)
         function updateBentoToggles(modName, state, modKey) {
             const checks = document.querySelectorAll('.bento-toggle:checked').length;
             document.getElementById('activeModuleCount').textContent = checks + ' / 3 Active';
+
+            const cogMap = {
+                level: 'LevelingCog',
+                moderation: 'ModerationCog',
+                economy: 'EconomyCog'
+            };
+            const targetCog = cogMap[modKey] || 'CoreCog';
 
             if (activeConnectedGuildId && modKey) {
                 fetch(`/api/guild/${activeConnectedGuildId}/modules`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ module_key: modKey, enabled: Boolean(state) })
+                    body: JSON.stringify({
+                        module_key: modKey,
+                        cog_name: targetCog,
+                        enabled: Boolean(state)
+                    })
                 }).then(r => r.json()).then(data => {
                     if (data && data.ok) {
-                        showToast(`${modName} ${state ? 'Enabled' : 'Disabled'} on Server (${data.active_count}/26 active)`);
+                        const totalMods = data.modules ? Object.keys(data.modules).length : 28;
+                        showToast(`${modName} (${targetCog}) ${state ? 'Enabled' : 'Disabled'} (${data.active_count}/${totalMods} active)`);
                     } else {
-                        showToast(modName + (state ? ' Enabled' : ' Disabled'));
+                        showToast(`${modName} (${targetCog}) ${state ? 'Enabled' : 'Disabled'}`);
                     }
                 }).catch(() => {
-                    showToast(modName + (state ? ' Enabled' : ' Disabled'));
+                    showToast(`${modName} (${targetCog}) ${state ? 'Enabled' : 'Disabled'}`);
                 });
             } else {
-                showToast(modName + (state ? ' Enabled' : ' Disabled'));
+                showToast(`${modName} (${targetCog}) ${state ? 'Enabled' : 'Disabled'}`);
             }
         }
 
@@ -1478,6 +1802,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         module_key: 'welcomer',
+                        cog_name: 'WelcomerCog',
                         enabled: true,
                         channel: chVal,
                         access_role: roleVal
@@ -1495,7 +1820,7 @@
                     .then(r => r.json())
                     .then(d => {
                         if (d && d.ok) {
-                            showToast(`Cluster #01: ${ms}ms • ${d.active_modules}/26 modules active`);
+                            showToast(`Cluster #01: ${ms}ms • ${d.active_modules}/28 modules active`);
                         } else {
                             showToast('Cluster #01 responded in ' + ms + 'ms');
                         }
@@ -1634,7 +1959,7 @@
             showToast('Winner rolled: ' + pick);
         }
 
-        // 10. Interactive 26 Module Inspector (Maps directly to Dedicated Module Routes)
+        // 10. Interactive 28 Module Inspector (Maps directly to Dedicated Module Routes & Bot Cogs)
         const moduleDescriptions = {
             'App Customiser': 'Customize bot username, avatar, bio, and theme colors exclusively for your server.',
             'Welcomer': 'Greet new members with custom background cards, DMs, and automatic join roles.',
@@ -1642,8 +1967,11 @@
             'Economy': 'Create a custom server currency, daily streaks, leaderboards, and role shops.',
             'Music': 'Stream high-bitrate audio in voice channels with queue filters and 24/7 mode.',
             'Moderation': 'Keep chats clean with AutoMod link filters, anti-raid locks, and case logs.',
+            'Logs': 'Track message edits, member joins, voice activity, and moderation actions in real time.',
             'Tickets': 'Organize member support with multi-panel dropdown tickets and HTML transcripts.',
-            'Giveaways': 'Host instant giveaways with role requirements and booster bonus entries.'
+            'Giveaways': 'Host instant giveaways with role requirements and booster bonus entries.',
+            'Invite Tracker': 'Track who invited each member, monitor vanity URLs, and reward top inviters.',
+            'Polls & Voting': 'Run anonymous or role-weighted community polls with live progress bars.'
         };
         const moduleRouteKeys = {
             'App Customiser': 'customiser',
@@ -1671,32 +1999,89 @@
             'Roleplay': 'roleplay',
             'Analytics': 'analytics',
             'Connect': 'connect',
-            'Verify': 'verify'
+            'Verify': 'verify',
+            'Invite Tracker': 'invite_tracker',
+            'Polls & Voting': 'polls'
         };
-        function inspectModule(mod) {
+        const moduleCogNames = {
+            'App Customiser': 'BrandingCog',
+            'Welcomer': 'WelcomerCog',
+            'Levels': 'LevelingCog',
+            'Economy': 'EconomyCog',
+            'Music': 'MusicAudioCog',
+            'Moderation': 'ModerationCog',
+            'Logs': 'AuditLogsCog',
+            'Giveaways': 'GiveawaysCog',
+            'Tickets': 'TicketsCog',
+            'Role Selection': 'RoleSelectCog',
+            'Sticky Roles': 'StickyRolesCog',
+            'Counters': 'CountersCog',
+            'Starboard': 'StarboardCog',
+            'Suggestions': 'SuggestionsCog',
+            'Birthdays': 'BirthdaysCog',
+            'Message Builder': 'EmbedBuilderCog',
+            'Scheduled Messages': 'TimersCog',
+            'Sticky Messages': 'StickyMsgCog',
+            'Notifications': 'SocialAlertsCog',
+            'Automations': 'AutomationsCog',
+            'Custom Commands': 'CustomCmdsCog',
+            'Temporary Channels': 'TempVoiceCog',
+            'Roleplay': 'RoleplayCog',
+            'Analytics': 'AnalyticsCog',
+            'Connect': 'WebhooksApiCog',
+            'Verify': 'VerificationCog',
+            'Invite Tracker': 'InviteTrackerCog',
+            'Polls & Voting': 'PollsVotingCog'
+        };
+
+        function inspectModule(mod, btnEl) {
+            document.querySelectorAll('.mod-pill').forEach(b => b.classList.remove('mod-pill-active'));
+            if (btnEl) btnEl.classList.add('mod-pill-active');
+
             document.getElementById('inspectorTitle').textContent = mod + ' Module';
             document.getElementById('inspectorDesc').textContent = moduleDescriptions[mod] || `Configure automated triggers, permissions, and channels for the ${mod} module directly from your web dashboard.`;
+            const cogBadge = document.getElementById('inspectorCogBadge');
+            if (cogBadge) cogBadge.textContent = moduleCogNames[mod] || 'CoreCog';
+
             const rKey = moduleRouteKeys[mod] || 'level';
             const cfgLink = document.getElementById('inspectorConfigLink');
             if (cfgLink) {
                 cfgLink.href = activeConnectedGuildId ? `/manage/${activeConnectedGuildId}/${rKey}` : '/dashboard';
             }
-            showToast('Inspecting ' + mod + ' module');
+            showToast(`Inspecting ${mod} (${moduleCogNames[mod] || 'CoreCog'})`);
         }
 
-        // 11. Auto-Connect Index Page to User's Active Discord Guild & Bot Backend (`app.py`)
+        // 11. Auto-Connect Index Page to User's Active Discord Guild, Premium Panel & Bot Backend (`app.py`)
         function initIndexBotBridge() {
             try {
                 const connMap = JSON.parse(localStorage.getItem('sofiya_connected_servers_v2')) || {};
                 const connectedIds = Object.keys(connMap).filter(id => connMap[id] === true);
+                const listBox = document.getElementById('indexPremiumServerList');
+
                 if (connectedIds.length > 0) {
                     activeConnectedGuildId = connectedIds[0];
                     const manageBtn = document.getElementById('liveBridgeManageBtn');
                     const ctaBtn = document.getElementById('ctaLaunchPanelBtn');
                     const inspBtn = document.getElementById('inspectorConfigLink');
+                    const directPremBtn = document.getElementById('directPremiumPanelBtn');
+
                     if (manageBtn) manageBtn.href = `/manage/${activeConnectedGuildId}`;
                     if (ctaBtn) ctaBtn.href = `/manage/${activeConnectedGuildId}`;
                     if (inspBtn) inspBtn.href = `/manage/${activeConnectedGuildId}/level`;
+                    if (directPremBtn) {
+                        directPremBtn.href = `/manage/${activeConnectedGuildId}/premium`;
+                        directPremBtn.innerHTML = 'Open Active Server Premium Panel &rarr;';
+                    }
+
+                    if (listBox && listBox.children.length === 0) {
+                        connectedIds.forEach(id => {
+                            const a = document.createElement('a');
+                            a.href = `/manage/${id}/premium`;
+                            a.className = 'flex items-center justify-between p-3.5 rounded-2xl bg-[#141824] hover:bg-amber-500/15 border border-white/5 hover:border-amber-500/40 transition group';
+                            a.innerHTML = `<div class="flex items-center space-x-3 min-w-0"><span class="w-2 h-2 rounded-full bg-goldaccent"></span><span class="text-xs sm:text-sm font-extrabold text-white truncate">Connected Server (${id})</span></div><span class="text-xs font-extrabold text-amber-400">Open Premium &rarr;</span>`;
+                            listBox.appendChild(a);
+                        });
+                    }
 
                     fetch(`/api/guild/${activeConnectedGuildId}/modules`)
                         .then(r => r.json())
@@ -1711,9 +2096,12 @@
                                 const checks = document.querySelectorAll('.bento-toggle:checked').length;
                                 document.getElementById('activeModuleCount').textContent = checks + ' / 3 Active';
                                 const ctaSummary = document.getElementById('ctaActiveSummary');
-                                if (ctaSummary) ctaSummary.textContent = `${data.active_count} / 26 modules currently active on your server`;
+                                const totalMods = Object.keys(data.modules).length || 28;
+                                if (ctaSummary) ctaSummary.textContent = `${data.active_count} / ${totalMods} modules currently active on your server`;
                             }
                         }).catch(() => {});
+                } else if (listBox && listBox.children.length === 0) {
+                    listBox.innerHTML = `<a href="/dashboard" class="flex items-center justify-between p-3.5 rounded-2xl bg-[#141824] hover:bg-white/10 border border-white/10 transition"><span class="text-xs font-bold text-gray-200">Select a server in your Dashboard first</span><span class="text-xs font-extrabold text-brandred">Go to Dashboard &rarr;</span></a>`;
                 }
             } catch (e) {}
         }

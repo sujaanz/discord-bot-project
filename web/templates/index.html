@@ -50,16 +50,16 @@
         }
         /* Floating Pill Navbar */
         .maki-pill-nav {
-            background: rgba(13, 15, 21, 0.82);
-            backdrop-filter: blur(22px);
-            -webkit-backdrop-filter: blur(22px);
+            background: rgba(13, 15, 21, 0.84);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             border: 1px solid rgba(255, 255, 255, 0.09);
-            box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.85);
         }
         /* Spotlight Glassmorphism Cards */
         .glass-card {
             position: relative;
-            background: linear-gradient(180deg, rgba(20, 23, 33, 0.78) 0%, rgba(12, 14, 20, 0.90) 100%);
+            background: linear-gradient(180deg, rgba(20, 23, 33, 0.78) 0%, rgba(12, 14, 20, 0.92) 100%);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -86,11 +86,23 @@
             transform: translateY(-4px);
             box-shadow: 0 28px 65px rgba(255, 59, 92, 0.09);
         }
+        /* Laptop Feature Showcase Outer Stage Container (Matches Nest Hub Max Screenshot) */
+        .feature-stage-shell {
+            background: linear-gradient(180deg, rgba(14, 16, 23, 0.86) 0%, rgba(9, 10, 15, 0.94) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.85);
+        }
         /* Discord Mockup Container */
         .discord-window {
             background: #111214;
             border: 1px solid rgba(255, 255, 255, 0.09);
             box-shadow: 0 25px 65px -15px rgba(0, 0, 0, 0.9);
+        }
+        /* Floating User Chat Trigger Bubble (Exact Match to Screenshot) */
+        .discord-chat-trigger {
+            background: rgba(20, 22, 29, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.65);
         }
         /* Ambient Background Glows */
         .hero-radial-glow {
@@ -98,8 +110,8 @@
             top: -130px;
             left: 50%;
             transform: translateX(-50%);
-            width: 1050px;
-            height: 700px;
+            width: 1120px;
+            height: 720px;
             background: radial-gradient(ellipse at center, var(--brand-glow) 0%, rgba(160, 20, 45, 0.06) 45%, rgba(6, 7, 9, 0) 75%);
             pointer-events: none;
             z-index: 0;
@@ -128,6 +140,18 @@
             opacity: 1;
             transform: translateY(0);
         }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #060709;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2433;
+            border-radius: 9999px;
+        }
     </style>
 </head>
 <body class="bg-grid-pattern antialiased selection:bg-brandred selection:text-white min-h-screen flex flex-col justify-between relative">
@@ -138,7 +162,9 @@
     <script>
         const SOFIYA_CONFIG = {
             botName: "Sofiya",
-            discordInviteUrl: "/auth/login",
+            clientId: "1267928727833149592",
+            discordInviteUrl: "/invite",
+            oauthLoginUrl: "/auth/login",
             supportServerUrl: "https://discord.gg/",
             twitterUrl: "https://x.com/SkSujaanMondal",
             githubUrl: "https://github.com/sujaanz",
@@ -150,18 +176,18 @@
     <div id="heroGlow" class="hero-radial-glow"></div>
 
     <!-- Live Interactive Toast Notification -->
-    <div id="liveToast" class="fixed bottom-6 right-6 z-[100] pointer-events-none opacity-0 translate-y-4 transition-all duration-300">
+    <div id="liveToast" class="fixed bottom-6 right-6 z-[140] pointer-events-none opacity-0 translate-y-4 transition-all duration-300">
         <div class="glass-card px-4 py-3 rounded-2xl border border-white/15 flex items-center space-x-3 shadow-2xl bg-[#10131c]/95">
             <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
             <span id="liveToastText" class="text-xs font-bold text-white">Synced successfully!</span>
         </div>
     </div>
 
-    <!-- ==================== STICKY FLOATING PILL NAVBAR ==================== -->
+    <!-- ==================== STICKY FLOATING PILL NAVBAR (EXACT LAPTOP UI MATCH) ==================== -->
     <header class="sticky top-4 z-50 px-4 sm:px-6 max-w-6xl mx-auto w-full">
         <div class="maki-pill-nav rounded-full px-5 sm:px-7 h-16 flex items-center justify-between transition-all duration-300 relative">
             
-            <!-- Left: Slanted Maki-Style Vector Logo & Brand Name -->
+            <!-- Left: Slanted Maki-Style Vector Logo & Brand Name + Desktop Links -->
             <div class="flex items-center space-x-8">
                 <a href="/" class="flex items-center space-x-3 group">
                     <svg class="w-8 h-8 text-brandred transition-transform duration-300 group-hover:scale-105" viewBox="0 0 40 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -172,18 +198,48 @@
                     <span class="text-xl font-extrabold tracking-tight text-white">sofiya</span>
                 </a>
 
-                <!-- Desktop Navigation Links -->
-                <nav class="hidden lg:flex items-center space-x-7 text-sm font-semibold text-gray-300">
+                <!-- Desktop Navigation Links (Matches Screenshot: Features, Commands, Tutorials, Resources v, Dashboard) -->
+                <nav class="hidden lg:flex items-center space-x-6 text-xs sm:text-sm font-semibold text-gray-300">
                     <a href="#bento-features" class="hover:text-white transition">Features</a>
                     <a href="/commands" class="hover:text-white transition">Commands</a>
                     <a href="/tutorials" class="hover:text-white transition">Tutorials</a>
-                    <a href="#modules-cloud" class="hover:text-white transition">Modules</a>
-                    <a href="/dashboard" class="hover:text-white transition">Dashboard</a>
+                    
+                    <!-- Resources Dropdown (From Laptop Screenshot) -->
+                    <div class="relative">
+                        <button id="resourcesDropdownBtn" type="button" class="flex items-center space-x-1 hover:text-white transition py-1">
+                            <span>Resources</span>
+                            <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div id="resourcesDropdownMenu" class="hidden absolute left-0 mt-3 w-52 bg-[#11141d] rounded-2xl p-2 border border-white/10 shadow-2xl z-50 text-xs">
+                            <a href="#modules-cloud" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 text-gray-200 hover:text-white flex items-center justify-between transition">
+                                <span>All 26 Modules</span>
+                                <span class="text-[10px] text-brandred font-bold">26</span>
+                            </a>
+                            <a href="/tutorials" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 text-gray-200 hover:text-white flex items-center justify-between transition">
+                                <span>Setup Documentation</span>
+                                <span class="text-[10px] text-gray-500">Docs</span>
+                            </a>
+                            <a href="#bento-features" onclick="pingCluster()" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 text-gray-200 hover:text-white flex items-center justify-between transition">
+                                <span>Cluster Status</span>
+                                <span class="text-[10px] text-emerald-400 font-bold">99.98%</span>
+                            </a>
+                            <a href="/dashboard" class="px-3.5 py-2.5 rounded-xl hover:bg-white/10 text-gray-200 hover:text-white flex items-center justify-between transition">
+                                <span>Server Control Panel</span>
+                                <span>&rarr;</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <a href="/dashboard" class="hover:text-white transition flex items-center space-x-1.5">
+                        <span>Dashboard</span>
+                    </a>
                 </nav>
             </div>
 
-            <!-- Right: Language Dropdown, Theme Switcher, Auth & Drawer Toggle -->
-            <div class="flex items-center space-x-2.5 sm:space-x-3.5">
+            <!-- Right: Language Dropdown, Theme Switcher, Auth & Desktop CTA Pill -->
+            <div class="flex items-center space-x-2.5 sm:space-x-3">
                 
                 <!-- Working Language Selector Dropdown -->
                 <div class="relative">
@@ -234,16 +290,20 @@
                     </svg>
                 </button>
 
-                <!-- User / Login Pill (Desktop) -->
-                <div class="hidden sm:flex items-center">
+                <!-- User / Login Pill (Desktop - Connected to Discord Session & Bot Invite) -->
+                <div class="hidden sm:flex items-center space-x-2">
                     {% if user %}
                         <a href="/dashboard" class="flex items-center space-x-2.5 bg-white/5 hover:bg-white/10 border border-white/10 pl-2 pr-4 py-1.5 rounded-full transition">
                             <img src="https://cdn.discordapp.com/avatars/{{ user.id }}/{{ user.avatar }}.png" onerror="this.src='https://i.pravatar.cc/100?img=12'" alt="Avatar" class="w-6 h-6 rounded-full object-cover">
                             <span class="text-xs font-bold text-white">{{ user.username }}</span>
+                            <span class="w-2 h-2 rounded-full bg-emerald-400" title="Connected to Discord OAuth2"></span>
                         </a>
                     {% else %}
-                        <a href="/auth/login" class="bg-brandred hover:bg-brandredhover text-white text-xs font-bold px-5 py-2.5 rounded-full shadow-lg shadow-brandred/25 transition">
+                        <a href="/auth/login" class="text-xs font-bold text-gray-300 hover:text-white px-3.5 py-2 rounded-full hover:bg-white/5 transition">
                             Login
+                        </a>
+                        <a href="/invite" class="bg-brandred hover:bg-brandredhover text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg shadow-brandred/25 flex items-center space-x-1.5 transition">
+                            <span>Add to Discord</span>
                         </a>
                     {% endif %}
                 </div>
@@ -265,7 +325,7 @@
                     <span class="w-2 h-2 rounded-full bg-brandred"></span>
                 </a>
                 <a href="/features" class="px-4 py-3 rounded-xl hover:bg-white/5 hover:text-white transition flex items-center justify-between">
-                    <span>Features & Modules</span>
+                    <span>Features &amp; Modules</span>
                     <span class="text-xs text-gray-500">26 Active</span>
                 </a>
                 <a href="/commands" class="px-4 py-3 rounded-xl hover:bg-white/5 hover:text-white transition flex items-center justify-between">
@@ -287,6 +347,7 @@
                     <a href="/auth/logout" class="w-full py-3 bg-white/5 hover:bg-white/10 text-gray-300 font-bold rounded-xl text-center text-sm transition">Logout ({{ user.username }})</a>
                 {% else %}
                     <a href="/auth/login" class="w-full py-3 bg-discord hover:bg-discordhover text-white font-bold rounded-xl text-center text-sm shadow-lg shadow-discord/25 transition">Login with Discord OAuth2</a>
+                    <a href="/invite" class="w-full py-3 bg-brandred hover:bg-brandredhover text-white font-bold rounded-xl text-center text-sm transition">Add Sofiya to Server</a>
                 {% endif %}
             </div>
         </div>
@@ -295,7 +356,7 @@
     <!-- ==================== MAIN PAGE CONTENT ==================== -->
     <main class="flex-grow relative z-10">
 
-        <!-- 1. HERO SECTION -->
+        <!-- 1. HERO SECTION (EXACT SCREENSHOT MATCH) -->
         <section class="max-w-4xl mx-auto px-5 pt-12 sm:pt-20 pb-14 text-center">
             
             <!-- Discount Promo Pill -->
@@ -309,7 +370,7 @@
 
             <!-- Main Headline -->
             <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white leading-[1.07] mb-6">
-                Run your whole community <span class="text-brandred">with one app.</span>
+                Run your whole community <span class="text-brandred block sm:inline">with one app.</span>
             </h1>
 
             <!-- Hero Subtitle -->
@@ -317,7 +378,7 @@
                 Everything your Discord server needs, from moderation and tickets to levelling, economy, automation, and more, in one app.
             </p>
 
-            <!-- Hero Action Buttons -->
+            <!-- Hero Action Buttons (Connected to Bot Invite & Dashboard) -->
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md sm:max-w-xl mx-auto mb-14">
                 <a href="/auth/login" class="w-full sm:w-auto sm:min-w-[235px] py-4 px-7 bg-discord hover:bg-discordhover text-white font-bold rounded-2xl shadow-xl shadow-discord/25 transition duration-200 flex items-center justify-center space-x-3 text-base hover:scale-[1.02]">
                     <svg class="w-5 h-5 fill-current" viewBox="0 0 127.14 96.36">
@@ -325,12 +386,19 @@
                     </svg>
                     <span>Add to Discord</span>
                 </a>
+                {% if user %}
+                <a href="/dashboard" class="w-full sm:w-auto sm:min-w-[235px] py-4 px-7 bg-[#171922] hover:bg-[#222634] border border-white/10 text-white font-bold rounded-2xl transition duration-200 text-base text-center flex items-center justify-center space-x-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span>Manage Servers ({{ user.username }})</span>
+                </a>
+                {% else %}
                 <a href="#modules-cloud" class="w-full sm:w-auto sm:min-w-[235px] py-4 px-7 bg-[#171922] hover:bg-[#222634] border border-white/10 text-white font-bold rounded-2xl transition duration-200 text-base text-center">
                     Explore Modules
                 </a>
+                {% endif %}
             </div>
 
-            <!-- Floating Social Proof Pill (1,600,000+ servers) -->
+            <!-- Floating Social Proof Pill (1,600,000+ servers - All 5 Photos Intact!) -->
             <div class="relative flex items-center justify-center">
                 <a href="#bento-features" title="Scroll Down" class="hidden sm:flex flex-col items-center justify-end w-6 h-11 rounded-full bg-[#11131a] border border-white/10 p-1.5 mr-4 hover:border-brandred/50 transition">
                     <span class="w-2 h-3 rounded-full bg-brandred animate-bounce"></span>
@@ -349,9 +417,25 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Live Bot Connection Status Bar (Connects Index Page directly to User's Active Discord Server & Bot API) -->
+            <div id="liveBotBridgeBanner" class="mt-8 max-w-2xl mx-auto bg-[#0e1118]/90 border border-white/[0.08] rounded-2xl px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs">
+                <div class="flex items-center space-x-2.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span class="text-gray-300 font-semibold">Sofiya Bot Engine:</span>
+                    <span id="liveBridgeServerLabel" class="text-white font-bold font-mono">
+                        {% if user %}Connected as {{ user.username }}{% else %}Online &bull; 26 Modules Ready{% endif %}
+                    </span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <a id="liveBridgeManageBtn" href="/dashboard" class="px-3 py-1 rounded-lg bg-brandred/15 hover:bg-brandred text-brandred hover:text-white border border-brandred/30 font-bold transition">
+                        {% if user %}Open Server Hub &rarr;{% else %}Connect Server &rarr;{% endif %}
+                    </a>
+                </div>
+            </div>
         </section>
 
-        <!-- 2. INFINITE PARTNER COMMUNITIES MARQUEE -->
+        <!-- 2. INFINITE PARTNER COMMUNITIES MARQUEE (ALL PHOTOS PRESERVED) -->
         <section class="max-w-6xl mx-auto py-8 border-y border-white/5 overflow-hidden relative">
             <p class="text-center text-[11px] font-bold uppercase tracking-[0.22em] text-gray-500 mb-5">Trusted by active gaming, creator, and developer communities</p>
             <div class="overflow-hidden relative w-full">
@@ -381,17 +465,19 @@
             </div>
         </section>
 
-        <!-- 3. INTERACTIVE 4-CARD BENTO GRID ("Everything you need to run your server") -->
+        <!-- 3. INTERACTIVE 4-CARD BENTO GRID ("Everything you need, in one place.") -->
         <section id="bento-features" class="reveal-section max-w-6xl mx-auto px-5 py-20">
             <div class="text-center max-w-2xl mx-auto mb-14">
                 <span class="text-brandred text-xs font-extrabold uppercase tracking-widest block mb-2">Built for Scale</span>
-                <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">Everything you need to run your server.</h2>
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+                    Everything you need, <span class="text-gray-400">in one place.</span>
+                </h2>
                 <p class="text-sm sm:text-base text-gray-400 mt-3">Test the live controls below. Every module syncs with your Discord server in real time.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-12 gap-5">
                 
-                <!-- Bento Card 1: Interactive Module Toggles (7 cols) -->
+                <!-- Bento Card 1: Interactive Module Toggles (7 cols - Connected to Backend API) -->
                 <div class="md:col-span-7 glass-card glass-card-hover rounded-3xl p-7 flex flex-col justify-between">
                     <div class="space-y-3 mb-6 bg-[#090b10] p-4 rounded-2xl border border-white/5">
                         <div class="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-gray-400 px-1 pb-1">
@@ -406,12 +492,12 @@
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 20V10m6 10V4M6 20v-4"/></svg>
                                 </div>
                                 <div>
-                                    <div class="text-xs font-bold text-white">Levels & Rank Cards</div>
-                                    <div class="text-[11px] text-gray-400">Text & voice XP progression</div>
+                                    <div class="text-xs font-bold text-white">Levels &amp; Rank Cards</div>
+                                    <div class="text-[11px] text-gray-400">Text &amp; voice XP progression</div>
                                 </div>
                             </div>
                             <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" class="sr-only peer bento-toggle" checked onchange="updateBentoToggles('Levels & Rank Cards', this.checked)">
+                                <input type="checkbox" data-bento-mod="level" class="sr-only peer bento-toggle" checked onchange="updateBentoToggles('Levels & Rank Cards', this.checked, 'level')">
                                 <div class="w-10 h-5 bg-gray-700 rounded-full peer peer-checked:after:translate-x-5 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brandred"></div>
                             </label>
                         </div>
@@ -424,11 +510,11 @@
                                 </div>
                                 <div>
                                     <div class="text-xs font-bold text-white">AutoMod Protection</div>
-                                    <div class="text-[11px] text-gray-400">Anti-raid, spam & link filtering</div>
+                                    <div class="text-[11px] text-gray-400">Anti-raid, spam &amp; link filtering</div>
                                 </div>
                             </div>
                             <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" class="sr-only peer bento-toggle" checked onchange="updateBentoToggles('AutoMod Protection', this.checked)">
+                                <input type="checkbox" data-bento-mod="moderation" class="sr-only peer bento-toggle" checked onchange="updateBentoToggles('AutoMod Protection', this.checked, 'moderation')">
                                 <div class="w-10 h-5 bg-gray-700 rounded-full peer peer-checked:after:translate-x-5 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brandred"></div>
                             </label>
                         </div>
@@ -440,19 +526,19 @@
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8m-3-5h6"/></svg>
                                 </div>
                                 <div>
-                                    <div class="text-xs font-bold text-white">Economy & Global Shop</div>
-                                    <div class="text-[11px] text-gray-400">Daily rewards, coins & role store</div>
+                                    <div class="text-xs font-bold text-white">Economy &amp; Global Shop</div>
+                                    <div class="text-[11px] text-gray-400">Daily rewards, coins &amp; role store</div>
                                 </div>
                             </div>
                             <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" class="sr-only peer bento-toggle" checked onchange="updateBentoToggles('Economy & Global Shop', this.checked)">
+                                <input type="checkbox" data-bento-mod="economy" class="sr-only peer bento-toggle" checked onchange="updateBentoToggles('Economy & Global Shop', this.checked, 'economy')">
                                 <div class="w-10 h-5 bg-gray-700 rounded-full peer peer-checked:after:translate-x-5 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brandred"></div>
                             </label>
                         </div>
                     </div>
                     <div>
-                        <h3 class="text-lg font-extrabold text-white">Modular by Design</h3>
-                        <p class="text-xs sm:text-sm text-gray-400 mt-1">Click any toggle above to test instant state synchronization across your server.</p>
+                        <h3 class="text-lg font-extrabold text-white">Modular by design</h3>
+                        <p class="text-xs sm:text-sm text-gray-400 mt-1">Enable only the features your community needs and configure them anytime.</p>
                     </div>
                 </div>
 
@@ -475,7 +561,7 @@
                         </div>
                     </div>
                     <div class="text-left w-full">
-                        <h3 class="text-lg font-extrabold text-white">Always Online</h3>
+                        <h3 class="text-lg font-extrabold text-white">Always online</h3>
                         <p class="text-xs sm:text-sm text-gray-400 mt-1">Enterprise-grade sharded infrastructure built to stay responsive 24/7.</p>
                     </div>
                 </div>
@@ -501,39 +587,50 @@
                         </div>
                     </div>
                     <div class="mt-5">
-                        <h3 class="text-lg font-extrabold text-white">Modern Slash Commands</h3>
-                        <p class="text-xs sm:text-sm text-gray-400 mt-1">Click a command pill above to preview native Discord auto-complete parameters.</p>
+                        <h3 class="text-lg font-extrabold text-white">Easy to use</h3>
+                        <p class="text-xs sm:text-sm text-gray-400 mt-1">Click a command pill above to preview native Discord slash commands.</p>
                     </div>
                 </div>
 
-                <!-- Bento Card 4: Live Web Channel Selector Sync (7 cols) -->
+                <!-- Bento Card 4: Live Web Channel & Role Selector Sync (7 cols - Exact Laptop Screenshot Match) -->
                 <div class="md:col-span-7 glass-card glass-card-hover rounded-3xl p-7 flex flex-col justify-between">
                     <div class="bg-[#090b10] border border-white/5 rounded-2xl p-4 mb-6 space-y-3">
                         <div class="flex items-center justify-between text-xs">
-                            <span class="text-gray-400 font-medium">Level Up Notification Channel</span>
+                            <span class="text-gray-400 font-medium">Real-Time Web Configuration</span>
                             <span class="text-emerald-400 font-bold flex items-center space-x-1">
                                 <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping mr-1"></span>
                                 <span id="channelSyncBadge">Synced Live</span>
                             </span>
                         </div>
-                        <div>
-                            <select onchange="showToast('Notification channel synced to ' + this.value)" class="w-full bg-[#141824] hover:bg-[#191e2d] border border-white/10 focus:border-brandred rounded-xl px-3.5 py-2.5 text-xs font-semibold text-gray-200 outline-none cursor-pointer transition">
-                                <option value="# level-ups-and-rewards"># level-ups-and-rewards</option>
-                                <option value="# general-chat"># general-chat</option>
-                                <option value="# bot-commands"># bot-commands</option>
-                                <option value="# community-highlights"># community-highlights</option>
+                        <!-- Row 1: Channel Selector (With Red Icon Badge like Screenshot) -->
+                        <div class="flex items-center space-x-3 bg-[#131620] px-3.5 py-2.5 rounded-xl border border-white/5">
+                            <div class="w-7 h-7 rounded-lg bg-brandred/15 border border-brandred/30 flex items-center justify-center text-brandred flex-shrink-0 font-mono text-xs font-bold">#</div>
+                            <select id="bentoChannelSelect" onchange="syncBentoQuickSetting('channel', this.value)" class="w-full bg-transparent text-xs font-semibold text-gray-200 outline-none cursor-pointer">
+                                <option class="bg-[#131620]" value="# level-ups-and-rewards">Welcome &amp; Level-Up Channel: # level-ups-and-rewards</option>
+                                <option class="bg-[#131620]" value="# general-chat">Welcome &amp; Level-Up Channel: # general-chat</option>
+                                <option class="bg-[#131620]" value="# bot-commands">Welcome &amp; Level-Up Channel: # bot-commands</option>
+                                <option class="bg-[#131620]" value="# community-highlights">Welcome &amp; Level-Up Channel: # community-highlights</option>
+                            </select>
+                        </div>
+                        <!-- Row 2: Role Selector (Matches Second Row in Laptop Screenshot) -->
+                        <div class="flex items-center space-x-3 bg-[#131620] px-3.5 py-2.5 rounded-xl border border-white/5">
+                            <div class="w-7 h-7 rounded-lg bg-pink-500/15 border border-pink-500/30 flex items-center justify-center text-pink-400 flex-shrink-0 font-mono text-xs font-bold">@</div>
+                            <select id="bentoRoleSelect" onchange="syncBentoQuickSetting('role', this.value)" class="w-full bg-transparent text-xs font-semibold text-gray-200 outline-none cursor-pointer">
+                                <option class="bg-[#131620]" value="@Active Member">Automatic Join &amp; Level Role: @Active Member</option>
+                                <option class="bg-[#131620]" value="@Verified Community">Automatic Join &amp; Level Role: @Verified Community</option>
+                                <option class="bg-[#131620]" value="@Server Booster">Automatic Join &amp; Level Role: @Server Booster</option>
                             </select>
                         </div>
                     </div>
                     <div>
-                        <h3 class="text-lg font-extrabold text-white">Real-Time Web Dashboard</h3>
-                        <p class="text-xs sm:text-sm text-gray-400 mt-1">Select any channel from the dropdown above to see how changes apply immediately.</p>
+                        <h3 class="text-lg font-extrabold text-white">Set up in minutes</h3>
+                        <p class="text-xs sm:text-sm text-gray-400 mt-1">Select any channel or role from the dropdowns above to see how changes apply immediately.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 4. FEATURE SHOWCASE 1: MODERATION ("Keep your server safe, automatically.") -->
+        <!-- 4. FEATURE SHOWCASE 1: MODERATION (Text Left, User Trigger + Discord Card Right - Exact Screenshot Match) -->
         <section class="reveal-section max-w-6xl mx-auto px-5 py-20 border-t border-white/5">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 <div class="lg:col-span-5 space-y-5">
@@ -558,9 +655,9 @@
                     </ul>
                 </div>
 
-                <!-- Interactive AutoMod Simulator -->
-                <div class="lg:col-span-7">
-                    <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+                <!-- Interactive AutoMod Simulator (With Top User Trigger Bubble from Screenshot) -->
+                <div class="lg:col-span-7 space-y-3.5">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
                         <div class="inline-flex items-center space-x-2 bg-[#161922] border border-white/10 px-4 py-2 rounded-full text-xs font-bold text-gray-200 shadow-xl">
                             <svg class="w-4 h-4 text-brandred" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                             <span>AutoMod Protection Active</span>
@@ -568,6 +665,17 @@
                         <button type="button" onclick="simulateAutoMod()" class="text-xs bg-brandred/15 hover:bg-brandred/25 text-brandred border border-brandred/30 px-3.5 py-1.5 rounded-full font-bold transition">
                             Simulate Raid / Link Test &rarr;
                         </button>
+                    </div>
+
+                    <!-- User Trigger Bubble (Right-Aligned Like Laptop Screenshot) -->
+                    <div class="flex justify-end">
+                        <div class="discord-chat-trigger rounded-2xl px-4 py-3 flex items-center space-x-3 max-w-md">
+                            <div class="text-right">
+                                <div class="text-[11px] font-bold text-gray-400">@rogue_user <span class="text-[10px] text-gray-600 ml-1">Today at 14:22</span></div>
+                                <p id="automodTriggerBubble" class="text-xs text-gray-200 font-mono">Join my free nitro server https://discord.gg/scam-link !</p>
+                            </div>
+                            <img src="https://i.pravatar.cc/80?img=60" alt="User" class="w-9 h-9 rounded-full object-cover border border-brandred/40 flex-shrink-0">
+                        </div>
                     </div>
 
                     <div class="discord-window rounded-3xl p-6">
@@ -581,7 +689,7 @@
                                 </div>
                                 <div class="rounded-r-xl p-4 mt-2.5 space-y-2 border-l-4 border-brandred bg-[#18191c]">
                                     <div class="flex items-center justify-between">
-                                        <span id="automodTitle" class="text-xs font-extrabold uppercase tracking-wider text-brandred">AutoMod Action • Link Blocked</span>
+                                        <span id="automodTitle" class="text-xs font-extrabold uppercase tracking-wider text-brandred">AutoMod Action &bull; Link Blocked</span>
                                         <span id="automodCase" class="text-[11px] text-gray-500">Case #1084</span>
                                     </div>
                                     <p id="automodDesc" class="text-xs sm:text-sm text-gray-300">
@@ -590,7 +698,7 @@
                                     <div class="grid grid-cols-2 gap-2 pt-2 text-xs">
                                         <div class="bg-black/30 p-2.5 rounded-lg border border-white/5">
                                             <span class="text-gray-500 block text-[10px] uppercase font-bold">Action Taken</span>
-                                            <span id="automodAction" class="text-white font-semibold">Message Deleted & 15m Timeout</span>
+                                            <span id="automodAction" class="text-white font-semibold">Message Deleted &amp; 15m Timeout</span>
                                         </div>
                                         <div class="bg-black/30 p-2.5 rounded-lg border border-white/5">
                                             <span class="text-gray-500 block text-[10px] uppercase font-bold">Triggered Rule</span>
@@ -605,156 +713,206 @@
             </div>
         </section>
 
-        <!-- 5. FEATURE SHOWCASE 2: LEVELING STUDIO ("Reward the members who show up.") -->
-        <section class="reveal-section max-w-6xl mx-auto px-5 py-20 border-t border-white/5">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                <div class="lg:col-span-5 space-y-5">
-                    <span class="text-brandred text-xs font-extrabold uppercase tracking-widest">Levels & XP</span>
-                    <h2 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight">Reward the members who show up.</h2>
-                    <p class="text-gray-400 text-sm sm:text-base leading-relaxed">
-                        Turn everyday conversations into rewarding milestones. Members earn XP from text messages and voice sessions to unlock custom roles and showcase personalized rank cards.
-                    </p>
-
-                    <!-- Interactive Rank Card Color Picker -->
-                    <div class="pt-2">
-                        <span class="text-xs font-bold uppercase tracking-wider text-gray-400 block mb-2.5">Live Card Theme Preview:</span>
-                        <div class="flex items-center space-x-3">
-                            <button type="button" onclick="setRankTheme('#ff3b5c', '#f97316', 'Crimson Neon')" class="w-7 h-7 rounded-full bg-gradient-to-tr from-[#ff3b5c] to-[#f97316] ring-2 ring-white scale-110 transition"></button>
-                            <button type="button" onclick="setRankTheme('#8b5cf6', '#ec4899', 'Cyber Violet')" class="w-7 h-7 rounded-full bg-gradient-to-tr from-[#8b5cf6] to-[#ec4899] opacity-80 hover:opacity-100 transition"></button>
-                            <button type="button" onclick="setRankTheme('#10b981', '#06b6d4', 'Emerald Matrix')" class="w-7 h-7 rounded-full bg-gradient-to-tr from-[#10b981] to-[#06b6d4] opacity-80 hover:opacity-100 transition"></button>
-                            <button type="button" onclick="setRankTheme('#f59e0b', '#eab308', 'Solar Gold')" class="w-7 h-7 rounded-full bg-gradient-to-tr from-[#f59e0b] to-[#eab308] opacity-80 hover:opacity-100 transition"></button>
+        <!-- 5. FEATURE SHOWCASE 2: LEVELING STUDIO (Mockup Left on Desktop, Text Right - Exact Laptop Screenshot Match!) -->
+        <section class="reveal-section max-w-6xl mx-auto px-5 py-16">
+            <div class="feature-stage-shell rounded-[32px] p-6 sm:p-10 lg:p-12">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    
+                    <!-- Right on Mobile, LEFT on Laptop/Desktop (lg:order-1) -->
+                    <div class="lg:col-span-7 lg:order-1 space-y-3.5">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <div class="inline-flex bg-[#12141c] p-1 rounded-xl border border-white/10 text-xs font-bold">
+                                <button type="button" id="tabBtnRank" onclick="switchLevelTab('rank')" class="px-3.5 py-1.5 rounded-lg bg-brandred text-white transition">Rank Card</button>
+                                <button type="button" id="tabBtnRewards" onclick="switchLevelTab('rewards')" class="px-3.5 py-1.5 rounded-lg text-gray-400 hover:text-white transition">Role Rewards</button>
+                                <button type="button" id="tabBtnLeader" onclick="switchLevelTab('leader')" class="px-3.5 py-1.5 rounded-lg text-gray-400 hover:text-white transition">Leaderboard</button>
+                            </div>
+                            <button type="button" onclick="grantDemoXp()" class="text-xs bg-brandred/15 hover:bg-brandred/25 text-brandred border border-brandred/30 px-3.5 py-1.5 rounded-full font-bold transition">
+                                + Boost XP Demo
+                            </button>
                         </div>
-                    </div>
-                </div>
 
-                <!-- Interactive Rank Card & Role Rewards Tabs -->
-                <div class="lg:col-span-7">
-                    <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
-                        <div class="inline-flex bg-[#12141c] p-1 rounded-xl border border-white/10 text-xs font-bold">
-                            <button type="button" id="tabBtnRank" onclick="switchLevelTab('rank')" class="px-3.5 py-1.5 rounded-lg bg-brandred text-white transition">Rank Card</button>
-                            <button type="button" id="tabBtnRewards" onclick="switchLevelTab('rewards')" class="px-3.5 py-1.5 rounded-lg text-gray-400 hover:text-white transition">Role Rewards</button>
-                            <button type="button" id="tabBtnLeader" onclick="switchLevelTab('leader')" class="px-3.5 py-1.5 rounded-lg text-gray-400 hover:text-white transition">Leaderboard</button>
+                        <!-- User Slash Command Trigger Bubble (Matches Laptop Screenshot) -->
+                        <div class="flex justify-end">
+                            <div class="discord-chat-trigger rounded-2xl px-4 py-2.5 flex items-center space-x-3">
+                                <span class="text-xs font-mono text-indigo-400 font-bold">/rank <span class="text-gray-400">member:@Sujaan</span></span>
+                                <img src="https://i.pravatar.cc/120?img=12" alt="Sujaan" class="w-7 h-7 rounded-full object-cover border border-white/20">
+                            </div>
                         </div>
-                        <button type="button" onclick="grantDemoXp()" class="text-xs bg-brandred/15 hover:bg-brandred/25 text-brandred border border-brandred/30 px-3.5 py-1.5 rounded-full font-bold transition">
-                            + Boost XP Demo
-                        </button>
-                    </div>
 
-                    <div class="discord-window rounded-3xl p-6">
-                        <!-- TAB 1: RANK CARD VIEW -->
-                        <div id="levelTabRank" class="flex items-start space-x-3.5">
-                            <div class="w-10 h-10 rounded-full bg-brandred flex items-center justify-center font-black text-white text-sm flex-shrink-0">S</div>
-                            <div class="flex-1 min-w-0">
-                                <div class="flex items-center space-x-2">
-                                    <span class="font-bold text-white text-sm">Sofiya</span>
-                                    <span class="bg-discord text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded uppercase">APP</span>
-                                    <span class="text-xs text-gray-500">Today at 16:05</span>
-                                </div>
-                                <p class="text-xs sm:text-sm text-gray-300 mt-1 mb-3">
-                                    GG <span class="text-indigo-400 bg-indigo-500/10 px-1 rounded">@Sujaan</span>, you just advanced to <strong id="demoLevelText" class="text-white">Level 24</strong>!
-                                </p>
-
-                                <!-- Graphical Rank Card Preview -->
-                                <div class="rounded-2xl p-5 bg-gradient-to-r from-[#161822] via-[#1d1522] to-[#141720] border border-white/10 relative overflow-hidden">
-                                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                                        <div class="flex items-center space-x-4">
-                                            <div class="relative">
-                                                <img src="https://i.pravatar.cc/120?img=12" alt="User Avatar" class="w-16 h-16 rounded-2xl object-cover border-2" id="rankAvatarBorder" style="border-color: #ff3b5c;">
-                                                <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-[#161822]"></span>
-                                            </div>
-                                            <div>
-                                                <div class="text-base font-extrabold text-white">Sujaan</div>
-                                                <div id="rankThemeLabel" class="text-xs text-gray-400">Crimson Neon • 2.0x Booster</div>
-                                            </div>
-                                        </div>
-                                        <div class="flex items-center space-x-5 text-right">
-                                            <div>
-                                                <span class="text-[10px] uppercase tracking-wider text-gray-400 block font-bold">RANK</span>
-                                                <span class="text-2xl font-black text-white">#1</span>
-                                            </div>
-                                            <div>
-                                                <span class="text-[10px] uppercase tracking-wider text-gray-400 block font-bold">LEVEL</span>
-                                                <span id="demoLevelNumber" class="text-2xl font-black" style="color: #ff3b5c;">24</span>
-                                            </div>
-                                        </div>
+                        <div class="discord-window rounded-3xl p-6">
+                            <!-- TAB 1: RANK CARD VIEW -->
+                            <div id="levelTabRank" class="flex items-start space-x-3.5">
+                                <div class="w-10 h-10 rounded-full bg-brandred flex items-center justify-center font-black text-white text-sm flex-shrink-0">S</div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-center space-x-2">
+                                        <span class="font-bold text-white text-sm">Sofiya</span>
+                                        <span class="bg-discord text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded uppercase">APP</span>
+                                        <span class="text-xs text-gray-500">Today at 16:05</span>
                                     </div>
-                                    <!-- Progress Bar -->
-                                    <div class="mt-4">
-                                        <div class="flex justify-between text-xs font-bold mb-1.5">
-                                            <span class="text-gray-400">XP Progress</span>
-                                            <span id="demoXpNumbers" class="text-white">4,820 / 5,000 XP (96%)</span>
+                                    <p class="text-xs sm:text-sm text-gray-300 mt-1 mb-3">
+                                        GG <span class="text-indigo-400 bg-indigo-500/10 px-1 rounded">@Sujaan</span>, you just advanced to <strong id="demoLevelText" class="text-white">Level 24</strong>!
+                                    </p>
+
+                                    <!-- Graphical Rank Card Preview -->
+                                    <div class="rounded-2xl p-5 bg-gradient-to-r from-[#161822] via-[#1d1522] to-[#141720] border border-white/10 relative overflow-hidden">
+                                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                            <div class="flex items-center space-x-4">
+                                                <div class="relative">
+                                                    <img src="https://i.pravatar.cc/120?img=12" alt="User Avatar" class="w-16 h-16 rounded-2xl object-cover border-2" id="rankAvatarBorder" style="border-color: #ff3b5c;">
+                                                    <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-[#161822]"></span>
+                                                </div>
+                                                <div>
+                                                    <div class="text-base font-extrabold text-white">Sujaan</div>
+                                                    <div id="rankThemeLabel" class="text-xs text-gray-400">Crimson Neon &bull; 2.0x Booster</div>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center space-x-5 text-right">
+                                                <div>
+                                                    <span class="text-[10px] uppercase tracking-wider text-gray-400 block font-bold">RANK</span>
+                                                    <span class="text-2xl font-black text-white">#1</span>
+                                                </div>
+                                                <div>
+                                                    <span class="text-[10px] uppercase tracking-wider text-gray-400 block font-bold">LEVEL</span>
+                                                    <span id="demoLevelNumber" class="text-2xl font-black" style="color: #ff3b5c;">24</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="w-full h-3 bg-black/50 rounded-full overflow-hidden p-0.5 border border-white/5">
-                                            <div id="rankProgressBar" class="h-full rounded-full transition-all duration-500" style="width: 96%; background: linear-gradient(90deg, #ff3b5c, #f97316);"></div>
+                                        <!-- Progress Bar -->
+                                        <div class="mt-4">
+                                            <div class="flex justify-between text-xs font-bold mb-1.5">
+                                                <span class="text-gray-400">XP Progress</span>
+                                                <span id="demoXpNumbers" class="text-white">4,820 / 5,000 XP (96%)</span>
+                                            </div>
+                                            <div class="w-full h-3 bg-black/50 rounded-full overflow-hidden p-0.5 border border-white/5">
+                                                <div id="rankProgressBar" class="h-full rounded-full transition-all duration-500" style="width: 96%; background: linear-gradient(90deg, #ff3b5c, #f97316);"></div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- TAB 2: ROLE REWARDS VIEW -->
-                        <div id="levelTabRewards" class="hidden space-y-3">
-                            <div class="text-xs font-extrabold uppercase tracking-wider text-gray-400 mb-2">Configured Automatic Role Rewards</div>
-                            <div class="flex items-center justify-between bg-[#181b24] px-4 py-3 rounded-xl border border-white/5">
-                                <span class="text-xs font-bold text-white">Reach Level 5</span>
-                                <span class="px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-xs font-bold">@Active Member</span>
+                            <!-- TAB 2: ROLE REWARDS VIEW -->
+                            <div id="levelTabRewards" class="hidden space-y-3">
+                                <div class="text-xs font-extrabold uppercase tracking-wider text-gray-400 mb-2">Configured Automatic Role Rewards</div>
+                                <div class="flex items-center justify-between bg-[#181b24] px-4 py-3 rounded-xl border border-white/5">
+                                    <span class="text-xs font-bold text-white">Reach Level 5</span>
+                                    <span class="px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-xs font-bold">@Active Member</span>
+                                </div>
+                                <div class="flex items-center justify-between bg-[#181b24] px-4 py-3 rounded-xl border border-white/5">
+                                    <span class="text-xs font-bold text-white">Reach Level 15</span>
+                                    <span class="px-3 py-1 rounded-full bg-purple-500/15 text-purple-400 border border-purple-500/30 text-xs font-bold">@Server Veteran</span>
+                                </div>
+                                <div class="flex items-center justify-between bg-[#181b24] px-4 py-3 rounded-xl border border-white/5">
+                                    <span class="text-xs font-bold text-white">Reach Level 30</span>
+                                    <span class="px-3 py-1 rounded-full bg-brandred/15 text-brandred border border-brandred/30 text-xs font-bold">@Community Legend</span>
+                                </div>
                             </div>
-                            <div class="flex items-center justify-between bg-[#181b24] px-4 py-3 rounded-xl border border-white/5">
-                                <span class="text-xs font-bold text-white">Reach Level 15</span>
-                                <span class="px-3 py-1 rounded-full bg-purple-500/15 text-purple-400 border border-purple-500/30 text-xs font-bold">@Server Veteran</span>
-                            </div>
-                            <div class="flex items-center justify-between bg-[#181b24] px-4 py-3 rounded-xl border border-white/5">
-                                <span class="text-xs font-bold text-white">Reach Level 30</span>
-                                <span class="px-3 py-1 rounded-full bg-brandred/15 text-brandred border border-brandred/30 text-xs font-bold">@Community Legend</span>
-                            </div>
-                        </div>
 
-                        <!-- TAB 3: LEADERBOARD VIEW -->
-                        <div id="levelTabLeader" class="hidden space-y-2.5">
-                            <div class="text-xs font-extrabold uppercase tracking-wider text-gray-400 mb-2">Top Community Members</div>
-                            <div class="flex items-center justify-between bg-[#181b24] px-4 py-2.5 rounded-xl border border-white/5">
-                                <div class="flex items-center space-x-3">
-                                    <span class="text-xs font-black text-amber-400">#1</span>
-                                    <img src="https://i.pravatar.cc/80?img=12" class="w-7 h-7 rounded-full" alt="Avatar">
-                                    <span class="text-xs font-bold text-white">Sujaan</span>
+                            <!-- TAB 3: LEADERBOARD VIEW -->
+                            <div id="levelTabLeader" class="hidden space-y-2.5">
+                                <div class="text-xs font-extrabold uppercase tracking-wider text-gray-400 mb-2">Top Community Members</div>
+                                <div class="flex items-center justify-between bg-[#181b24] px-4 py-2.5 rounded-xl border border-white/5">
+                                    <div class="flex items-center space-x-3">
+                                        <span class="text-xs font-black text-amber-400">#1</span>
+                                        <img src="https://i.pravatar.cc/80?img=12" class="w-7 h-7 rounded-full" alt="Avatar">
+                                        <span class="text-xs font-bold text-white">Sujaan</span>
+                                    </div>
+                                    <span class="text-xs font-mono font-bold text-brandred">Level 24 &bull; 48.2k XP</span>
                                 </div>
-                                <span class="text-xs font-mono font-bold text-brandred">Level 24 • 48.2k XP</span>
-                            </div>
-                            <div class="flex items-center justify-between bg-[#181b24] px-4 py-2.5 rounded-xl border border-white/5">
-                                <div class="flex items-center space-x-3">
-                                    <span class="text-xs font-black text-gray-300">#2</span>
-                                    <img src="https://i.pravatar.cc/80?img=45" class="w-7 h-7 rounded-full" alt="Avatar">
-                                    <span class="text-xs font-bold text-white">Aria</span>
+                                <div class="flex items-center justify-between bg-[#181b24] px-4 py-2.5 rounded-xl border border-white/5">
+                                    <div class="flex items-center space-x-3">
+                                        <span class="text-xs font-black text-gray-300">#2</span>
+                                        <img src="https://i.pravatar.cc/80?img=45" class="w-7 h-7 rounded-full" alt="Avatar">
+                                        <span class="text-xs font-bold text-white">Aria</span>
+                                    </div>
+                                    <span class="text-xs font-mono font-bold text-gray-400">Level 21 &bull; 39.4k XP</span>
                                 </div>
-                                <span class="text-xs font-mono font-bold text-gray-400">Level 21 • 39.4k XP</span>
-                            </div>
-                            <div class="flex items-center justify-between bg-[#181b24] px-4 py-2.5 rounded-xl border border-white/5">
-                                <div class="flex items-center space-x-3">
-                                    <span class="text-xs font-black text-amber-600">#3</span>
-                                    <img src="https://i.pravatar.cc/80?img=33" class="w-7 h-7 rounded-full" alt="Avatar">
-                                    <span class="text-xs font-bold text-white">Alex</span>
+                                <div class="flex items-center justify-between bg-[#181b24] px-4 py-2.5 rounded-xl border border-white/5">
+                                    <div class="flex items-center space-x-3">
+                                        <span class="text-xs font-black text-amber-600">#3</span>
+                                        <img src="https://i.pravatar.cc/80?img=33" class="w-7 h-7 rounded-full" alt="Avatar">
+                                        <span class="text-xs font-bold text-white">Alex</span>
+                                    </div>
+                                    <span class="text-xs font-mono font-bold text-gray-400">Level 19 &bull; 31.0k XP</span>
                                 </div>
-                                <span class="text-xs font-mono font-bold text-gray-400">Level 19 • 31.0k XP</span>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Text & Checkmarks on RIGHT on Desktop (lg:order-2) -->
+                    <div class="lg:col-span-5 lg:order-2 space-y-5">
+                        <span class="text-brandred text-xs font-extrabold uppercase tracking-widest">Levels &amp; XP</span>
+                        <h2 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight">Reward the members who show up.</h2>
+                        <p class="text-gray-400 text-sm sm:text-base leading-relaxed">
+                            Turn everyday conversations into rewarding milestones. Members earn XP from text messages and voice sessions to unlock custom roles and showcase personalized rank cards.
+                        </p>
+
+                        <ul class="space-y-2.5 text-sm text-gray-300">
+                            <li class="flex items-center space-x-3">
+                                <svg class="w-5 h-5 text-brandred flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                <span>Customisable rank cards &amp; backgrounds</span>
+                            </li>
+                            <li class="flex items-center space-x-3">
+                                <svg class="w-5 h-5 text-brandred flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                <span>Automatic role rewards &amp; XP multipliers</span>
+                            </li>
+                            <li class="flex items-center space-x-3">
+                                <svg class="w-5 h-5 text-brandred flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                <span>Text, voice, and thread XP progression</span>
+                            </li>
+                        </ul>
+
+                        <!-- Interactive Rank Card Color Picker -->
+                        <div class="pt-2">
+                            <span class="text-xs font-bold uppercase tracking-wider text-gray-400 block mb-2.5">Live Card Theme Preview:</span>
+                            <div class="flex items-center space-x-3">
+                                <button type="button" onclick="setRankTheme('#ff3b5c', '#f97316', 'Crimson Neon')" class="w-7 h-7 rounded-full bg-gradient-to-tr from-[#ff3b5c] to-[#f97316] ring-2 ring-white scale-110 transition"></button>
+                                <button type="button" onclick="setRankTheme('#8b5cf6', '#ec4899', 'Cyber Violet')" class="w-7 h-7 rounded-full bg-gradient-to-tr from-[#8b5cf6] to-[#ec4899] opacity-80 hover:opacity-100 transition"></button>
+                                <button type="button" onclick="setRankTheme('#10b981', '#06b6d4', 'Emerald Matrix')" class="w-7 h-7 rounded-full bg-gradient-to-tr from-[#10b981] to-[#06b6d4] opacity-80 hover:opacity-100 transition"></button>
+                                <button type="button" onclick="setRankTheme('#f59e0b', '#eab308', 'Solar Gold')" class="w-7 h-7 rounded-full bg-gradient-to-tr from-[#f59e0b] to-[#eab308] opacity-80 hover:opacity-100 transition"></button>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </section>
 
-        <!-- 6. FEATURE SHOWCASE 3: INTERACTIVE TICKETS ("Support that stays organised.") -->
+        <!-- 6. FEATURE SHOWCASE 3: INTERACTIVE TICKETS (Text Left, Mockup Right with Top/Bottom Chat Bubbles) -->
         <section class="reveal-section max-w-6xl mx-auto px-5 py-20 border-t border-white/5">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 <div class="lg:col-span-5 space-y-5">
-                    <span class="text-emerald-400 text-xs font-extrabold uppercase tracking-widest">Tickets & Support</span>
+                    <span class="text-emerald-400 text-xs font-extrabold uppercase tracking-widest">Tickets &amp; Support</span>
                     <h2 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight">Support that stays organised.</h2>
                     <p class="text-gray-400 text-sm sm:text-base leading-relaxed">
                         Resolve member inquiries, partnership requests, and ban appeals in private channels. Click the buttons inside the ticket preview to test staff actions.
                     </p>
+                    <ul class="space-y-3 text-sm text-gray-300 pt-2">
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            <span>Multi-category button &amp; dropdown panels</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            <span>One-click staff claiming &amp; role ping routing</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            <span>Automatic HTML transcripts upon ticket closure</span>
+                        </li>
+                    </ul>
                 </div>
 
                 <!-- Interactive Discord Ticket Mockup -->
-                <div class="lg:col-span-7">
+                <div class="lg:col-span-7 space-y-3.5">
+                    <!-- Top Trigger Bubble -->
+                    <div class="flex justify-end">
+                        <div class="discord-chat-trigger rounded-2xl px-4 py-2.5 flex items-center space-x-3">
+                            <span class="text-xs text-gray-300">Opened ticket in <strong class="text-emerald-400">#support-desk</strong></span>
+                            <img src="https://i.pravatar.cc/80?img=33" alt="Alex" class="w-7 h-7 rounded-full object-cover">
+                        </div>
+                    </div>
+
                     <div class="discord-window rounded-3xl p-6 space-y-4">
                         <div class="flex items-center justify-between border-b border-white/5 pb-3 text-xs text-gray-400">
                             <span class="font-mono font-bold text-emerald-400"># ticket-0492-general-support</span>
@@ -787,42 +945,77 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Bottom Follow-up Chat Bubble (Matches Laptop Screenshot) -->
+                    <div class="discord-chat-trigger rounded-2xl px-4 py-3 flex items-start space-x-3 max-w-lg">
+                        <img src="https://i.pravatar.cc/80?img=33" alt="Alex" class="w-8 h-8 rounded-full object-cover flex-shrink-0 mt-0.5">
+                        <div>
+                            <div class="text-[11px] font-bold text-white">Alex <span class="text-[10px] text-gray-500 ml-1">Today at 15:10</span></div>
+                            <p class="text-xs text-gray-300">Hi team! I just boosted the server and wanted to ask how to claim my custom booster role colour.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- 7. FEATURE SHOWCASE 4: WELCOMER ("Make your community feel like home.") -->
-        <section class="reveal-section max-w-6xl mx-auto px-5 py-20 border-t border-white/5">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                <div class="lg:col-span-5 space-y-5">
-                    <span class="text-purple-400 text-xs font-extrabold uppercase tracking-widest">Welcomer</span>
-                    <h2 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight">Make your community feel like home.</h2>
-                    <p class="text-gray-400 text-sm sm:text-base leading-relaxed">
-                        Greet every new arrival with custom image banners, personalized welcome messages, and automatic starter roles the moment they join.
-                    </p>
-                </div>
+        <!-- 7. FEATURE SHOWCASE 4: WELCOMER (Mockup Left on Desktop, Text Right - Exact Laptop Screenshot Match!) -->
+        <section class="reveal-section max-w-6xl mx-auto px-5 py-16">
+            <div class="feature-stage-shell rounded-[32px] p-6 sm:p-10 lg:p-12">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    
+                    <!-- Mockup on LEFT on Desktop (lg:order-1) -->
+                    <div class="lg:col-span-7 lg:order-1 space-y-3.5">
+                        <div class="flex justify-end">
+                            <div class="discord-chat-trigger rounded-2xl px-4 py-2.5 flex items-center space-x-3">
+                                <span class="text-xs text-purple-300 font-semibold">&rarr; <strong>@Aria</strong> just joined the server!</span>
+                                <img src="https://i.pravatar.cc/120?img=45" alt="Aria" class="w-7 h-7 rounded-full object-cover border border-purple-400/50">
+                            </div>
+                        </div>
 
-                <!-- Discord Welcome Mockup -->
-                <div class="lg:col-span-7">
-                    <div class="discord-window rounded-3xl p-6">
-                        <div class="flex items-start space-x-3.5">
-                            <div class="w-10 h-10 rounded-full bg-brandred flex items-center justify-center font-black text-white text-sm flex-shrink-0">S</div>
-                            <div class="flex-1">
-                                <div class="flex items-center space-x-2">
-                                    <span class="font-bold text-white text-sm">Sofiya</span>
-                                    <span class="bg-discord text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded uppercase">APP</span>
-                                </div>
-                                <div class="mt-2.5 rounded-2xl p-5 bg-gradient-to-br from-[#1f192e] to-[#131520] border border-purple-500/30 flex items-center space-x-4">
-                                    <img src="https://i.pravatar.cc/120?img=45" alt="New Member" class="w-14 h-14 rounded-full border-2 border-purple-400 object-cover">
-                                    <div>
-                                        <span class="text-[11px] font-extrabold uppercase tracking-wider text-purple-400">Member #1,642 Joined • Role Assigned: @Member</span>
-                                        <h4 class="text-base font-black text-white">Welcome to the community, @Aria!</h4>
-                                        <p class="text-xs text-gray-400 mt-0.5">Grab your self-roles in <span class="text-purple-300">#roles</span> and say hello in <span class="text-purple-300">#lounge</span>.</p>
+                        <div class="discord-window rounded-3xl p-6">
+                            <div class="flex items-start space-x-3.5">
+                                <div class="w-10 h-10 rounded-full bg-brandred flex items-center justify-center font-black text-white text-sm flex-shrink-0">S</div>
+                                <div class="flex-1">
+                                    <div class="flex items-center space-x-2">
+                                        <span class="font-bold text-white text-sm">Sofiya</span>
+                                        <span class="bg-discord text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded uppercase">APP</span>
+                                    </div>
+                                    <div class="mt-2.5 rounded-2xl p-5 bg-gradient-to-br from-[#1f192e] to-[#131520] border border-purple-500/30 flex items-center space-x-4">
+                                        <img src="https://i.pravatar.cc/120?img=45" alt="New Member" class="w-14 h-14 rounded-full border-2 border-purple-400 object-cover">
+                                        <div>
+                                            <span class="text-[11px] font-extrabold uppercase tracking-wider text-purple-400">Member #1,642 Joined &bull; Role Assigned: @Member</span>
+                                            <h4 class="text-base font-black text-white">Welcome to the community, @Aria!</h4>
+                                            <p class="text-xs text-gray-400 mt-0.5">Grab your self-roles in <span class="text-purple-300">#roles</span> and say hello in <span class="text-purple-300">#lounge</span>.</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Text on RIGHT on Desktop (lg:order-2) -->
+                    <div class="lg:col-span-5 lg:order-2 space-y-5">
+                        <span class="text-purple-400 text-xs font-extrabold uppercase tracking-widest">Welcomer</span>
+                        <h2 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight">Make your community feel like home.</h2>
+                        <p class="text-gray-400 text-sm sm:text-base leading-relaxed">
+                            Greet every new arrival with custom image banners, personalized welcome messages, and automatic starter roles the moment they join.
+                        </p>
+                        <ul class="space-y-3 text-sm text-gray-300 pt-2">
+                            <li class="flex items-center space-x-3">
+                                <svg class="w-5 h-5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                <span>Dynamic welcome cards &amp; custom embeds</span>
+                            </li>
+                            <li class="flex items-center space-x-3">
+                                <svg class="w-5 h-5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                <span>Automatic join roles &amp; private DM greetings</span>
+                            </li>
+                            <li class="flex items-center space-x-3">
+                                <svg class="w-5 h-5 text-purple-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                <span>Customisable member count &amp; farewell logs</span>
+                            </li>
+                        </ul>
+                    </div>
+
                 </div>
             </div>
         </section>
@@ -836,6 +1029,20 @@
                     <p class="text-gray-400 text-sm sm:text-base leading-relaxed">
                         Monitor daily active chatters, voice channel minutes, and member retention trends directly from your server analytics dashboard.
                     </p>
+                    <ul class="space-y-3 text-sm text-gray-300 pt-2">
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-indigo-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            <span>Real-time message velocity &amp; voice activity</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-indigo-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            <span>Member join vs. leave retention insights</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-indigo-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            <span>Top active channels &amp; contributor breakdowns</span>
+                        </li>
+                    </ul>
                 </div>
 
                 <!-- Interactive Analytics Graph Card -->
@@ -862,6 +1069,7 @@
                                     <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0.0"/>
                                 </linearGradient>
                             </defs>
+                            <path id="analyticsArea" d="M0,110 C70,95 110,120 170,75 C230,30 280,65 340,40 C400,15 450,35 500,10 L500,140 L0,140 Z" fill="url(#chartGrad)"/>
                             <path id="analyticsLine" d="M0,110 C70,95 110,120 170,75 C230,30 280,65 340,40 C400,15 450,35 500,10" stroke="#a855f7" stroke-width="3.5" stroke-linecap="round" class="transition-all duration-500"/>
                             <circle cx="340" cy="40" r="5" fill="#fff" stroke="#a855f7" stroke-width="3"/>
                         </svg>
@@ -870,48 +1078,81 @@
             </div>
         </section>
 
-        <!-- 9. FEATURE SHOWCASE 6: INTERACTIVE GIVEAWAYS ("Giveaways in seconds.") -->
-        <section class="reveal-section max-w-6xl mx-auto px-5 py-20 border-t border-white/5">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                <div class="lg:col-span-5 space-y-5">
-                    <span class="text-blue-400 text-xs font-extrabold uppercase tracking-widest">Giveaways</span>
-                    <h2 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight">Giveaways in seconds.</h2>
-                    <p class="text-gray-400 text-sm sm:text-base leading-relaxed">
-                        Launch automated giveaways with level requirements, booster bonus entries, and instant winner selection. Click below to test entering!
-                    </p>
-                </div>
+        <!-- 9. FEATURE SHOWCASE 6: INTERACTIVE GIVEAWAYS (Mockup Left on Desktop, Text Right - Exact Laptop Screenshot Match!) -->
+        <section class="reveal-section max-w-6xl mx-auto px-5 py-16">
+            <div class="feature-stage-shell rounded-[32px] p-6 sm:p-10 lg:p-12">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    
+                    <!-- Mockup on LEFT on Desktop (lg:order-1) -->
+                    <div class="lg:col-span-7 lg:order-1 space-y-3.5">
+                        <!-- Top Trigger Bubble -->
+                        <div class="flex justify-end">
+                            <div class="discord-chat-trigger rounded-2xl px-4 py-2.5 flex items-center space-x-3">
+                                <span class="text-xs font-mono text-indigo-400 font-bold">/giveaway start <span class="text-gray-400">prize:Nitro winners:3</span></span>
+                                <img src="https://i.pravatar.cc/100?img=12" alt="Sujaan" class="w-7 h-7 rounded-full object-cover">
+                            </div>
+                        </div>
 
-                <!-- Interactive Giveaway Mockup -->
-                <div class="lg:col-span-7">
-                    <div class="discord-window rounded-3xl p-6">
-                        <div class="flex items-start space-x-3.5">
-                            <div class="w-10 h-10 rounded-full bg-brandred flex items-center justify-center font-black text-white text-sm flex-shrink-0">S</div>
-                            <div class="flex-1">
-                                <div class="flex items-center space-x-2">
-                                    <span class="font-bold text-white text-sm">Sofiya</span>
-                                    <span class="bg-discord text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded uppercase">APP</span>
-                                </div>
-                                <div class="mt-2.5 rounded-r-xl p-4 bg-[#161926] border-l-4 border-discord space-y-2">
-                                    <div id="giveawayHeader" class="text-xs font-extrabold text-indigo-400 uppercase">Giveaway Active • 3 Winners</div>
-                                    <h4 class="text-base font-black text-white">Discord Nitro Monthly Subscription</h4>
-                                    <p id="giveawaySubtext" class="text-xs text-gray-300">Click the button below to enter! Ends in <strong>2 hours</strong>. Hosted by <span class="text-indigo-400">@Sujaan</span>.</p>
-                                    <div class="pt-2 flex flex-wrap gap-2">
-                                        <button id="giveawayJoinBtn" type="button" onclick="joinGiveaway()" class="inline-flex items-center space-x-2 bg-discord hover:bg-discordhover text-white text-xs font-bold px-4 py-2 rounded-lg transition">
-                                            <span id="giveawayBtnText">Enter Giveaway (428)</span>
-                                        </button>
-                                        <button type="button" onclick="rollGiveawayWinner()" class="inline-flex items-center space-x-2 bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 text-xs font-bold px-3.5 py-2 rounded-lg transition">
-                                            <span>Roll Demo Winner</span>
-                                        </button>
+                        <div class="discord-window rounded-3xl p-6">
+                            <div class="flex items-start space-x-3.5">
+                                <div class="w-10 h-10 rounded-full bg-brandred flex items-center justify-center font-black text-white text-sm flex-shrink-0">S</div>
+                                <div class="flex-1">
+                                    <div class="flex items-center space-x-2">
+                                        <span class="font-bold text-white text-sm">Sofiya</span>
+                                        <span class="bg-discord text-white text-[10px] font-extrabold px-1.5 py-0.5 rounded uppercase">APP</span>
+                                    </div>
+                                    <div class="mt-2.5 rounded-r-xl p-4 bg-[#161926] border-l-4 border-discord space-y-2">
+                                        <div id="giveawayHeader" class="text-xs font-extrabold text-indigo-400 uppercase">Giveaway Active &bull; 3 Winners</div>
+                                        <h4 class="text-base font-black text-white">Discord Nitro Monthly Subscription</h4>
+                                        <p id="giveawaySubtext" class="text-xs text-gray-300">Click the button below to enter! Ends in <strong>2 hours</strong>. Hosted by <span class="text-indigo-400">@Sujaan</span>.</p>
+                                        <div class="pt-2 flex flex-wrap gap-2">
+                                            <button id="giveawayJoinBtn" type="button" onclick="joinGiveaway()" class="inline-flex items-center space-x-2 bg-discord hover:bg-discordhover text-white text-xs font-bold px-4 py-2 rounded-lg transition">
+                                                <span id="giveawayBtnText">Enter Giveaway (428)</span>
+                                            </button>
+                                            <button type="button" onclick="rollGiveawayWinner()" class="inline-flex items-center space-x-2 bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 text-xs font-bold px-3.5 py-2 rounded-lg transition">
+                                                <span>Roll Demo Winner</span>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Bottom Winner Announcement Bubble (Matches Laptop Screenshot) -->
+                        <div class="discord-chat-trigger rounded-2xl px-4 py-2.5 flex items-center space-x-3 max-w-md">
+                            <div class="w-7 h-7 rounded-full bg-brandred flex items-center justify-center font-black text-white text-xs flex-shrink-0">S</div>
+                            <p class="text-xs text-gray-300">🎉 Congratulations <strong class="text-indigo-400">@Aria</strong>, you won <strong>Discord Nitro Monthly</strong>!</p>
+                        </div>
                     </div>
+
+                    <!-- Text on RIGHT on Desktop (lg:order-2) -->
+                    <div class="lg:col-span-5 lg:order-2 space-y-5">
+                        <span class="text-blue-400 text-xs font-extrabold uppercase tracking-widest">Giveaways</span>
+                        <h2 class="text-3xl sm:text-5xl font-extrabold text-white leading-tight">Giveaways in seconds.</h2>
+                        <p class="text-gray-400 text-sm sm:text-base leading-relaxed">
+                            Launch automated giveaways with level requirements, booster bonus entries, and instant winner selection. Click the preview to test entering!
+                        </p>
+                        <ul class="space-y-3 text-sm text-gray-300 pt-2">
+                            <li class="flex items-center space-x-3">
+                                <svg class="w-5 h-5 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                <span>Role &amp; minimum level entry requirements</span>
+                            </li>
+                            <li class="flex items-center space-x-3">
+                                <svg class="w-5 h-5 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                <span>Extra bonus entries for server boosters</span>
+                            </li>
+                            <li class="flex items-center space-x-3">
+                                <svg class="w-5 h-5 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                <span>One-click fair winner picking &amp; rerolls</span>
+                            </li>
+                        </ul>
+                    </div>
+
                 </div>
             </div>
         </section>
 
-        <!-- 10. FEATURE SHOWCASE 7: SOCIAL NOTIFICATIONS ("Keep your community in the loop.") -->
+        <!-- 10. FEATURE SHOWCASE 7: SOCIAL NOTIFICATIONS ("Keep your community in the loop." - Photo 100% Preserved) -->
         <section class="reveal-section max-w-6xl mx-auto px-5 py-20 border-t border-white/5">
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                 <div class="lg:col-span-5 space-y-5">
@@ -920,10 +1161,31 @@
                     <p class="text-gray-400 text-sm sm:text-base leading-relaxed">
                         Send instant alerts to your server whenever you go live on Twitch, upload a new YouTube video, or post updates on X and Instagram.
                     </p>
+                    <ul class="space-y-3 text-sm text-gray-300 pt-2">
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-brandred flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            <span>Twitch, YouTube, Kick, and X/Twitter feeds</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-brandred flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            <span>Custom role mentions &amp; live stream embeds</span>
+                        </li>
+                        <li class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-brandred flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            <span>Instant webhook delivery with zero delay</span>
+                        </li>
+                    </ul>
                 </div>
 
-                <!-- Stream Alert Mockup with Real Photo -->
-                <div class="lg:col-span-7">
+                <!-- Stream Alert Mockup with Real Photo (100% Intact) -->
+                <div class="lg:col-span-7 space-y-3.5">
+                    <div class="flex justify-end">
+                        <div class="discord-chat-trigger rounded-2xl px-4 py-2 flex items-center space-x-2.5 text-xs text-purple-300 font-bold">
+                            <span class="w-2 h-2 rounded-full bg-brandred animate-ping"></span>
+                            <span>Twitch Webhook &bull; Stream went live in #stream-alerts</span>
+                        </div>
+                    </div>
+
                     <div class="discord-window rounded-3xl p-6">
                         <div class="flex items-start space-x-3.5">
                             <div class="w-10 h-10 rounded-full bg-brandred flex items-center justify-center font-black text-white text-sm flex-shrink-0">S</div>
@@ -936,7 +1198,7 @@
                                     <div class="p-4 flex items-center justify-between">
                                         <div>
                                             <span class="text-[11px] font-extrabold uppercase text-brandred tracking-wider">Live Stream Alert</span>
-                                            <h4 class="text-sm sm:text-base font-bold text-white mt-0.5">Late Night Ranked Grind & Community Customs!</h4>
+                                            <h4 class="text-sm sm:text-base font-bold text-white mt-0.5">Late Night Ranked Grind &amp; Community Customs!</h4>
                                         </div>
                                         <a href="https://twitch.tv" target="_blank" rel="noopener" class="px-3 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition">Watch Stream</a>
                                     </div>
@@ -973,17 +1235,17 @@
                 {% endfor %}
             </div>
 
-            <!-- Live Module Inspector Box -->
+            <!-- Live Module Inspector Box (Connected to Active Server Route if Available) -->
             <div class="glass-card max-w-2xl mx-auto rounded-2xl p-5 mb-10 border border-white/10 text-left flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
                     <div class="flex items-center space-x-2">
                         <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
-                        <h4 id="inspectorTitle" class="text-sm font-extrabold text-white">Levels & XP Engine</h4>
+                        <h4 id="inspectorTitle" class="text-sm font-extrabold text-white">Levels &amp; XP Engine</h4>
                         <span class="text-[10px] bg-brandred/20 text-brandred px-2 py-0.5 rounded-full font-bold uppercase">Ready</span>
                     </div>
                     <p id="inspectorDesc" class="text-xs text-gray-400 mt-1">Customize Bento rank cards, voice XP rates, role rewards, and multipliers from the web dashboard.</p>
                 </div>
-                <a href="/dashboard" class="px-4 py-2.5 rounded-xl bg-brandred hover:bg-brandredhover text-white text-xs font-bold flex-shrink-0 transition">
+                <a id="inspectorConfigLink" href="/dashboard" class="px-4 py-2.5 rounded-xl bg-brandred hover:bg-brandredhover text-white text-xs font-bold flex-shrink-0 transition">
                     Configure Module &rarr;
                 </a>
             </div>
@@ -1025,12 +1287,12 @@
                             <span class="w-8 h-8 rounded-lg bg-brandred flex items-center justify-center font-black text-white text-xs">S</span>
                             <div>
                                 <div class="text-xs font-bold text-white">Sofiya Quick Setup</div>
-                                <div class="text-[11px] text-gray-400">All 26 modules ready to configure</div>
+                                <div id="ctaActiveSummary" class="text-[11px] text-gray-400">All 26 modules ready to configure</div>
                             </div>
                         </div>
-                        <span class="text-xs font-bold text-emerald-400">● Connected</span>
+                        <span class="text-xs font-bold text-emerald-400">&bull; Connected</span>
                     </div>
-                    <a href="/dashboard" class="block w-full py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-center text-xs font-bold text-white transition">
+                    <a id="ctaLaunchPanelBtn" href="/dashboard" class="block w-full py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-center text-xs font-bold text-white transition">
                         Launch Server Control Panel &rarr;
                     </a>
                 </div>
@@ -1108,8 +1370,10 @@
         </div>
     </footer>
 
-    <!-- ==================== COMPLETE INTERACTIVE ENGINE SCRIPT ==================== -->
+    <!-- ==================== COMPLETE INTERACTIVE ENGINE + LIVE BOT API BRIDGE ==================== -->
     <script>
+        let activeConnectedGuildId = null;
+
         // 1. Live Toast Helper
         let toastTimer;
         function showToast(msg) {
@@ -1124,27 +1388,40 @@
             }, 2600);
         }
 
-        // 2. Mobile Drawer & Language Popover Toggles
+        // 2. Mobile Drawer, Resources Dropdown & Language Popover Toggles
         const menuBtn = document.getElementById('mobileMenuBtn');
         const navDrawer = document.getElementById('navDrawer');
         const langBtn = document.getElementById('langBtn');
         const langDropdown = document.getElementById('langDropdown');
+        const resBtn = document.getElementById('resourcesDropdownBtn');
+        const resMenu = document.getElementById('resourcesDropdownMenu');
 
         if (menuBtn && navDrawer) {
-            menuBtn.addEventListener('click', () => {
+            menuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
                 navDrawer.classList.toggle('hidden');
-                langDropdown.classList.add('hidden');
+                if (langDropdown) langDropdown.classList.add('hidden');
+                if (resMenu) resMenu.classList.add('hidden');
             });
         }
         if (langBtn && langDropdown) {
             langBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 langDropdown.classList.toggle('hidden');
-                navDrawer.classList.add('hidden');
+                if (navDrawer) navDrawer.classList.add('hidden');
+                if (resMenu) resMenu.classList.add('hidden');
+            });
+        }
+        if (resBtn && resMenu) {
+            resBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                resMenu.classList.toggle('hidden');
+                if (langDropdown) langDropdown.classList.add('hidden');
             });
         }
         document.addEventListener('click', () => {
             if (langDropdown) langDropdown.classList.add('hidden');
+            if (resMenu) resMenu.classList.add('hidden');
         });
 
         function setLanguage(code, label) {
@@ -1168,17 +1445,64 @@
             showToast('Theme switched to ' + t.name);
         });
 
-        // 4. Bento Toggles, Ping & Slash Command Switcher
-        function updateBentoToggles(modName, state) {
+        // 4. Bento Toggles, Ping & Slash Command Switcher (Connected to Flask Backend API if Server Active)
+        function updateBentoToggles(modName, state, modKey) {
             const checks = document.querySelectorAll('.bento-toggle:checked').length;
             document.getElementById('activeModuleCount').textContent = checks + ' / 3 Active';
-            showToast(modName + (state ? ' Enabled' : ' Disabled'));
+
+            if (activeConnectedGuildId && modKey) {
+                fetch(`/api/guild/${activeConnectedGuildId}/modules`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ module_key: modKey, enabled: Boolean(state) })
+                }).then(r => r.json()).then(data => {
+                    if (data && data.ok) {
+                        showToast(`${modName} ${state ? 'Enabled' : 'Disabled'} on Server (${data.active_count}/26 active)`);
+                    } else {
+                        showToast(modName + (state ? ' Enabled' : ' Disabled'));
+                    }
+                }).catch(() => {
+                    showToast(modName + (state ? ' Enabled' : ' Disabled'));
+                });
+            } else {
+                showToast(modName + (state ? ' Enabled' : ' Disabled'));
+            }
+        }
+
+        function syncBentoQuickSetting(fieldType, val) {
+            if (activeConnectedGuildId) {
+                const chVal = document.getElementById('bentoChannelSelect') ? document.getElementById('bentoChannelSelect').value : '# general-chat';
+                const roleVal = document.getElementById('bentoRoleSelect') ? document.getElementById('bentoRoleSelect').value : '@Active Member';
+                fetch(`/api/guild/${activeConnectedGuildId}/quick_config`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        module_key: 'welcomer',
+                        enabled: true,
+                        channel: chVal,
+                        access_role: roleVal
+                    })
+                }).catch(() => {});
+            }
+            showToast(`Synced ${fieldType} to ${val}`);
         }
 
         function pingCluster() {
             const ms = Math.floor(Math.random() * 9) + 14;
             document.getElementById('clusterPing').textContent = ms + 'ms';
-            showToast('Cluster #01 responded in ' + ms + 'ms');
+            if (activeConnectedGuildId) {
+                fetch(`/api/guild/${activeConnectedGuildId}/diagnostics`)
+                    .then(r => r.json())
+                    .then(d => {
+                        if (d && d.ok) {
+                            showToast(`Cluster #01: ${ms}ms • ${d.active_modules}/26 modules active`);
+                        } else {
+                            showToast('Cluster #01 responded in ' + ms + 'ms');
+                        }
+                    }).catch(() => showToast('Cluster #01 responded in ' + ms + 'ms'));
+            } else {
+                showToast('Cluster #01 responded in ' + ms + 'ms');
+            }
         }
 
         function switchSlashCmd(cmd, arg, desc) {
@@ -1191,9 +1515,9 @@
         // 5. AutoMod Simulator
         let autoModIdx = 0;
         const autoModCases = [
-            { title: 'AutoMod Action • Phishing Blocked', caseId: 'Case #1085', desc: 'Blocked a suspicious phishing link from @scam_bot in #general-chat.', action: 'Permanent Ban & Message Purge', rule: 'Anti-Phishing Domain Filter' },
-            { title: 'AutoMod Action • Mass Mention Stopped', caseId: 'Case #1086', desc: 'Stopped @raider_99 from mentioning 18 roles in a single message.', action: 'Message Deleted & 1h Mute', rule: 'Max Mention Limit (5)' },
-            { title: 'AutoMod Action • Link Blocked', caseId: 'Case #1084', desc: 'Blocked a message containing an unauthorized server invite from @rogue_user.', action: 'Message Deleted & 15m Timeout', rule: 'Block External Discord Invites' }
+            { title: 'AutoMod Action • Phishing Blocked', caseId: 'Case #1085', desc: 'Blocked a suspicious phishing link from @scam_bot in #general-chat.', action: 'Permanent Ban & Message Purge', rule: 'Anti-Phishing Domain Filter', trigger: 'Free Steam Giftcards here -> http://steam-free-nitro.ru' },
+            { title: 'AutoMod Action • Mass Mention Stopped', caseId: 'Case #1086', desc: 'Stopped @raider_99 from mentioning 18 roles in a single message.', action: 'Message Deleted & 1h Mute', rule: 'Max Mention Limit (5)', trigger: '@everyone @here @Admin @Mod @VIP check this out!' },
+            { title: 'AutoMod Action • Link Blocked', caseId: 'Case #1084', desc: 'Blocked a message containing an unauthorized server invite from @rogue_user.', action: 'Message Deleted & 15m Timeout', rule: 'Block External Discord Invites', trigger: 'Join my free nitro server https://discord.gg/scam-link !' }
         ];
         function simulateAutoMod() {
             const c = autoModCases[autoModIdx % autoModCases.length];
@@ -1203,6 +1527,8 @@
             document.getElementById('automodDesc').textContent = c.desc;
             document.getElementById('automodAction').textContent = c.action;
             document.getElementById('automodRule').textContent = c.rule;
+            const trigEl = document.getElementById('automodTriggerBubble');
+            if (trigEl) trigEl.textContent = c.trigger;
             showToast('Simulated ' + c.caseId);
         }
 
@@ -1264,18 +1590,25 @@
             const countEl = document.getElementById('analyticsCount');
             const growthEl = document.getElementById('analyticsGrowth');
             const lineEl = document.getElementById('analyticsLine');
+            const areaEl = document.getElementById('analyticsArea');
             if (period === '7d') {
                 countEl.textContent = '48,920';
                 growthEl.textContent = '+18.4%';
-                lineEl.setAttribute('d', 'M0,110 C70,95 110,120 170,75 C230,30 280,65 340,40 C400,15 450,35 500,10');
+                const d = 'M0,110 C70,95 110,120 170,75 C230,30 280,65 340,40 C400,15 450,35 500,10';
+                lineEl.setAttribute('d', d);
+                if (areaEl) areaEl.setAttribute('d', d + ' L500,140 L0,140 Z');
             } else if (period === '30d') {
                 countEl.textContent = '214,680';
                 growthEl.textContent = '+34.2%';
-                lineEl.setAttribute('d', 'M0,120 C70,80 110,85 170,55 C230,65 280,35 340,25 C400,30 450,15 500,5');
+                const d = 'M0,120 C70,80 110,85 170,55 C230,65 280,35 340,25 C400,30 450,15 500,5';
+                lineEl.setAttribute('d', d);
+                if (areaEl) areaEl.setAttribute('d', d + ' L500,140 L0,140 Z');
             } else {
                 countEl.textContent = '1,892,400';
                 growthEl.textContent = '+142.0%';
-                lineEl.setAttribute('d', 'M0,130 C70,110 110,95 170,70 C230,55 280,45 340,30 C400,20 450,12 500,4');
+                const d = 'M0,130 C70,110 110,95 170,70 C230,55 280,45 340,30 C400,20 450,12 500,4';
+                lineEl.setAttribute('d', d);
+                if (areaEl) areaEl.setAttribute('d', d + ' L500,140 L0,140 Z');
             }
             showToast('Analytics updated (' + period.toUpperCase() + ')');
         }
@@ -1301,7 +1634,7 @@
             showToast('Winner rolled: ' + pick);
         }
 
-        // 10. Interactive 26 Module Inspector
+        // 10. Interactive 26 Module Inspector (Maps directly to Dedicated Module Routes)
         const moduleDescriptions = {
             'App Customiser': 'Customize bot username, avatar, bio, and theme colors exclusively for your server.',
             'Welcomer': 'Greet new members with custom background cards, DMs, and automatic join roles.',
@@ -1312,13 +1645,80 @@
             'Tickets': 'Organize member support with multi-panel dropdown tickets and HTML transcripts.',
             'Giveaways': 'Host instant giveaways with role requirements and booster bonus entries.'
         };
+        const moduleRouteKeys = {
+            'App Customiser': 'customiser',
+            'Welcomer': 'welcomer',
+            'Levels': 'level',
+            'Economy': 'economy',
+            'Music': 'music',
+            'Moderation': 'moderation',
+            'Logs': 'logs',
+            'Giveaways': 'giveaways',
+            'Tickets': 'tickets',
+            'Role Selection': 'reaction_roles',
+            'Sticky Roles': 'sticky_roles',
+            'Counters': 'counters',
+            'Starboard': 'starboard',
+            'Suggestions': 'suggestions',
+            'Birthdays': 'birthdays',
+            'Message Builder': 'embeds',
+            'Scheduled Messages': 'timers',
+            'Sticky Messages': 'sticky_messages',
+            'Notifications': 'notifications',
+            'Automations': 'automations',
+            'Custom Commands': 'custom_commands',
+            'Temporary Channels': 'temp_channels',
+            'Roleplay': 'roleplay',
+            'Analytics': 'analytics',
+            'Connect': 'connect',
+            'Verify': 'verify'
+        };
         function inspectModule(mod) {
             document.getElementById('inspectorTitle').textContent = mod + ' Module';
             document.getElementById('inspectorDesc').textContent = moduleDescriptions[mod] || `Configure automated triggers, permissions, and channels for the ${mod} module directly from your web dashboard.`;
+            const rKey = moduleRouteKeys[mod] || 'level';
+            const cfgLink = document.getElementById('inspectorConfigLink');
+            if (cfgLink) {
+                cfgLink.href = activeConnectedGuildId ? `/manage/${activeConnectedGuildId}/${rKey}` : '/dashboard';
+            }
             showToast('Inspecting ' + mod + ' module');
         }
 
-        // 11. Mouse Spotlight Effect & Scroll Reveal
+        // 11. Auto-Connect Index Page to User's Active Discord Guild & Bot Backend (`app.py`)
+        function initIndexBotBridge() {
+            try {
+                const connMap = JSON.parse(localStorage.getItem('sofiya_connected_servers_v2')) || {};
+                const connectedIds = Object.keys(connMap).filter(id => connMap[id] === true);
+                if (connectedIds.length > 0) {
+                    activeConnectedGuildId = connectedIds[0];
+                    const manageBtn = document.getElementById('liveBridgeManageBtn');
+                    const ctaBtn = document.getElementById('ctaLaunchPanelBtn');
+                    const inspBtn = document.getElementById('inspectorConfigLink');
+                    if (manageBtn) manageBtn.href = `/manage/${activeConnectedGuildId}`;
+                    if (ctaBtn) ctaBtn.href = `/manage/${activeConnectedGuildId}`;
+                    if (inspBtn) inspBtn.href = `/manage/${activeConnectedGuildId}/level`;
+
+                    fetch(`/api/guild/${activeConnectedGuildId}/modules`)
+                        .then(r => r.json())
+                        .then(data => {
+                            if (data && data.ok && data.modules) {
+                                document.querySelectorAll('.bento-toggle').forEach(inp => {
+                                    const mKey = inp.getAttribute('data-bento-mod');
+                                    if (mKey && typeof data.modules[mKey] === 'boolean') {
+                                        inp.checked = data.modules[mKey];
+                                    }
+                                });
+                                const checks = document.querySelectorAll('.bento-toggle:checked').length;
+                                document.getElementById('activeModuleCount').textContent = checks + ' / 3 Active';
+                                const ctaSummary = document.getElementById('ctaActiveSummary');
+                                if (ctaSummary) ctaSummary.textContent = `${data.active_count} / 26 modules currently active on your server`;
+                            }
+                        }).catch(() => {});
+                }
+            } catch (e) {}
+        }
+
+        // 12. Mouse Spotlight Effect & Scroll Reveal
         document.querySelectorAll('.glass-card').forEach(card => {
             card.addEventListener('mousemove', e => {
                 const rect = card.getBoundingClientRect();
@@ -1333,6 +1733,8 @@
             });
         }, { threshold: 0.1 });
         document.querySelectorAll('.reveal-section').forEach(sec => observer.observe(sec));
+
+        initIndexBotBridge();
     </script>
 </body>
 </html>

@@ -92,7 +92,7 @@
     },
     "866932175878225950": {
         "prefix": "!",
-        "leveling_enabled": false,
+        "leveling_enabled": true,
         "theme": "crimson",
         "bg_url": "",
         "multiplier": 1.0,
@@ -134,7 +134,18 @@
             "verify": true
         },
         "module_configs": {},
-        "audit_logs": []
+        "audit_logs": [
+            {
+                "user": "sujaanz",
+                "action": "Enabled module 'level'",
+                "timestamp": 1794199998
+            },
+            {
+                "user": "sujaanz",
+                "action": "Disabled module 'level'",
+                "timestamp": 1794199996
+            }
+        ]
     },
     "862720870291865640": {
         "prefix": "!",

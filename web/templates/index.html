@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sofiya — Run Your Whole Community With One App</title>
+    <title>{{ bot_profile.name if bot_profile is defined and bot_profile and bot_profile.name else 'Sofiya' }} — Run Your Whole Community With One App</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -188,8 +188,9 @@
          ===================================================================== -->
     <script>
         const SOFIYA_CONFIG = {
-            botName: "Sofiya",
-            clientId: "1267928727833149592",
+            botName: "{{ bot_profile.name if bot_profile is defined and bot_profile and bot_profile.name else 'Sofiya' }}",
+            botAvatarUrl: "{{ bot_profile.avatar_url if bot_profile is defined and bot_profile and bot_profile.avatar_url else '' }}",
+            clientId: "{{ bot_profile.id if bot_profile is defined and bot_profile and bot_profile.id else '1267928727833149592' }}",
             discordInviteUrl: "/invite",
             oauthLoginUrl: "/auth/login",
             premiumRouteUrl: "{{ '/manage/' ~ guilds[0].id ~ '/premium' if guilds is defined and guilds and guilds|length > 0 else '/premium' }}",
@@ -215,15 +216,16 @@
     <header class="sticky top-4 z-50 px-4 sm:px-6 max-w-6xl mx-auto w-full">
         <div class="maki-pill-nav rounded-full px-5 sm:px-7 h-16 flex items-center justify-between transition-all duration-300 relative">
             
-            <!-- Left: Slanted Maki-Style Vector Logo & Brand Name + Desktop Links -->
+            <!-- Left: Bot Live Avatar DP (Replaces .\ Vector Logo) & Brand Name + Desktop Links -->
             <div class="flex items-center space-x-6 lg:space-x-7">
                 <a href="/" class="flex items-center space-x-3 group">
-                    <svg class="w-8 h-8 text-brandred transition-transform duration-300 group-hover:scale-105" viewBox="0 0 40 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <img id="navBotLogoImg" src="{{ bot_profile.avatar_url if bot_profile is defined and bot_profile and bot_profile.avatar_url else '' }}" alt="{{ bot_profile.name if bot_profile is defined and bot_profile and bot_profile.name else 'Sofiya' }}" class="w-8 h-8 rounded-full object-cover ring-2 ring-brandred/40 transition-transform duration-300 group-hover:scale-105 {{ '' if bot_profile is defined and bot_profile and bot_profile.avatar_url else 'hidden' }}" onerror="this.classList.add('hidden'); document.getElementById('navBotLogoSvg').classList.remove('hidden');">
+                    <svg id="navBotLogoSvg" class="w-8 h-8 text-brandred transition-transform duration-300 group-hover:scale-105 {{ 'hidden' if bot_profile is defined and bot_profile and bot_profile.avatar_url else '' }}" viewBox="0 0 40 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="6" cy="22" r="3.5" fill="currentColor"/>
                         <path d="M13 8L21 25" stroke="currentColor" stroke-width="5.5" stroke-linecap="round"/>
                         <path d="M25 6L34 25" stroke="currentColor" stroke-width="5.5" stroke-linecap="round"/>
                     </svg>
-                    <span class="text-xl font-extrabold tracking-tight text-white">sofiya</span>
+                    <span class="text-xl font-extrabold tracking-tight text-white">{{ (bot_profile.name if bot_profile is defined and bot_profile and bot_profile.name else 'sofiya') | lower }}</span>
                 </a>
 
                 <!-- Desktop Navigation Links (Matches Screenshot: Dashboard Pill, Features v, Resources v, >_ Commands, Tutorials, ☆ Premium) -->
@@ -465,8 +467,8 @@
             
             <!-- Discount Promo Pill (Directly Navigates to Dedicated Premium Panel!) -->
             <a id="heroDiscountPill" href="{{ '/manage/' ~ guilds[0].id ~ '/premium' if guilds is defined and guilds and guilds|length > 0 else '/premium' }}" onclick="navigateToPremiumPanel(event)" class="inline-flex items-center space-x-3 bg-[#12141c]/90 hover:bg-[#191c26] border border-white/10 pl-2 pr-4 py-1.5 rounded-full text-xs sm:text-sm text-gray-200 shadow-lg mb-8 transition group">
-                <span class="bg-brandred text-white text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">DISCOUNT</span>
-                <span id="heroPromoText" class="font-medium">Save 30% on Premium Pro</span>
+                <span class="bg-brandred text-white text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">{{ bot_status_config.promo_badge if bot_status_config is defined and bot_status_config and bot_status_config.promo_badge else 'DISCOUNT' }}</span>
+                <span id="heroPromoText" class="font-medium">{{ bot_status_config.promo_text if bot_status_config is defined and bot_status_config and bot_status_config.promo_text else 'Save 30% on Premium Pro' }}</span>
                 <svg class="w-4 h-4 text-gray-400 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6l6 6-6 6"/>
                 </svg>
@@ -669,9 +671,9 @@
                 <!-- Bento Card 2: Interactive Latency Ping & Uptime Ring (5 cols) -->
                 <div class="md:col-span-5 glass-card glass-card-hover rounded-3xl p-7 flex flex-col justify-between items-center text-center">
                     <div class="w-full flex items-center justify-between text-xs text-gray-400">
-                        <span class="font-semibold">Cluster #01 (India/Global)</span>
+                        <span class="font-semibold">{{ bot_status_config.cluster_name if bot_status_config is defined and bot_status_config and bot_status_config.cluster_name else 'Cluster #01 (India/Global)' }}</span>
                         <button type="button" onclick="pingCluster()" class="text-[11px] bg-white/5 hover:bg-white/10 border border-white/10 px-2.5 py-1 rounded-lg text-orange-400 font-bold transition">
-                            Test Ping: <span id="clusterPing">18ms</span>
+                            Test Ping: <span id="clusterPing">{{ (bot_status_config.default_ping_ms ~ 'ms') if bot_status_config is defined and bot_status_config and bot_status_config.default_ping_ms else '18ms' }}</span>
                         </button>
                     </div>
                     <div class="my-auto py-5 relative flex items-center justify-center">
@@ -680,7 +682,7 @@
                             <circle cx="50" cy="50" r="40" stroke="#f97316" stroke-width="8" stroke-dasharray="251.2" stroke-dashoffset="12" stroke-linecap="round" fill="none"/>
                         </svg>
                         <div class="absolute inset-0 flex flex-col items-center justify-center">
-                            <span class="text-2xl font-black text-white">99.98%</span>
+                            <span class="text-2xl font-black text-white">{{ bot_status_config.uptime_percent if bot_status_config is defined and bot_status_config and bot_status_config.uptime_percent else '99.98%' }}</span>
                             <span class="text-[10px] uppercase tracking-wider text-orange-400 font-bold">Uptime</span>
                         </div>
                     </div>
@@ -704,7 +706,7 @@
                             </div>
                             <div class="bg-[#090b10] border border-white/10 rounded-xl px-4 py-2.5 flex-1 min-w-0">
                                 <div class="text-xs font-mono text-indigo-400 font-bold truncate">
-                                    <span id="slashCmdName">/rank</span> <span id="slashCmdArg" class="text-gray-400">member:@Sujaan</span>
+                                    <span id="slashCmdName">/rank</span> <span id="slashCmdArg" class="text-gray-400">member:@{{ user.username if user else 'Sujaan' }}</span>
                                 </div>
                                 <div id="slashCmdDesc" class="text-[11px] text-gray-500 mt-0.5 truncate">Generates a high-res Bento rank card</div>
                             </div>
@@ -858,8 +860,8 @@
                         <!-- User Slash Command Trigger Bubble (Matches Laptop Screenshot) -->
                         <div class="flex justify-end">
                             <div class="discord-chat-trigger rounded-2xl px-4 py-2.5 flex items-center space-x-3">
-                                <span class="text-xs font-mono text-indigo-400 font-bold">/rank <span class="text-gray-400">member:@Sujaan</span></span>
-                                <img src="https://i.pravatar.cc/120?img=12" alt="Sujaan" class="w-7 h-7 rounded-full object-cover border border-white/20">
+                                <span class="text-xs font-mono text-indigo-400 font-bold">/rank <span class="text-gray-400">member:@{{ user.username if user else 'Sujaan' }}</span></span>
+                                <img src="{{ ('https://cdn.discordapp.com/avatars/' ~ user.id ~ '/' ~ user.avatar ~ '.png') if user and user.avatar else 'https://i.pravatar.cc/120?img=12' }}" onerror="this.src='https://i.pravatar.cc/120?img=12'" alt="Sujaan" class="w-7 h-7 rounded-full object-cover border border-white/20">
                             </div>
                         </div>
 
@@ -874,7 +876,7 @@
                                         <span class="text-xs text-gray-500">Today at 16:05</span>
                                     </div>
                                     <p class="text-xs sm:text-sm text-gray-300 mt-1 mb-3">
-                                        GG <span class="text-indigo-400 bg-indigo-500/10 px-1 rounded">@Sujaan</span>, you just advanced to <strong id="demoLevelText" class="text-white">Level 24</strong>!
+                                        GG <span class="text-indigo-400 bg-indigo-500/10 px-1 rounded">@{{ user.username if user else 'Sujaan' }}</span>, you just advanced to <strong id="demoLevelText" class="text-white">Level 24</strong>!
                                     </p>
 
                                     <!-- Graphical Rank Card Preview -->
@@ -882,11 +884,11 @@
                                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                             <div class="flex items-center space-x-4">
                                                 <div class="relative">
-                                                    <img src="https://i.pravatar.cc/120?img=12" alt="User Avatar" class="w-16 h-16 rounded-2xl object-cover border-2" id="rankAvatarBorder" style="border-color: #ff3b5c;">
+                                                    <img src="{{ ('https://cdn.discordapp.com/avatars/' ~ user.id ~ '/' ~ user.avatar ~ '.png') if user and user.avatar else 'https://i.pravatar.cc/120?img=12' }}" onerror="this.src='https://i.pravatar.cc/120?img=12'" alt="User Avatar" class="w-16 h-16 rounded-2xl object-cover border-2" id="rankAvatarBorder" style="border-color: #ff3b5c;">
                                                     <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-[#161822]"></span>
                                                 </div>
                                                 <div>
-                                                    <div class="text-base font-extrabold text-white">Sujaan</div>
+                                                    <div class="text-base font-extrabold text-white">{{ user.username if user else 'Sujaan' }}</div>
                                                     <div id="rankThemeLabel" class="text-xs text-gray-400">Crimson Neon &bull; 2.0x Booster</div>
                                                 </div>
                                             </div>
@@ -938,8 +940,8 @@
                                 <div class="flex items-center justify-between bg-[#181b24] px-4 py-2.5 rounded-xl border border-white/5">
                                     <div class="flex items-center space-x-3">
                                         <span class="text-xs font-black text-amber-400">#1</span>
-                                        <img src="https://i.pravatar.cc/80?img=12" class="w-7 h-7 rounded-full" alt="Avatar">
-                                        <span class="text-xs font-bold text-white">Sujaan</span>
+                                        <img src="{{ ('https://cdn.discordapp.com/avatars/' ~ user.id ~ '/' ~ user.avatar ~ '.png') if user and user.avatar else 'https://i.pravatar.cc/80?img=12' }}" onerror="this.src='https://i.pravatar.cc/80?img=12'" class="w-7 h-7 rounded-full" alt="Avatar">
+                                        <span class="text-xs font-bold text-white">{{ user.username if user else 'Sujaan' }}</span>
                                     </div>
                                     <span class="text-xs font-mono font-bold text-brandred">Level 24 &bull; 48.2k XP</span>
                                 </div>
@@ -1213,7 +1215,7 @@
                         <div class="flex justify-end">
                             <div class="discord-chat-trigger rounded-2xl px-4 py-2.5 flex items-center space-x-3">
                                 <span class="text-xs font-mono text-indigo-400 font-bold">/giveaway start <span class="text-gray-400">prize:Nitro winners:3</span></span>
-                                <img src="https://i.pravatar.cc/100?img=12" alt="Sujaan" class="w-7 h-7 rounded-full object-cover">
+                                <img src="{{ ('https://cdn.discordapp.com/avatars/' ~ user.id ~ '/' ~ user.avatar ~ '.png') if user and user.avatar else 'https://i.pravatar.cc/100?img=12' }}" onerror="this.src='https://i.pravatar.cc/100?img=12'" alt="Sujaan" class="w-7 h-7 rounded-full object-cover">
                             </div>
                         </div>
 
@@ -1228,7 +1230,7 @@
                                     <div class="mt-2.5 rounded-r-xl p-4 bg-[#161926] border-l-4 border-discord space-y-2">
                                         <div id="giveawayHeader" class="text-xs font-extrabold text-indigo-400 uppercase">Giveaway Active &bull; 3 Winners</div>
                                         <h4 class="text-base font-black text-white">Discord Nitro Monthly Subscription</h4>
-                                        <p id="giveawaySubtext" class="text-xs text-gray-300">Click the button below to enter! Ends in <strong>2 hours</strong>. Hosted by <span class="text-indigo-400">@Sujaan</span>.</p>
+                                        <p id="giveawaySubtext" class="text-xs text-gray-300">Click the button below to enter! Ends in <strong>2 hours</strong>. Hosted by <span class="text-indigo-400">@{{ user.username if user else 'Sujaan' }}</span>.</p>
                                         <div class="pt-2 flex flex-wrap gap-2">
                                             <button id="giveawayJoinBtn" type="button" onclick="joinGiveaway()" class="inline-flex items-center space-x-2 bg-discord hover:bg-discordhover text-white text-xs font-bold px-4 py-2 rounded-lg transition">
                                                 <span id="giveawayBtnText">Enter Giveaway (428)</span>
@@ -1368,11 +1370,11 @@
                             <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
                             <h4 id="inspectorTitle" class="text-sm font-extrabold text-white">Welcomer Module</h4>
                             <span id="inspectorCogBadge" class="text-[10px] font-mono bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded-full font-bold">WelcomerCog</span>
-                            <span class="text-[10px] bg-brandred/20 text-brandred px-2 py-0.5 rounded-full font-bold uppercase">Ready</span>
+                            <span id="inspectorStatusBadge" class="text-[10px] bg-brandred/20 text-brandred px-2 py-0.5 rounded-full font-bold uppercase">Ready</span>
                         </div>
                         <p id="inspectorDesc" class="text-xs text-gray-400 mt-1.5">Greet new members with custom background cards, DMs, and automatic join roles.</p>
                     </div>
-                    <a id="inspectorConfigLink" href="/dashboard" class="px-4 py-2.5 rounded-xl bg-brandred hover:bg-brandredhover text-white text-xs font-bold flex-shrink-0 transition">
+                    <a id="inspectorConfigLink" href="{{ '/manage/' ~ guilds[0].id ~ '/welcomer' if guilds is defined and guilds and guilds|length > 0 else '/dashboard' }}" class="px-4 py-2.5 rounded-xl bg-brandred hover:bg-brandredhover text-white text-xs font-bold flex-shrink-0 transition">
                         Configure Module &rarr;
                     </a>
                 </div>
@@ -1421,7 +1423,7 @@
                     <!-- Top Channel / Dashboard Tabs from Screenshot -->
                     <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-4 border-b border-white/5">
                         <div class="flex items-center space-x-2">
-                            <span class="px-3 py-1 rounded-lg bg-white/[0.06] border border-white/10 text-xs font-mono font-bold text-gray-200"># general-chat</span>
+                            <span id="ctaActiveServerBadge" class="px-3 py-1 rounded-lg bg-white/[0.06] border border-white/10 text-xs font-mono font-bold text-gray-200">{{ ('# ' ~ guilds[0].name) if guilds is defined and guilds and guilds|length > 0 else '# general-chat' }}</span>
                             <span class="px-3 py-1 rounded-lg bg-brandred/15 border border-brandred/30 text-xs font-bold text-brandred">Sofiya Quick Setup</span>
                         </div>
                         <span class="text-xs font-bold text-emerald-400 flex items-center space-x-1.5">
@@ -1490,7 +1492,7 @@
                         </div>
                     </div>
 
-                    <a id="ctaLaunchPanelBtn" href="/dashboard" class="block w-full py-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-center text-xs font-bold text-white transition">
+                    <a id="ctaLaunchPanelBtn" href="{{ '/manage/' ~ guilds[0].id if guilds is defined and guilds and guilds|length > 0 else '/dashboard' }}" class="block w-full py-3.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-center text-xs font-bold text-white transition">
                         Launch Server Control Panel &rarr;
                     </a>
                 </div>
@@ -1597,15 +1599,16 @@
     <footer class="border-t border-white/5 bg-[#050608] pt-16 pb-12 px-6 mt-12">
         <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-white/5 text-xs">
             
-            <!-- Brand Column -->
+            <!-- Brand Column (Bot Live Avatar DP Replaces .\ Vector Logo) -->
             <div class="md:col-span-5 space-y-4">
-                <a href="/" class="flex items-center space-x-3">
-                    <svg class="w-7 h-7 text-brandred" viewBox="0 0 40 32" fill="none">
+                <a href="/" class="flex items-center space-x-3 group">
+                    <img id="footerBotLogoImg" src="{{ bot_profile.avatar_url if bot_profile is defined and bot_profile and bot_profile.avatar_url else '' }}" alt="{{ bot_profile.name if bot_profile is defined and bot_profile and bot_profile.name else 'Sofiya' }}" class="w-7 h-7 rounded-full object-cover ring-2 ring-brandred/40 {{ '' if bot_profile is defined and bot_profile and bot_profile.avatar_url else 'hidden' }}" onerror="this.classList.add('hidden'); document.getElementById('footerBotLogoSvg').classList.remove('hidden');">
+                    <svg id="footerBotLogoSvg" class="w-7 h-7 text-brandred {{ 'hidden' if bot_profile is defined and bot_profile and bot_profile.avatar_url else '' }}" viewBox="0 0 40 32" fill="none">
                         <circle cx="6" cy="22" r="3.5" fill="currentColor"/>
                         <path d="M13 8L21 25" stroke="currentColor" stroke-width="5.5" stroke-linecap="round"/>
                         <path d="M25 6L34 25" stroke="currentColor" stroke-width="5.5" stroke-linecap="round"/>
                     </svg>
-                    <span class="text-lg font-extrabold tracking-tight text-white">sofiya</span>
+                    <span class="text-lg font-extrabold tracking-tight text-white">{{ (bot_profile.name if bot_profile is defined and bot_profile and bot_profile.name else 'sofiya') | lower }}</span>
                 </a>
                 <p class="text-gray-400 max-w-xs leading-relaxed">
                     One Discord app for your whole community, built to grow with you.
@@ -1669,6 +1672,74 @@
     <!-- ==================== COMPLETE INTERACTIVE ENGINE + 28-COG LIVE BOT API BRIDGE ==================== -->
     <script>
         let activeConnectedGuildId = "{{ guilds[0].id if guilds is defined and guilds and guilds|length > 0 else '' }}" || null;
+        let liveGuildModulesMap = {};
+
+        // 0. Sync Navbar/Footer Logo (.\ -> Real Bot Avatar DP) & All Cards Live with Bot Identity
+        function syncLiveBotLogoAndCards(profile) {
+            if (!profile) return;
+            const liveName = profile.name || SOFIYA_CONFIG.botName || 'Sofiya';
+            const liveLower = profile.name_lower || liveName.toLowerCase();
+            const liveInitial = profile.initial || liveName.charAt(0).toUpperCase();
+            const liveAvatar = profile.avatar_url || SOFIYA_CONFIG.botAvatarUrl || '';
+
+            SOFIYA_CONFIG.botName = liveName;
+            SOFIYA_CONFIG.botAvatarUrl = liveAvatar;
+
+            // Replace .\ SVG in Navbar & Footer with Real Bot Avatar DP
+            const navImg = document.getElementById('navBotLogoImg');
+            const navSvg = document.getElementById('navBotLogoSvg');
+            const footImg = document.getElementById('footerBotLogoImg');
+            const footSvg = document.getElementById('footerBotLogoSvg');
+
+            if (liveAvatar) {
+                if (navImg) {
+                    navImg.src = liveAvatar;
+                    navImg.alt = liveName;
+                    navImg.classList.remove('hidden');
+                }
+                if (navSvg) navSvg.classList.add('hidden');
+                if (footImg) {
+                    footImg.src = liveAvatar;
+                    footImg.alt = liveName;
+                    footImg.classList.remove('hidden');
+                }
+                if (footSvg) footSvg.classList.add('hidden');
+            }
+
+            // Sync Navbar & Footer Brand Name
+            document.querySelectorAll('header a[href="/"] span, footer a[href="/"] span').forEach(el => {
+                el.textContent = liveLower;
+            });
+
+            // Sync Page Title & All Bot Name Text Nodes
+            if (document.title.includes('Sofiya') && liveName !== 'Sofiya') {
+                document.title = document.title.replace(/Sofiya/g, liveName);
+            }
+            if (liveName !== 'Sofiya') {
+                document.querySelectorAll('span, h1, h2, h3, h4, p, a, button, label, div').forEach(el => {
+                    if (el.children.length === 0 && el.textContent && el.textContent.includes('Sofiya')) {
+                        el.textContent = el.textContent.replace(/Sofiya/g, liveName);
+                    }
+                });
+            }
+
+            // Sync All Red 'S' Bot Avatar Circles in Discord Cards with Real Bot DP
+            document.querySelectorAll('div, span').forEach(el => {
+                if (el.className && typeof el.className === 'string' && el.className.includes('bg-brandred') && (el.textContent.trim() === 'S' || el.textContent.trim() === liveInitial)) {
+                    if (liveAvatar && el.children.length === 0) {
+                        el.textContent = '';
+                        const img = document.createElement('img');
+                        img.src = liveAvatar;
+                        img.alt = liveName;
+                        img.className = 'w-full h-full object-cover';
+                        img.style.borderRadius = 'inherit';
+                        img.onerror = function() { el.textContent = liveInitial; };
+                        el.appendChild(img);
+                        el.classList.add('overflow-hidden');
+                    }
+                }
+            });
+        }
 
         // 1. Live Toast Helper
         let toastTimer;
@@ -1749,6 +1820,7 @@
 
         function setLanguage(code, label) {
             document.getElementById('currentLangCode').textContent = code;
+            localStorage.setItem('sofiya_preferred_lang', code);
             showToast('Language switched to ' + label);
         }
 
@@ -1832,7 +1904,7 @@
             showToast('Theme switched to ' + t.name);
         });
 
-        // 4. Bento Toggles, Ping & Slash Command Switcher (Connected to Flask Backend API & Specific Bot Cogs)
+        // 4. Bento Toggles, Real-Time Ping & Slash Command Switcher (Connected to Flask Backend API & Specific Bot Cogs)
         function updateBentoToggles(modName, state, modKey) {
             document.querySelectorAll(`.bento-toggle[data-bento-mod="${modKey}"], .cta-live-toggle[data-cta-mod="${modKey}"]`).forEach(el => {
                 el.checked = Boolean(state);
@@ -1849,6 +1921,7 @@
                 tickets: 'TicketsCog'
             };
             const targetCog = cogMap[modKey] || 'CoreCog';
+            liveGuildModulesMap[modKey] = Boolean(state);
 
             if (activeConnectedGuildId && modKey) {
                 fetch(`/api/guild/${activeConnectedGuildId}/modules`, {
@@ -1861,9 +1934,12 @@
                     })
                 }).then(r => r.json()).then(data => {
                     if (data && data.ok) {
+                        liveGuildModulesMap = data.modules || liveGuildModulesMap;
                         const totalMods = data.modules ? Object.keys(data.modules).length : 28;
                         const ctaSummary = document.getElementById('ctaActiveSummary');
                         if (ctaSummary) ctaSummary.textContent = `${data.active_count} / ${totalMods} modules currently active on your server`;
+                        const bridgeLbl = document.getElementById('liveBridgeServerLabel');
+                        if (bridgeLbl) bridgeLbl.textContent = `Server Synced • ${data.active_count}/${totalMods} Cogs Active`;
                         showToast(`${modName} (${targetCog}) ${state ? 'Enabled' : 'Disabled'} (${data.active_count}/${totalMods} active)`);
                     } else {
                         showToast(`${modName} (${targetCog}) ${state ? 'Enabled' : 'Disabled'}`);
@@ -1877,6 +1953,8 @@
         }
 
         function syncBentoQuickSetting(fieldType, val) {
+            const syncBadge = document.getElementById('channelSyncBadge');
+            if (syncBadge) syncBadge.textContent = 'Syncing...';
             if (activeConnectedGuildId) {
                 const chVal = document.getElementById('bentoChannelSelect') ? document.getElementById('bentoChannelSelect').value : '# general-chat';
                 const roleVal = document.getElementById('bentoRoleSelect') ? document.getElementById('bentoRoleSelect').value : '@Active Member';
@@ -1890,27 +1968,37 @@
                         channel: chVal,
                         access_role: roleVal
                     })
-                }).catch(() => {});
+                }).then(r => r.json()).then(d => {
+                    if (syncBadge) syncBadge.textContent = (d && d.ok) ? 'Saved to Bot DB' : 'Synced Live';
+                }).catch(() => {
+                    if (syncBadge) syncBadge.textContent = 'Synced Live';
+                });
+            } else if (syncBadge) {
+                setTimeout(() => { syncBadge.textContent = 'Synced Live'; }, 350);
             }
             showToast(`Synced ${fieldType} to ${val}`);
         }
 
         function pingCluster() {
-            const ms = Math.floor(Math.random() * 9) + 14;
-            document.getElementById('clusterPing').textContent = ms + 'ms';
-            if (activeConnectedGuildId) {
-                fetch(`/api/guild/${activeConnectedGuildId}/diagnostics`)
-                    .then(r => r.json())
-                    .then(d => {
-                        if (d && d.ok) {
-                            showToast(`Cluster #01: ${ms}ms • ${d.active_modules}/28 modules active`);
-                        } else {
-                            showToast('Cluster #01 responded in ' + ms + 'ms');
-                        }
-                    }).catch(() => showToast('Cluster #01 responded in ' + ms + 'ms'));
-            } else {
-                showToast('Cluster #01 responded in ' + ms + 'ms');
-            }
+            const t0 = performance.now();
+            const targetEndpoint = activeConnectedGuildId ? `/api/guild/${activeConnectedGuildId}/diagnostics` : '/api/bot/stats';
+            fetch(targetEndpoint)
+                .then(r => r.json())
+                .then(d => {
+                    const realMs = Math.max(8, Math.round(performance.now() - t0));
+                    document.getElementById('clusterPing').textContent = realMs + 'ms';
+                    if (d && d.bot_profile) syncLiveBotLogoAndCards(d.bot_profile);
+                    if (d && d.ok && typeof d.active_modules === 'number') {
+                        showToast(`${SOFIYA_CONFIG.botName} Engine: ${realMs}ms • ${d.active_modules}/${d.total_modules || 28} modules active`);
+                    } else {
+                        showToast(`${SOFIYA_CONFIG.botName} Cluster responded in ${realMs}ms`);
+                    }
+                })
+                .catch(() => {
+                    const fallbackMs = Math.max(12, Math.round(performance.now() - t0));
+                    document.getElementById('clusterPing').textContent = fallbackMs + 'ms';
+                    showToast('Cluster #01 responded in ' + fallbackMs + 'ms');
+                });
         }
 
         function switchSlashCmd(cmd, arg, desc) {
@@ -1970,7 +2058,7 @@
             document.getElementById('demoLevelText').textContent = 'Level ' + currentDemoLvl;
             document.getElementById('demoLevelNumber').textContent = currentDemoLvl;
             document.getElementById('demoXpNumbers').textContent = '5,000 / 5,000 XP (LEVEL UP!)';
-            showToast('Level Up! @Sujaan reached Level ' + currentDemoLvl);
+            showToast('Level Up! Reached Level ' + currentDemoLvl);
         }
 
         // 7. Interactive Ticket Actions
@@ -2127,6 +2215,11 @@
             if (cogBadge) cogBadge.textContent = moduleCogNames[mod] || 'CoreCog';
 
             const rKey = moduleRouteKeys[mod] || 'welcomer';
+            const statusBadge = document.getElementById('inspectorStatusBadge');
+            if (statusBadge && typeof liveGuildModulesMap[rKey] === 'boolean') {
+                statusBadge.textContent = liveGuildModulesMap[rKey] ? 'Active on Server' : 'Paused';
+            }
+
             const cfgLink = document.getElementById('inspectorConfigLink');
             if (cfgLink) {
                 cfgLink.href = activeConnectedGuildId ? `/manage/${activeConnectedGuildId}/${rKey}` : '/dashboard';
@@ -2134,26 +2227,43 @@
             showToast(`Inspecting ${mod} (${moduleCogNames[mod] || 'CoreCog'})`);
         }
 
-        // 11. Auto-Connect Index Page to User's Active Discord Guild, Live Server Count, Direct Premium Panel & Bot Backend (`app.py`)
+        // 11. Auto-Connect Index Page to User's Active Discord Guild, Live Bot DP/Name, Server Count, Direct Premium Panel & Bot Backend (`app.py`)
         function initIndexBotBridge() {
             try {
+                // Immediately apply server-injected or global bot profile if present
+                if (window.SOFIYA_LIVE_BOT_PROFILE) {
+                    syncLiveBotLogoAndCards(window.SOFIYA_LIVE_BOT_PROFILE);
+                } else if (SOFIYA_CONFIG.botAvatarUrl || SOFIYA_CONFIG.botName) {
+                    syncLiveBotLogoAndCards({
+                        name: SOFIYA_CONFIG.botName,
+                        avatar_url: SOFIYA_CONFIG.botAvatarUrl
+                    });
+                }
+
                 const connMap = JSON.parse(localStorage.getItem('sofiya_connected_servers_v2')) || {};
                 const connectedIds = Object.keys(connMap).filter(id => connMap[id] === true);
                 const listBox = document.getElementById('indexPremiumServerList');
                 const liveCountEl = document.getElementById('liveBotServerCount');
                 const liveBadgeText = document.getElementById('liveConnectedGuildsText');
 
-                // Fetch global live bot server count if `/api/bot/stats` is available
+                // Fetch global live bot server count & live bot identity from `/api/bot/stats`
                 fetch('/api/bot/stats')
                     .then(r => r.json())
                     .then(stats => {
-                        if (stats && typeof stats.guild_count === 'number' && liveCountEl) {
-                            liveCountEl.textContent = stats.guild_count.toLocaleString();
-                            if (liveBadgeText) liveBadgeText.textContent = `${stats.guild_count} Live Joined`;
+                        if (stats && stats.ok) {
+                            if (stats.bot_profile) {
+                                syncLiveBotLogoAndCards(stats.bot_profile);
+                            }
+                            if (typeof stats.guild_count === 'number' && liveCountEl) {
+                                liveCountEl.textContent = stats.guild_count.toLocaleString();
+                                if (liveBadgeText) liveBadgeText.textContent = `${stats.guild_count} Live Joined`;
+                            } else if (stats.display_server_count && liveCountEl) {
+                                liveCountEl.textContent = stats.display_server_count;
+                            }
                         }
                     }).catch(() => {});
 
-                if (connectedIds.length > 0) {
+                if (!activeConnectedGuildId && connectedIds.length > 0) {
                     activeConnectedGuildId = connectedIds[0];
                 }
 
@@ -2200,6 +2310,7 @@
                         .then(r => r.json())
                         .then(data => {
                             if (data && data.ok && data.modules) {
+                                liveGuildModulesMap = data.modules;
                                 document.querySelectorAll('.bento-toggle').forEach(inp => {
                                     const mKey = inp.getAttribute('data-bento-mod');
                                     if (mKey && typeof data.modules[mKey] === 'boolean') {
